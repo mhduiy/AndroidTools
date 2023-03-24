@@ -6,10 +6,6 @@
 InfoPannelWidget::InfoPannelWidget(QWidget *parent) : DWidget (parent)
 {
     initUI();
-
-    ADBTools tool;
-    QString ret = tool.testCmd("adb devices");
-    qDebug() << "ret" << ret;
 }
 
 InfoPannelWidget::~InfoPannelWidget()
@@ -20,18 +16,20 @@ InfoPannelWidget::~InfoPannelWidget()
 void InfoPannelWidget::initUI()
 {
     QVBoxLayout *mainLayout = new QVBoxLayout();
-
     QHBoxLayout *headLayout = new QHBoxLayout();
 
     deviceName = new DLabel("Xiaomi 13 Pro");
-    deviceBox = new DComboBox();
-    deviceBox->setFixedWidth(150);
+//    deviceBox = new DComboBox();
+//    flashBtn = new DPushButton("刷新设备");
+//    flashBtn->setFixedWidth(80);
+//    deviceBox->setFixedWidth(150);
 
-    deviceBox->addItem("test1");
-    deviceBox->addItem("test2");
+//    deviceBox->addItem("test1");
+//    deviceBox->addItem("test2");
 
     headLayout->addWidget(deviceName);
-    headLayout->addWidget(deviceBox);
+//    headLayout->addWidget(flashBtn);
+//    headLayout->addWidget(deviceBox);
 
     //设置字体大小
     QFont font = deviceName->font();
@@ -39,73 +37,70 @@ void InfoPannelWidget::initUI()
     deviceName->setFont(font);
 
     QHBoxLayout *pgLayout = new QHBoxLayout();
-    btyLevelPg = new MyCircleProgress;
-//    btyLevelPg->setTextVisible(true);
-//    btyLevelPg->
-    btyTEMPPg = new MyCircleProgress;
-    memoryPg = new MyCircleProgress;
-    CPUPg = new MyCircleProgress;
-    GPUPg = new MyCircleProgress;
 
-    btyLevelPg->setFixedSize(100,150);
-    btyTEMPPg->setFixedSize(100,150);
-    memoryPg->setFixedSize(100,150);
-    CPUPg->setFixedSize(100,150);
-    GPUPg->setFixedSize(100,150);
-
-    btyLevelPg->setTopText("电量");
-    btyTEMPPg->setTopText("温度");
-    memoryPg->setTopText("内存");
-    CPUPg->setTopText("CPU");
-    GPUPg->setTopText("GPU");
-
-    btyLevelPg->setBottomText("50%");
-    btyTEMPPg->setBottomText("20℃");
-    memoryPg->setBottomText("2.1/8.0");
-    CPUPg->setBottomText("80%");
-    GPUPg->setBottomText("10%");
-
+    deviceRealTimePG.resize(MHDUIY::deviceRealTimeInfo::TOTAL);
     pgLayout->setAlignment(Qt::AlignLeft);
-    pgLayout->addWidget(btyLevelPg);
-    pgLayout->addWidget(btyTEMPPg);
-    pgLayout->addWidget(memoryPg);
-    pgLayout->addWidget(CPUPg);
-    pgLayout->addWidget(GPUPg);
+    for (int i = 0; i < MHDUIY::deviceRealTimeInfo::TOTAL; i++) {
+        deviceRealTimePG[i] = new MyCircleProgress();
+        deviceRealTimePG[i]->setFixedSize(100,150);
+        deviceRealTimePG[i]->setTopText(MHDUIY::deviceRealTimeInfo::OUTSTR[i]);
+        deviceRealTimePG[i]->getPG()->setValue(100);
+        deviceRealTimePG[i]->setBottomText("待测试");
+        pgLayout->addWidget(deviceRealTimePG[i]);
+    }
 
-    deviceInfo = new DTableView;
-    deviceInfo->horizontalHeader()->hide(); //隐藏表头
-    deviceInfo->verticalHeader()->hide();   //隐藏垂直表头
-
-    deviceInfo->horizontalHeader()->setStretchLastSection(true);
+    deviceInfoTable = new DTableView;
+    deviceInfoTable->horizontalHeader()->hide(); //隐藏表头
+    deviceInfoTable->verticalHeader()->hide();   //隐藏垂直表头
+    deviceInfoTable->horizontalHeader()->setStretchLastSection(true);
+    deviceInfoTable->setSelectionMode(QAbstractItemView::NoSelection);  //设置不可选择
+    deviceInfoTable->setEditTriggers(QAbstractItemView::NoEditTriggers);//设置不可编辑
+    deviceInfoTable->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
 
     /*test*/
     tableModel = new QStandardItemModel();
-    deviceInfo->setModel(tableModel);
-
+    deviceInfoTable->setModel(tableModel);
+    //设置列数为2
     tableModel->setColumnCount(2);
-    tableModel->appendRow(new QStandardItem("安卓版本"));
-    tableModel->appendRow(new QStandardItem("安卓版本"));
-    tableModel->appendRow(new QStandardItem("安卓版本"));
-    tableModel->appendRow(new QStandardItem("安卓版本"));
-    tableModel->appendRow(new QStandardItem("安卓版本"));
-    tableModel->appendRow(new QStandardItem("安卓版本"));
-    tableModel->appendRow(new QStandardItem("安卓版本"));
-    tableModel->appendRow(new QStandardItem("安卓版本"));
-    tableModel->appendRow(new QStandardItem("安卓版本"));
-    tableModel->appendRow(new QStandardItem("安卓版本"));
-    tableModel->appendRow(new QStandardItem("安卓版本"));
-
-    deviceInfo->setColumnWidth(0, int(deviceInfo->width() * 0.3));
-    for(int i = 0; i < 11; i++) {
-        deviceInfo->setRowHeight(i, 50);
+    for(QString &s : MHDUIY::deviceDetailsInfo::OUTSTR) {
+        QStandardItem *item = new QStandardItem(s);
+        item->setBackground(QBrush(QColor(247, 247, 247)));
+//        QFont font = item->font();
+//        font.setBold(true);
+//        item->setFont(font);
+        tableModel->appendRow(item);
+    }
+    //设置表格列宽和行高
+    deviceInfoTable->setColumnWidth(0, int(deviceInfoTable->width() * 0.3));
+    for(int i = 0; i < MHDUIY::deviceDetailsInfo::TOTAL; i++) {
+        deviceInfoTable->setRowHeight(i, 40);
     }
 //    deviceInfo->setColumnWidth(1, int(deviceInfo->width() * 0.7));
 
 
     mainLayout->addLayout(headLayout);
     mainLayout->addLayout(pgLayout);
-    mainLayout->addWidget(deviceInfo);
+    mainLayout->addWidget(deviceInfoTable);
 
     this->setLayout(mainLayout);
 
+//    connect(flashBtn, &DPushButton::clicked, this, &InfoPannelWidget::flashDevice);
+
+}
+
+void InfoPannelWidget::setInfoToRealTimePG(MHDUIY::deviceRealTimeInfo *info)
+{
+    for(int i = 0; i < info->TOTAL ; i++) {
+        deviceRealTimePG[i]->setBottomText(info->info[i]);
+        deviceRealTimePG[i]->getPG()->setValue(info->valueInfo[i]);
+    }
+}
+
+void InfoPannelWidget::setInfoToDetialsTable(MHDUIY::deviceDetailsInfo *info)
+{
+    QStandardItem *item;
+    for(int i = 0; i < info->TOTAL; i++) {
+        item = new DStandardItem(info->OUTSTR[i]);
+        tableModel->setItem(i, 1, item);
+    }
 }

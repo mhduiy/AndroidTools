@@ -15,7 +15,7 @@ public:
     explicit ADBTools(QObject *parent = nullptr);
     ~ADBTools();
 
-    QString testCmd(const QString &cmd);
+    QString executeCommand(const QString &cmd);
 
 signals:
 

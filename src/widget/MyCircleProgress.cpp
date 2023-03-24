@@ -53,6 +53,11 @@ void MyCircleProgress::setBottomText(const QString &s)
     this->_bottomLabel->setText(s);
 }
 
+DCircleProgress *MyCircleProgress::getPG()
+{
+    return this->progress;
+}
+
 void MyCircleProgress::resizeEvent(QResizeEvent *event)
 {
     int w = event->size().width();

@@ -20,6 +20,16 @@ void MainWindow::initUI()
     funcView = new DListView;
     funcView->setFixedWidth(150);
 
+    //标题栏
+    deviceBox = new DComboBox();
+    flashBtn = new DPushButton("刷新");
+
+    flashBtn->setFixedWidth(50);
+    deviceBox->setFixedWidth(150);
+
+    this->titlebar()->addWidget(deviceBox, Qt::AlignRight);
+    this->titlebar()->addWidget(flashBtn, Qt::AlignRight);
+
     //设置功能区域的项目
     model = new QStandardItemModel;
     model->appendRow(new DStandardItem("信息面板"));
@@ -30,6 +40,8 @@ void MainWindow::initUI()
     model->appendRow(new DStandardItem("设备镜像"));
     model->appendRow(new DStandardItem("终端"));
     funcView->setModel(model);
+    //设置不可编辑
+    funcView->setEditTriggers(QListView::EditTrigger::NoEditTriggers);
 
     funcView->setCurrentIndex(model->index(0,0));
 
@@ -47,6 +59,55 @@ void MainWindow::initUI()
     mainW->setLayout(mainLayout);
 
     this->setCentralWidget(mainW);
+
+    flashThreadTool = FlashThreadTool::getInstance();
+    flashThread = new QThread();
+    flashThreadTool->moveToThread(flashThread);
+    flashThread->start();
+    connect(&timer, &QTimer::timeout, flashThreadTool, &FlashThreadTool::FlashPGInfo);
+    connect(flashThreadTool, &FlashThreadTool::readDeviceInfoFinish, infoPannelWidget, &InfoPannelWidget::setInfoToRealTimePG);
+
+    timer.start(1000);
+
+    connect(flashBtn, &DPushButton::clicked, [this](){
+        for(int i = 0; i < this->devices.size(); i++) {
+            delete this->devices[i];
+        }
+        this->devices.resize(0);
+        this->deviceBox->clear();
+
+        ADBTools tool;
+        QString ret = tool.executeCommand("adb devices");
+    //    ret = ret.simplified();
+    //    info->info[MHDUIY::deviceBaceInfo::DeviceCodeName] =
+        QStringList l = ret.split('\n');
+        QVector<MHDUIY::deviceBaceInfo*> res;
+        bool readFlag = false;
+        for (QString &s : l) {
+            if(s.isEmpty()) {
+                continue;
+            }
+            if(s.startsWith("*")) {
+                return;
+            }
+            if(s == "List of devices attached") {
+                readFlag = true;
+            }
+            if(readFlag == true) {  //读取到新设备
+                MHDUIY::deviceBaceInfo *info = new MHDUIY::deviceBaceInfo();
+                s = s.simplified();
+                QStringList ll = s.split(' ');
+                if(ll.value(1) == "device") {
+                    qDebug() << ll.value(0);
+                    info->info[MHDUIY::deviceBaceInfo::DeviceCodeName] = ll.value(0);
+                    this->deviceBox->addItem(ll.value(0));
+                }
+                res.push_back(info);
+            }
+        }
+        this->devices = res;
+    });
+
 }
 
 void MainWindow::myCmd(QString cmd)

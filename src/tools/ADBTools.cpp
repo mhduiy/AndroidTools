@@ -12,7 +12,7 @@ ADBTools::~ADBTools()
 
 }
 
-QString ADBTools::testCmd(const QString &cmd)
+QString ADBTools::executeCommand(const QString &cmd)
 {
     QProcess pro;
     pro.start(cmd);

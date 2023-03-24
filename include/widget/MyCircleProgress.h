@@ -15,6 +15,7 @@ public:
     ~MyCircleProgress() override;
     void setTopText(const QString &s);
     void setBottomText(const QString &s);
+    DCircleProgress *getPG();
 
 protected:
     void resizeEvent(QResizeEvent *event)override;

@@ -9,6 +9,11 @@
 #include "inforPanelWidget.h"
 #include <DStackedWidget>
 #include <QStandardItemModel>
+#include <QTimer>
+#include "flashThreadTool.h"
+#include <QThread>
+#include <DComboBox>
+#include <DPushButton>
 
 
 DWIDGET_USE_NAMESPACE
@@ -27,6 +32,12 @@ private:
     DStackedWidget *mainStackedWidget;
     DListView *funcView;
     QStandardItemModel *model;
+    QTimer timer;
+    FlashThreadTool *flashThreadTool;
+    QThread *flashThread;
+    DPushButton *flashBtn;
+    DComboBox *deviceBox;
+    QVector<MHDUIY::deviceBaceInfo *> devices;
 };
 
 #endif

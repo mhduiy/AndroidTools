@@ -14,6 +14,8 @@
 #include <DTableView>
 #include <QStandardItemModel>
 #include <DComboBox>
+#include "myTypes.h"
+#include <DPushButton>
 
 
 DWIDGET_USE_NAMESPACE
@@ -23,21 +25,20 @@ class InfoPannelWidget : public DWidget {
 public:
     explicit InfoPannelWidget(QWidget *parent = nullptr);
     ~InfoPannelWidget();
-
     void initUI();
+    void setInfoToRealTimePG(MHDUIY::deviceRealTimeInfo *info);
+    void setInfoToDetialsTable(MHDUIY::deviceDetailsInfo *info);
+signals:
+    void flashDevice();
+
 private:
     DLabel *deviceName;
-    MyCircleProgress *btyLevelPg;
-    MyCircleProgress *btyTEMPPg;
-    MyCircleProgress *memoryPg;
-    MyCircleProgress *CPUPg;
-    MyCircleProgress *GPUPg;
-    DComboBox *deviceBox;
-
-    DTableView *deviceInfo;
-
+    QVector<MyCircleProgress*> deviceRealTimePG;    //实时面板
+//    DComboBox *deviceBox;
+    DTableView *deviceInfoTable;
     /*test*/
     QStandardItemModel *tableModel;
+//    DPushButton *flashBtn;
 };
 
 #endif

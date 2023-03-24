@@ -21,6 +21,7 @@ file(GLOB_RECURSE HEAD include/*.h)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/widget)
 include_directories(${CMAKE_SOURCE_DIR}/include/tools)
+include_directories(${CMAKE_SOURCE_DIR}/include/Thread)
 
 add_executable(${PROJECT_NAME}
         ${SRC} ${HEAD})
