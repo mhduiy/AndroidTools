@@ -29,7 +29,9 @@ QVector<MHDUIY::deviceBaceInfo *> DeviceConnect::flashDevices()
 {
     //释放原有设备内存
     for(int i = 0; i < this->devices.size(); i++) {
-        delete this->devices[i];
+        if(nullptr != this->devices[i]) {
+            delete this->devices[i];
+        }
     }
     this->devices.resize(0);
 

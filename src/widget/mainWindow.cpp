@@ -1,6 +1,7 @@
 #include "mainWindow.h"
 #include <DTitlebar>
 #include <QLayout>
+#include "deviceDetailTool.h"
 
 MainWindow::MainWindow(QWidget *parent) : DMainWindow (parent)
 {
@@ -79,6 +80,8 @@ void MainWindow::initUI()
             return;
         }
         DeviceConnect::getInstance()->setCurrentDevice(0);    //设置默认设备为第一个
+        auto res = DeviceDetailTool::getInstance()->flashInfo();    //刷新详细信息
+        infoPannelWidget->setInfoToDetialsTable(res);   //设置详细信息
 
         for(MHDUIY::deviceBaceInfo* info : devices) {   //添加信息的box
             this->deviceBox->addItem(info->info[MHDUIY::deviceBaceInfo::DeviceCodeName]);
@@ -86,9 +89,14 @@ void MainWindow::initUI()
         this->deviceBox->setCurrentIndex(0);
         timer.start(1000);  //开启刷新信息的定时器
     });
-    connect(deviceBox, QOverload<int>::of(&QComboBox::activated),[](int index){
-        DeviceConnect::getInstance()->setCurrentDevice(index);
+    //选择了其他设备
+    connect(deviceBox, QOverload<int>::of(&QComboBox::activated),[this](int index){
+        DeviceConnect::getInstance()->setCurrentDevice(index);  //设置新设备
+        auto res = DeviceDetailTool::getInstance()->flashInfo();    //刷新详细信息
+        infoPannelWidget->setInfoToDetialsTable(res);   //设置详细信息
     });
+
+    emit flashBtn->clicked();   //启动时自动触发一次刷新设备
 
 }
 

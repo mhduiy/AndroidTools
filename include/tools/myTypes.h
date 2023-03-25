@@ -3,6 +3,7 @@
 
 #include <QStringList>
 #include <QVector>
+#include <QMap>
 
 namespace MHDUIY {
     //设备实时更新的信息
@@ -51,6 +52,8 @@ namespace MHDUIY {
         QVector<QString> info;
         inline deviceBaceInfo():info(TOTAL){}
     };
+
+    QMap<QString, QString> serializationInformation(QString &info);
 }
 
 #endif

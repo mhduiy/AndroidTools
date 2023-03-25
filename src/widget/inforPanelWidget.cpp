@@ -18,7 +18,7 @@ void InfoPannelWidget::initUI()
     QVBoxLayout *mainLayout = new QVBoxLayout();
     QHBoxLayout *headLayout = new QHBoxLayout();
 
-    deviceName = new DLabel("Xiaomi 13 Pro");
+    deviceName = new DLabel("Android Tools");
 //    deviceBox = new DComboBox();
 //    flashBtn = new DPushButton("刷新设备");
 //    flashBtn->setFixedWidth(80);
@@ -100,7 +100,10 @@ void InfoPannelWidget::setInfoToDetialsTable(MHDUIY::deviceDetailsInfo *info)
 {
     QStandardItem *item;
     for(int i = 0; i < info->TOTAL; i++) {
-        item = new DStandardItem(info->OUTSTR[i]);
+        item = new DStandardItem(info->info[i]);
         tableModel->setItem(i, 1, item);
     }
+    deviceName->setText(info->info[MHDUIY::deviceDetailsInfo::Manufacturer]
+            + " "
+            + info->info[MHDUIY::deviceDetailsInfo::DeviceModel]);
 }

@@ -18,6 +18,7 @@ signals:
 private:
     ADBTools tool;
     static FlashThreadTool *instance;
+    MHDUIY::deviceRealTimeInfo *info = nullptr;
 };
 
 
