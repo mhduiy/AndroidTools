@@ -38,10 +38,22 @@ void FlashThreadTool::FlashPGInfo()
     serialInfo = MHDUIY::serializationInformation(ret);
     double totalMem = serialInfo["MemTotal"].split(' ').value(0).toDouble() / 1024 / 1024;
     double freeMem = serialInfo["MemAvailable"].split(' ').value(0).toDouble() / 1024 / 1024;
-    resInfo->info[MHDUIY::deviceRealTimeInfo::MemoryUsed] = QString("%1GB/%2GB")
+    resInfo->info[MHDUIY::deviceRealTimeInfo::MemoryUsed] = QString("%1G/%2G")
             .arg(QString::number(freeMem, 'f', 1))
             .arg(QString::number(totalMem, 'f', 1));
     resInfo->valueInfo[MHDUIY::deviceRealTimeInfo::MemoryUsed] = int(freeMem / totalMem * 100.0);
+
+    /*存储*/
+    command = QString("adb -s %1 shell df -h | grep '% /data'").arg(currentDeviceCode);
+    ret = tool.executeCommand(command).simplified();
+    QStringList ll = ret.simplified().split(' ');
+    if(ll.size() == 6) {
+        resInfo->info[MHDUIY::deviceRealTimeInfo::StorageUsed] = QString("%1/%2")
+                .arg(ll.value(3))
+                .arg(ll.value(1));
+        resInfo->valueInfo[MHDUIY::deviceRealTimeInfo::StorageUsed] = 100-ll.value(4).left(ll.value(4).size() - 1).toInt();
+    }
+
 
     info = resInfo;
     emit readDeviceInfoFinish(resInfo);

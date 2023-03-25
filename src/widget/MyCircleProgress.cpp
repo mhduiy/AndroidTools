@@ -33,7 +33,7 @@ MyCircleProgress::MyCircleProgress(Dtk::Widget::DWidget *parent) : DWidget(paren
     vLayout->addLayout(hLayout);
     vLayout->addWidget(_bottomLabel);
     //设置环形框的宽度
-    progress->setLineWidth(12);
+    progress->setLineWidth(10);
 
     this->setLayout(vLayout);
 }

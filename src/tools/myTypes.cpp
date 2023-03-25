@@ -2,13 +2,13 @@
 using namespace MHDUIY;
 
 QStringList deviceRealTimeInfo::OUTSTR {
-    "电量",
-    "电流",
-    "温度",
-    "内存",
-    "存储",
-    "CPU",
-    "GPU"
+    "电池电量",
+    "充电电流",
+    "电池温度",
+    "剩余内存",
+    "剩余存储",
+    "CPU占用",
+    "GPU占用"
 };
 
 QStringList deviceDetailsInfo::OUTSTR {

@@ -44,6 +44,16 @@ MHDUIY::deviceDetailsInfo *DeviceDetailTool::flashInfo()
     command = QString("adb -s %1 shell getprop ro.build.version.release").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();
     res->info[MHDUIY::deviceDetailsInfo::AndroidVersion] = ret;
+    /*CPU*/
+    command = QString("adb -s %1 shell cat /proc/cpuinfo").arg(currentDeviceCode);
+    ret = tool.executeCommand(command);
+    auto serialInfo = MHDUIY::serializationInformation(ret);
+    res->info[MHDUIY::deviceDetailsInfo::CPUInfo] = serialInfo["Hardware"];
+    /*GPU*/
+//    command = QString("adb -s %1 shell cat /proc/cpuinfo").arg(currentDeviceCode);
+//    ret = tool.executeCommand(command).simplified();
+//    serialInfo = MHDUIY::serializationInformation(ret);
+//    res->info[MHDUIY::deviceDetailsInfo::CPUInfo] = serialInfo["Hardware"];
     /*分辨率*/
     command = QString("adb -s %1 shell wm size").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();
