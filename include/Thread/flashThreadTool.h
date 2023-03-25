@@ -11,7 +11,6 @@ public:
     explicit FlashThreadTool(QObject *parent = nullptr);
     ~FlashThreadTool();
     void FlashPGInfo();
-    void checkNewDevice();
     static FlashThreadTool *getInstance(QObject *parent = nullptr);
 signals:
     void newDeviceConnect(MHDUIY::deviceBaceInfo *info);

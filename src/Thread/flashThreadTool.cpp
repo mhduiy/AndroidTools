@@ -1,5 +1,6 @@
 #include "flashThreadTool.h"
 #include <QThread>
+#include "deviceConnect.h"
 
 FlashThreadTool *FlashThreadTool::instance = nullptr;
 
@@ -15,8 +16,11 @@ FlashThreadTool::~FlashThreadTool()
 
 void FlashThreadTool::FlashPGInfo()
 {
+    QString currentDeviceCode = DeviceConnect::getInstance()->getCurrentDeviceCode();
+    QString command = QString("adb -s %1 shell dumpsys battery").arg(currentDeviceCode);
+
     MHDUIY::deviceRealTimeInfo *info = new MHDUIY::deviceRealTimeInfo();
-    QString ret = tool.executeCommand("adb shell dumpsys battery");
+    QString ret = tool.executeCommand(command);
     QStringList l = ret.split('\n');
     for(auto &s : l) {
         s = s.simplified();
@@ -28,36 +32,6 @@ void FlashThreadTool::FlashPGInfo()
     emit readDeviceInfoFinish(info);
 }
 
-void FlashThreadTool::checkNewDevice()
-{
-    QString ret = tool.executeCommand("adb devices");
-//    ret = ret.simplified();
-//    info->info[MHDUIY::deviceBaceInfo::DeviceCodeName] =
-    QStringList l = ret.split('\n');
-    QVector<MHDUIY::deviceBaceInfo*> res;
-    bool readFlag = false;
-    for (QString &s : l) {
-        if(s.isEmpty()) {
-            continue;
-        }
-        if(s.startsWith("*")) {
-            return;
-        }
-        if(s == "List of devices attached") {
-            readFlag = true;
-        }
-        if(readFlag == true) {  //读取到新设备
-            MHDUIY::deviceBaceInfo *info = new MHDUIY::deviceBaceInfo();
-            s = s.simplified();
-            QStringList ll = s.split(' ');
-            if(ll.value(1) == "device") {
-                qDebug() << ll.value(0);
-                info->info[MHDUIY::deviceBaceInfo::DeviceCodeName] = ll.value(0);
-            }
-            res.push_back(info);
-        }
-    }
-}
 
 FlashThreadTool *FlashThreadTool::getInstance(QObject *parent)
 {

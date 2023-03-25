@@ -14,6 +14,7 @@
 #include <QThread>
 #include <DComboBox>
 #include <DPushButton>
+#include "deviceConnect.h"
 
 
 DWIDGET_USE_NAMESPACE
@@ -25,6 +26,7 @@ public:
     ~MainWindow();
     void initUI();
     void myCmd(QString cmd);
+    QString getCurrentDeviceCode();
 
 private:
     DWidget *mainW;
@@ -37,7 +39,6 @@ private:
     QThread *flashThread;
     DPushButton *flashBtn;
     DComboBox *deviceBox;
-    QVector<MHDUIY::deviceBaceInfo *> devices;
 };
 
 #endif

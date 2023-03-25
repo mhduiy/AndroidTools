@@ -67,45 +67,27 @@ void MainWindow::initUI()
     connect(&timer, &QTimer::timeout, flashThreadTool, &FlashThreadTool::FlashPGInfo);
     connect(flashThreadTool, &FlashThreadTool::readDeviceInfoFinish, infoPannelWidget, &InfoPannelWidget::setInfoToRealTimePG);
 
-    timer.start(1000);
-
+    //寻找新设备
     connect(flashBtn, &DPushButton::clicked, [this](){
-        for(int i = 0; i < this->devices.size(); i++) {
-            delete this->devices[i];
-        }
-        this->devices.resize(0);
         this->deviceBox->clear();
-
-        ADBTools tool;
-        QString ret = tool.executeCommand("adb devices");
-    //    ret = ret.simplified();
-    //    info->info[MHDUIY::deviceBaceInfo::DeviceCodeName] =
-        QStringList l = ret.split('\n');
-        QVector<MHDUIY::deviceBaceInfo*> res;
-        bool readFlag = false;
-        for (QString &s : l) {
-            if(s.isEmpty()) {
-                continue;
-            }
-            if(s.startsWith("*")) {
-                return;
-            }
-            if(s == "List of devices attached") {
-                readFlag = true;
-            }
-            if(readFlag == true) {  //读取到新设备
-                MHDUIY::deviceBaceInfo *info = new MHDUIY::deviceBaceInfo();
-                s = s.simplified();
-                QStringList ll = s.split(' ');
-                if(ll.value(1) == "device") {
-                    qDebug() << ll.value(0);
-                    info->info[MHDUIY::deviceBaceInfo::DeviceCodeName] = ll.value(0);
-                    this->deviceBox->addItem(ll.value(0));
-                }
-                res.push_back(info);
-            }
+        timer.stop();
+        QVector<MHDUIY::deviceBaceInfo *> devices = DeviceConnect::getInstance()->flashDevices();   //刷新设备
+        //没有找到任何设备
+        if(devices.size() <= 0) {
+            //发送消息
+            this->sendMessage(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning), "当前没有连接到任何设备，请检查数据线的连接并确保打开了USB调试");
+            return;
         }
-        this->devices = res;
+        DeviceConnect::getInstance()->setCurrentDevice(0);    //设置默认设备为第一个
+
+        for(MHDUIY::deviceBaceInfo* info : devices) {   //添加信息的box
+            this->deviceBox->addItem(info->info[MHDUIY::deviceBaceInfo::DeviceCodeName]);
+        }
+        this->deviceBox->setCurrentIndex(0);
+        timer.start(1000);  //开启刷新信息的定时器
+    });
+    connect(deviceBox, QOverload<int>::of(&QComboBox::activated),[](int index){
+        DeviceConnect::getInstance()->setCurrentDevice(index);
     });
 
 }
@@ -114,4 +96,5 @@ void MainWindow::myCmd(QString cmd)
 {
 
 }
+
 // 前端调用，
