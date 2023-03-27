@@ -47,9 +47,23 @@ void MainWindow::initUI()
     funcView->setCurrentIndex(model->index(0,0));
 
     mainStackedWidget = new DStackedWidget;
+
     infoPannelWidget = new InfoPannelWidget;
+    deviceControlWidget = new DeviceControlWidget;
+    softwareManageWidget = new SoftwareManageWidget;
+    fileManageWidget = new FileManageWidget;
+    flashToolWidget = new FlashToolWidget;
+    deviceImageWidget = new DeviceImageWidget;
+    terminalWidget = new TerminalWidget;
 
     mainStackedWidget->addWidget(infoPannelWidget);
+    mainStackedWidget->addWidget(deviceControlWidget);
+    mainStackedWidget->addWidget(softwareManageWidget);
+    mainStackedWidget->addWidget(fileManageWidget);
+    mainStackedWidget->addWidget(flashToolWidget);
+    mainStackedWidget->addWidget(deviceImageWidget);
+    mainStackedWidget->addWidget(terminalWidget);
+
     mainStackedWidget->setCurrentIndex(0);
 
     //将左边的功能区和右边的内容显示区域加入到布局中
@@ -61,12 +75,12 @@ void MainWindow::initUI()
 
     this->setCentralWidget(mainW);
 
-    flashThreadTool = FlashThreadTool::getInstance();
+    updateThreadTool = UpdateThread::getInstance();
     flashThread = new QThread();
-    flashThreadTool->moveToThread(flashThread);
+    updateThreadTool->moveToThread(flashThread);
     flashThread->start();
-    connect(&timer, &QTimer::timeout, flashThreadTool, &FlashThreadTool::FlashPGInfo);
-    connect(flashThreadTool, &FlashThreadTool::readDeviceInfoFinish, infoPannelWidget, &InfoPannelWidget::setInfoToRealTimePG);
+    connect(&timer, &QTimer::timeout, updateThreadTool, &UpdateThread::FlashPGInfo);
+    connect(updateThreadTool, &UpdateThread::readDeviceInfoFinish, infoPannelWidget, &InfoPannelWidget::setInfoToRealTimePG);
 
     //寻找新设备
     connect(flashBtn, &DPushButton::clicked, [this](){
@@ -94,6 +108,12 @@ void MainWindow::initUI()
         DeviceConnect::getInstance()->setCurrentDevice(index);  //设置新设备
         auto res = DeviceDetailTool::getInstance()->flashInfo();    //刷新详细信息
         infoPannelWidget->setInfoToDetialsTable(res);   //设置详细信息
+    });
+
+    //链接左边的功能区域和右边的设备
+    connect(funcView, &DListView::clicked, [this](const QModelIndex &index){
+        //实现点击左侧功能按钮右边界面切换
+        this->mainStackedWidget->setCurrentIndex(index.row());
     });
 
     emit flashBtn->clicked();   //启动时自动触发一次刷新设备

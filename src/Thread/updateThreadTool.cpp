@@ -1,20 +1,20 @@
-#include "flashThreadTool.h"
+#include "updateThreadTool.h"
 #include <QThread>
 #include "deviceConnect.h"
 
-FlashThreadTool *FlashThreadTool::instance = nullptr;
+UpdateThread *UpdateThread::instance = nullptr;
 
-FlashThreadTool::FlashThreadTool(QObject *parent) : QObject (parent)
+UpdateThread::UpdateThread(QObject *parent) : QObject (parent)
 {
 
 }
 
-FlashThreadTool::~FlashThreadTool()
+UpdateThread::~UpdateThread()
 {
 
 }
 
-void FlashThreadTool::FlashPGInfo()
+void UpdateThread::FlashPGInfo()
 {
     if(nullptr != this->info) {
         delete this->info;  //刷新前释放内存
@@ -60,10 +60,10 @@ void FlashThreadTool::FlashPGInfo()
 }
 
 
-FlashThreadTool *FlashThreadTool::getInstance(QObject *parent)
+UpdateThread *UpdateThread::getInstance(QObject *parent)
 {
-    if(FlashThreadTool::instance == nullptr) {
-        FlashThreadTool::instance = new FlashThreadTool(parent);
+    if(UpdateThread::instance == nullptr) {
+        UpdateThread::instance = new UpdateThread(parent);
     }
-    return FlashThreadTool::instance;
+    return UpdateThread::instance;
 }
