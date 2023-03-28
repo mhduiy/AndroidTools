@@ -14,6 +14,7 @@
 #include <DComboBox>
 #include <DPushButton>
 #include "deviceConnect.h"
+#include <QSystemTrayIcon>
 
 #include "inforPanelWidget.h"
 #include "deviceControlWidget.h"
@@ -36,6 +37,7 @@ public:
     QString getCurrentDeviceCode();
 
     void noticeMsg(const QString &msg); //发出提示消息
+    void paintBtyIcon(int level);       //画一个电池图标
 
 private:
     DWidget *mainW;
@@ -56,6 +58,7 @@ private:
     QThread *flashThread;
     DPushButton *flashBtn;
     DComboBox *deviceBox;
+    QSystemTrayIcon *sysIcon;                   //托盘图标
 };
 
 #endif

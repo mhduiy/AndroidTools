@@ -31,6 +31,12 @@ void MainWindow::initUI()
     this->titlebar()->addWidget(deviceBox, Qt::AlignRight);
     this->titlebar()->addWidget(flashBtn, Qt::AlignRight);
 
+    //设置托盘图标
+    sysIcon = new QSystemTrayIcon(this);
+    sysIcon->setToolTip("Android-Tools：当前未连接到任何设备");
+    this->paintBtyIcon(100);
+    sysIcon->show();
+
     //设置功能区域的项目
     model = new QStandardItemModel;
     model->appendRow(new DStandardItem("信息面板"));
@@ -81,6 +87,10 @@ void MainWindow::initUI()
     flashThread->start();
     connect(&timer, &QTimer::timeout, updateThreadTool, &UpdateThread::FlashPGInfo);
     connect(updateThreadTool, &UpdateThread::readDeviceInfoFinish, infoPannelWidget, &InfoPannelWidget::setInfoToRealTimePG);
+    connect(updateThreadTool, &UpdateThread::readDeviceInfoFinish, this, [this](MHDUIY::deviceRealTimeInfo *info){
+        this->paintBtyIcon(info->valueInfo[MHDUIY::deviceRealTimeInfo::BatteryLevel]);
+        this->sysIcon->setToolTip(QString("当前设备电量：%1%").arg(info->valueInfo[MHDUIY::deviceRealTimeInfo::BatteryLevel]));
+    });
 
     //寻找新设备
     connect(flashBtn, &DPushButton::clicked, [this](){
@@ -103,6 +113,7 @@ void MainWindow::initUI()
         this->deviceBox->setCurrentIndex(0);
         timer.start(1000);  //开启刷新信息的定时器
     });
+
     //选择了其他设备
     connect(deviceBox, QOverload<int>::of(&QComboBox::activated),[this](int index){
         DeviceConnect::getInstance()->setCurrentDevice(index);  //设置新设备
@@ -132,4 +143,53 @@ void MainWindow::noticeMsg(const QString &msg)
     this->sendMessage(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning), msg);
 }
 
-// 前端调用，
+void MainWindow::paintBtyIcon(int level)
+{
+    static int l = -1;
+    if(l == level) {//防止重复绘制
+        return;
+    }
+    //创建一个QImage对象，作为绘图的画布
+    QImage image(16, 16, QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+    QPainter painter(&image);
+    //打开抗锯齿
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    painter.setPen(Qt::white);
+    //绘制外层矩形
+    painter.drawRoundedRect(1,3,14,10,1,1);
+    painter.setPen(Qt::NoPen);
+    //绘制内层矩形
+    if(level <= 0) {
+        painter.setBrush(Qt::red);
+        painter.drawRoundedRect(2,4,12,8,1,1);
+    }
+    else if (level < 20){
+        painter.setBrush(Qt::red);
+        painter.drawRoundedRect(2,4,2,8,1,1);
+    }
+    else if (level < 40){
+        painter.setBrush(Qt::yellow);
+        painter.drawRoundedRect(2,4,4,8,1,1);
+    }
+    else if (level < 60){
+        painter.setBrush(Qt::yellow);
+        painter.drawRoundedRect(2,4,6,8,1,1);
+    }
+    else if (level < 80){
+        painter.setBrush(Qt::green);
+        painter.drawRoundedRect(2,4,8,8,1,1);
+    }
+    else if (level < 100){
+        painter.setBrush(Qt::green);
+        painter.drawRoundedRect(2,4,10,8,1,1);
+    }
+    else if (level >= 100){
+        painter.setBrush(Qt::blue);
+        painter.drawRoundedRect(2,4,12,8,1,1);
+    }
+
+    // 将QImage对象转换为QIcon对象，并设置为托盘图标
+    sysIcon->setIcon(QIcon(QPixmap::fromImage(image).scaled(16, 16, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
+    l = level;
+}
