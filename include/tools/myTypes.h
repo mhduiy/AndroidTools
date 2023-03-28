@@ -53,6 +53,52 @@ namespace MHDUIY {
         inline deviceBaceInfo():info(TOTAL){}
     };
 
+    //按键模拟
+    struct keySimulationInfo {
+        static QStringList OUTSTR;
+        static QStringList CMDSTR;
+        enum {
+            MYRETURN = 0,       //返回
+            HOME,               //HOME
+            MENU,               //菜单
+            POWER,              //电源
+            inBrightness,       //增加亮度
+            deBrightness,       //减小亮度
+            inVolume,           //增加音量
+            deVolume,           //减小音量
+            TOTAL
+        };
+        inline keySimulationInfo(){}
+    };
+
+    //高级重启
+    struct advancedRestartInfo {
+        static QStringList OUTSTR;
+        static QStringList CMDSTR;
+        enum {
+            POWEROFF = 0,       //关机
+            REBOOT,             //重启
+            REBOOTTOREC,        //重启到REC
+            REBOOTTOFAST,       //重启到FASTBOOT
+            TOTAL
+        };
+        inline advancedRestartInfo(){}
+    };
+
+    //媒体控制
+    struct mediaControlInfo {
+        static QStringList OUTSTR;
+        static QStringList CMDSTR;
+        enum {
+            PLAY = 0,           //播放
+            STOP,               //停止
+            Previous,           //上一首
+            Next,               //下一首
+            TOTAL
+        };
+        inline mediaControlInfo(){}
+    };
+
     QMap<QString, QString> serializationInformation(QString &info);
 }
 

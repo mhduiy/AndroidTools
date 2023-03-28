@@ -27,6 +27,56 @@ QStringList deviceBaceInfo::OUTSTR {
     "设备代码"
 };
 
+QStringList keySimulationInfo::OUTSTR {
+    "返回",
+    "HOME",
+    "菜单",
+    "电源",
+    "增加亮度",
+    "减小亮度",
+    "增加音量",
+    "减小音量"
+};
+
+QStringList keySimulationInfo::CMDSTR {
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+};
+
+QStringList advancedRestartInfo::OUTSTR {
+    "关机",
+    "重启",
+    "重启到Recovery",
+    "重启到FastBoot"
+};
+
+QStringList advancedRestartInfo::CMDSTR {
+    "",
+    "",
+    "",
+    ""
+};
+
+QStringList mediaControlInfo::OUTSTR {
+    "播放/暂停",
+    "停止",
+    "下一首",
+    "下一首"
+};
+
+QStringList mediaControlInfo::CMDSTR {
+    "",
+    "",
+    "",
+    ""
+};
+
 QMap<QString, QString> MHDUIY::serializationInformation(QString &info)
 {
     QMap<QString, QString> res;
