@@ -39,14 +39,14 @@ QStringList keySimulationInfo::OUTSTR {
 };
 
 QStringList keySimulationInfo::CMDSTR {
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
+    "adb -s %1 shell input keyevent 4",
+    "adb -s %1 shell input keyevent 3",
+    "adb -s %1 shell input keyevent 82",
+    "adb -s %1 shell input keyevent 26",
+    "adb -s %1 shell input keyevent 221",
+    "adb -s %1 shell input keyevent 220",
+    "adb -s %1 shell input keyevent 24",
+    "adb -s %1 shell input keyevent 25"
 };
 
 QStringList advancedRestartInfo::OUTSTR {
@@ -57,10 +57,10 @@ QStringList advancedRestartInfo::OUTSTR {
 };
 
 QStringList advancedRestartInfo::CMDSTR {
-    "",
-    "",
-    "",
-    ""
+    "adb -s %1 shutdown",
+    "adb -s %1 reboot",
+    "adb -s %1 reboot recovery",
+    "adb -s %1 reboot bootloader"
 };
 
 QStringList mediaControlInfo::OUTSTR {
@@ -71,10 +71,10 @@ QStringList mediaControlInfo::OUTSTR {
 };
 
 QStringList mediaControlInfo::CMDSTR {
-    "",
-    "",
-    "",
-    ""
+    "adb -s %1 shell input keyevent 85",
+    "adb -s %1 shell input keyevent 86",
+    "adb -s %1 shell input keyevent 88",
+    "adb -s %1 shell input keyevent 87"
 };
 
 QMap<QString, QString> MHDUIY::serializationInformation(QString &info)

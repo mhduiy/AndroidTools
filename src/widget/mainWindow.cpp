@@ -116,6 +116,8 @@ void MainWindow::initUI()
         this->mainStackedWidget->setCurrentIndex(index.row());
     });
 
+    connect(deviceControlWidget, &DeviceControlWidget::sendMsgToMainWindow, this, &MainWindow::noticeMsg);
+
     emit flashBtn->clicked();   //启动时自动触发一次刷新设备
 
 }
@@ -123,6 +125,11 @@ void MainWindow::initUI()
 void MainWindow::myCmd(QString cmd)
 {
 
+}
+
+void MainWindow::noticeMsg(const QString &msg)
+{
+    this->sendMessage(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning), msg);
 }
 
 // 前端调用，

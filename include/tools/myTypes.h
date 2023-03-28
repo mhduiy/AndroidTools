@@ -6,6 +6,12 @@
 #include <QMap>
 
 namespace MHDUIY {
+    enum class deviceControlCode {
+        KeySimulation,
+        AdvancedReBoot,
+        MediaControl
+    };
+
     //设备实时更新的信息
     struct deviceRealTimeInfo {
         static QStringList OUTSTR;

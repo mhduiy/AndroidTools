@@ -2,6 +2,7 @@
 #include <DGroupBox>
 #include <QLayout>
 #include <QDebug>
+#include "deviceConnect.h"
 
 DeviceControlWidget::DeviceControlWidget(QWidget *parent) : DWidget(parent)
 {
@@ -20,6 +21,9 @@ void DeviceControlWidget::initUI()
     QVBoxLayout *leftKeyLayout = new QVBoxLayout();
     QVBoxLayout *rightContorlLayout = new QVBoxLayout();
 
+    /* test */
+    rightContorlLayout->addWidget(new DPushButton("占位"));
+
     DGroupBox *keySimulationBox = new DGroupBox();
     DGroupBox *advancedRestartBox = new DGroupBox();
     DGroupBox *mediaControlBox = new DGroupBox();
@@ -36,15 +40,18 @@ void DeviceControlWidget::initUI()
     advancedRestartBox->setTitle("高级重启");
     mediaControlBox->setTitle("媒体控制");
 
+    //添加按钮，设置按钮响应
     for(int i = 0; i < MHDUIY::keySimulationInfo::TOTAL; i++) {
         static int j = 0;
         DPushButton *btn = new DPushButton(MHDUIY::keySimulationInfo::OUTSTR[i]);
         if(i != 0 && i % 4 == 0) {
             j++;
         }
-        qDebug() << i % 4 << j;
         keySimulationLayout->addWidget(btn, j, i % 4);
         keySimulationBtns.push_back(btn);
+        connect(btn, &DPushButton::clicked, this, [this, i](){
+            this->responseBtn(MHDUIY::deviceControlCode::KeySimulation, i);
+        });
     }
 
     for(int i = 0; i < MHDUIY::advancedRestartInfo::TOTAL; i++) {
@@ -55,6 +62,9 @@ void DeviceControlWidget::initUI()
         }
         advancedRestartLayout->addWidget(btn, j, i % 2);
         advancedRestartBtns.push_back(btn);
+        connect(btn, &DPushButton::clicked, this, [this, i](){
+            this->responseBtn(MHDUIY::deviceControlCode::AdvancedReBoot, i);
+        });
     }
 
     for(int i = 0; i < MHDUIY::mediaControlInfo::TOTAL; i++) {
@@ -65,6 +75,9 @@ void DeviceControlWidget::initUI()
         }
         mediaControlLayout->addWidget(btn, j, i % 2);
         mediaControlBtns.push_back(btn);
+        connect(btn, &DPushButton::clicked, this, [this, i](){
+            this->responseBtn(MHDUIY::deviceControlCode::MediaControl, i);
+        });
     }
 
     leftKeyLayout->addWidget(keySimulationBox);
@@ -73,5 +86,27 @@ void DeviceControlWidget::initUI()
     mainLayout->addLayout(leftKeyLayout);
     mainLayout->addLayout(rightContorlLayout);
     this->setLayout(mainLayout);
-    qDebug() << "test";
+}
+
+void DeviceControlWidget::responseBtn(MHDUIY::deviceControlCode code, int i)
+{
+    QString currentDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
+    if(currentDevice.isEmpty()) {
+        emit sendMsgToMainWindow("没有连接任何设备");
+        return;
+    }
+    switch (code) {
+        case MHDUIY::deviceControlCode::KeySimulation:
+            tool.executeCommand(MHDUIY::keySimulationInfo::CMDSTR[i]
+                                .arg(currentDevice));
+            break;
+        case MHDUIY::deviceControlCode::AdvancedReBoot:
+            tool.executeCommand(MHDUIY::advancedRestartInfo::CMDSTR[i]
+                                .arg(currentDevice));
+            break;
+        case MHDUIY::deviceControlCode::MediaControl:
+            tool.executeCommand(MHDUIY::mediaControlInfo::CMDSTR[i]
+                                .arg(currentDevice));
+            break;
+    }
 }

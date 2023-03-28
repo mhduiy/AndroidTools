@@ -77,6 +77,9 @@ void DeviceConnect::setCurrentDevice(int index)
 
 QString DeviceConnect::getCurrentDeviceCode()
 {
+    if(nullptr == this->currentDevice) {
+        return "";
+    }
     return this->currentDevice->info[MHDUIY::deviceBaceInfo::DeviceCodeName];
 }
 

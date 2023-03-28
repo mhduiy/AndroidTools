@@ -35,6 +35,8 @@ public:
     void myCmd(QString cmd);
     QString getCurrentDeviceCode();
 
+    void noticeMsg(const QString &msg); //发出提示消息
+
 private:
     DWidget *mainW;
 
