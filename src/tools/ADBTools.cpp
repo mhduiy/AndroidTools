@@ -16,7 +16,7 @@ QString ADBTools::executeCommand(const QString &cmd)
 {
     QProcess pro;
     pro.start(cmd);
-    pro.waitForFinished(3000);
+    pro.waitForFinished(5000);
     QString ret = pro.readAllStandardOutput();
     if(ret.isEmpty()) {
         ret = pro.readAllStandardError();

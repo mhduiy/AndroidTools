@@ -66,7 +66,7 @@ QStringList advancedRestartInfo::CMDSTR {
 QStringList mediaControlInfo::OUTSTR {
     "播放/暂停",
     "停止",
-    "下一首",
+    "上一首",
     "下一首"
 };
 
