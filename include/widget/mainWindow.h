@@ -23,6 +23,7 @@
 #include "flashToolWidget.h"
 #include "deviceImageWidget.h"
 #include "terminalWidget.h"
+#include "wirelessConnectWidget.h"
 
 
 DWIDGET_USE_NAMESPACE
@@ -50,6 +51,8 @@ private:
     DeviceImageWidget *deviceImageWidget;       //设备镜像
     TerminalWidget *terminalWidget;             //终端
 
+    WirelessConnectWidget *wirelessConWidget;   //无线连接界面
+
     DStackedWidget *mainStackedWidget;
     DListView *funcView;
     QStandardItemModel *model;
@@ -57,6 +60,7 @@ private:
     UpdateThread *updateThreadTool;
     QThread *flashThread;
     DPushButton *flashBtn;
+    DPushButton *wirelessBtn;
     DComboBox *deviceBox;
     QSystemTrayIcon *sysIcon;                   //托盘图标
 };

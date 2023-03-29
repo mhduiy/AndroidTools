@@ -1,4 +1,4 @@
-#include "mainWindow.h"
+﻿#include "mainWindow.h"
 #include <DTitlebar>
 #include <QLayout>
 #include "deviceDetailTool.h"
@@ -24,12 +24,17 @@ void MainWindow::initUI()
     //标题栏
     deviceBox = new DComboBox();
     flashBtn = new DPushButton("刷新");
+    wirelessBtn = new DPushButton("无线连接");
 
     flashBtn->setFixedWidth(50);
+    wirelessBtn->setFixedWidth(80);
     deviceBox->setFixedWidth(150);
 
     this->titlebar()->addWidget(deviceBox, Qt::AlignRight);
     this->titlebar()->addWidget(flashBtn, Qt::AlignRight);
+    this->titlebar()->addWidget(wirelessBtn, Qt::AlignRight);
+
+    wirelessConWidget = new WirelessConnectWidget(this);
 
     //设置托盘图标
     sysIcon = new QSystemTrayIcon(this);
@@ -128,6 +133,11 @@ void MainWindow::initUI()
     });
 
     connect(deviceControlWidget, &DeviceControlWidget::sendMsgToMainWindow, this, &MainWindow::noticeMsg);
+
+    //无线连接按钮
+    connect(wirelessBtn, &DPushButton::clicked, this, [this](){
+        this->wirelessConWidget->show();
+    });
 
     emit flashBtn->clicked();   //启动时自动触发一次刷新设备
 
