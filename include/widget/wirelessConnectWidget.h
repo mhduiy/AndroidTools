@@ -9,6 +9,7 @@
 #include <DLabel>
 #include <DIpv4LineEdit>
 #include <DLineEdit>
+#include "ADBTools.h"
 
 
 DWIDGET_USE_NAMESPACE
@@ -17,26 +18,40 @@ class WirelessConnectWidget : public QDialog {
     Q_OBJECT
 public:
     explicit WirelessConnectWidget(QWidget *parent = nullptr);
-    ~WirelessConnectWidget();
+    ~WirelessConnectWidget()override;
     void initUI();
+    int exec()override;
+    void startPair();
+    void startConnect();
+    void CheckConnect();
 
 private:
     enum {PrepareW = 0, PairW, ConnectW, CheckW, TOTALW};   //界面枚举定义
-    DStackedWidget *mainW;          //主界面
+    DStackedWidget *mainW = nullptr;          //主界面
     QVector<DWidget*> itemW;        //小界面
     /*准备界面*/
-    DTextEdit *preEdit;
-    DPushButton *enterPairBtn;
-    DPushButton *enterConnectBtn;
+    DTextEdit *preEdit = nullptr;
+    DPushButton *enterPairBtn = nullptr;
+    DPushButton *enterConnectBtn = nullptr;
     /*配对界面*/
-    DTextEdit *pairEdit;
-    DIpv4LineEdit *ipEdit;
-    DLineEdit *pairCodeEdit;
-    DPushButton *pairBtn;
-    DPushButton *returnBtn;
+    DTextEdit *pairEdit = nullptr;
+    DLineEdit *pairIpEdit = nullptr;
+    DLineEdit *pairPortEdit = nullptr;
+    DLineEdit *pairCodeEdit = nullptr;
+    DPushButton *pairBtn = nullptr;
+    DPushButton *pairReturnBtn = nullptr;
     /*连接界面*/
-
+    DTextEdit *conEdit = nullptr;
+    DLineEdit *conIpEdit = nullptr;
+    DLineEdit *conPortEdit = nullptr;
+    DPushButton *conReturnbtn = nullptr;
+    DPushButton *conBtn = nullptr;
     /*检查界面*/
+    QLabel *connectStatus = nullptr;
+    bool connectSuccess = false;
+    DPushButton *funcBtn = nullptr;
+
+    ADBTools adbTool;
 };
 
 

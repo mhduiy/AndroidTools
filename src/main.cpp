@@ -11,6 +11,8 @@ int main(int argc, char *argv[]) {
 
     a.setApplicationName("Android Tools");
     a.setApplicationVersion("1.0");
+    a.setAttribute(Qt::AA_UseHighDpiPixmaps);
+    a.loadTranslator(QList<QLocale>() << QLocale::system());
 
     //开启Debug调试
     QLoggingCategory::defaultCategory()->setEnabled(QtDebugMsg, true);

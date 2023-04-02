@@ -16,6 +16,7 @@ public:
     ~ADBTools();
 
     QString executeCommand(const QString &cmd);
+    bool pairDevice(const QString& ip, const QString& pairCode);
 
 signals:
 

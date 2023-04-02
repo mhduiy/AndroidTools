@@ -34,7 +34,7 @@ void MainWindow::initUI()
     this->titlebar()->addWidget(flashBtn, Qt::AlignRight);
     this->titlebar()->addWidget(wirelessBtn, Qt::AlignRight);
 
-    wirelessConWidget = new WirelessConnectWidget(this);
+    wirelessConWidget = new WirelessConnectWidget();
 
     //设置托盘图标
     sysIcon = new QSystemTrayIcon(this);
@@ -136,7 +136,11 @@ void MainWindow::initUI()
 
     //无线连接按钮
     connect(wirelessBtn, &DPushButton::clicked, this, [this](){
-        this->wirelessConWidget->show();
+        int ret = this->wirelessConWidget->exec();
+        if(ret == 0) {
+            return;
+        }
+        emit flashBtn->clicked();
     });
 
     emit flashBtn->clicked();   //启动时自动触发一次刷新设备

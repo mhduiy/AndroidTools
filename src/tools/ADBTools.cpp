@@ -29,3 +29,19 @@ QString ADBTools::executeCommand(const QString &cmd)
     }
     return ret;
 }
+
+bool ADBTools::pairDevice(const QString &ip, const QString &pairCode)
+{
+    QString command = QString("echo %1 | %2 pair %3").arg(pairCode).arg(ADBPATH).arg(ip);
+    FILE *fp = popen(command.toLocal8Bit(), "r");
+    QTextStream stream(fp);
+    QString ret = stream.readAll();
+    qDebug() << ret;
+    if(ret.contains(" Failed: ")) { //配对失败
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
