@@ -164,46 +164,49 @@ void MainWindow::paintBtyIcon(int level)
         return;
     }
     //创建一个QImage对象，作为绘图的画布
-    QImage image(16, 16, QImage::Format_ARGB32);
+    QImage image(32, 32, QImage::Format_ARGB32);
     image.fill(Qt::transparent);
     QPainter painter(&image);
     //打开抗锯齿
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-    painter.setPen(Qt::white);
+    painter.setRenderHints(QPainter::Antialiasing);
+    QPen pen = painter.pen();
+    pen.setWidth(2);
+    pen.setColor(Qt::white);
+    painter.setPen(pen);
     //绘制外层矩形
-    painter.drawRoundedRect(1,3,14,10,1,1);
+    painter.drawRoundedRect(1,5,30,20,4,4);
     painter.setPen(Qt::NoPen);
     //绘制内层矩形
     if(level <= 0) {
         painter.setBrush(Qt::red);
-        painter.drawRoundedRect(2,4,12,8,1,1);
+        painter.drawRoundedRect(4,8,25,14,1,1);
     }
     else if (level < 20){
         painter.setBrush(Qt::red);
-        painter.drawRoundedRect(2,4,2,8,1,1);
+        painter.drawRoundedRect(4,8,4,14,1,1);
     }
     else if (level < 40){
         painter.setBrush(Qt::yellow);
-        painter.drawRoundedRect(2,4,4,8,1,1);
+        painter.drawRoundedRect(4,8,8,14,1,1);
     }
     else if (level < 60){
         painter.setBrush(Qt::yellow);
-        painter.drawRoundedRect(2,4,6,8,1,1);
+        painter.drawRoundedRect(4,8,12,14,1,1);
     }
     else if (level < 80){
         painter.setBrush(Qt::green);
-        painter.drawRoundedRect(2,4,8,8,1,1);
+        painter.drawRoundedRect(4,8,16,14,1,1);
     }
     else if (level < 100){
         painter.setBrush(Qt::green);
-        painter.drawRoundedRect(2,4,10,8,1,1);
+        painter.drawRoundedRect(4,8,20,14,1,1);
     }
     else if (level >= 100){
         painter.setBrush(Qt::blue);
-        painter.drawRoundedRect(2,4,12,8,1,1);
+        painter.drawRoundedRect(4,8,25,14,1,1);
     }
 
     // 将QImage对象转换为QIcon对象，并设置为托盘图标
-    sysIcon->setIcon(QIcon(QPixmap::fromImage(image).scaled(16, 16, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
+    sysIcon->setIcon(QIcon(QPixmap::fromImage(image).scaled(32, 32, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
     l = level;
 }
