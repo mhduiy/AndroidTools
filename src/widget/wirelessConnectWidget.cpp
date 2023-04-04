@@ -34,7 +34,7 @@ void WirelessConnectWidget::initUI()
 
     /*准备界面*/
     preEdit = new DTextEdit();
-    enterPairBtn = new DPushButton("配对设备");
+    enterPairBtn = new DSuggestButton("配对设备");
     enterConnectBtn = new DSuggestButton("连接设备");
     preEdit->setReadOnly(true);
     preEdit->append("进行无线连接操作之前，需要保证待连接设备满足以下条件：\n");
@@ -43,6 +43,7 @@ void WirelessConnectWidget::initUI()
     preEdit->append("3. PC与待连接设备处于同一局域网中\n\n");
     preEdit->append("若设备没有与电脑连接过或者还未配对该电脑，请选择 '配对设备' 按钮\n");
     preEdit->append("若已经完成配对，请选择 '连接设备' 按钮");
+
 
     QVBoxLayout *preLayout = new QVBoxLayout();
     preLayout->addWidget(preEdit);
@@ -169,10 +170,16 @@ void WirelessConnectWidget::startPair()
 
     bool isPairSuccess = adbTool.pairDevice(ip + ":" + port, pairCode);
     if(!isPairSuccess) {
-        DMessageBox::information(this, "提示", "配对失败，请检查信息是否填写正确");
+        DDialog dlg("提示", "配对失败，请检查信息是否填写正确");
+        dlg.addButton("好的", true, DDialog::ButtonRecommend);
+        dlg.setIcon(QIcon::fromTheme("dialog-information"));
+        dlg.exec();
         return;
     }
-    DMessageBox::information(this, "提示", "配对成功");
+    DDialog dlg("提示", "配对成功");
+    dlg.addButton("好的", true, DDialog::ButtonRecommend);
+    dlg.setIcon(QIcon::fromTheme("dialog-information"));
+    dlg.exec();
     mainW->setCurrentIndex(PrepareW);
 }
 
@@ -193,10 +200,16 @@ void WirelessConnectWidget::startConnect()
     command = command.arg(ip).arg(port);
     QString&& ret = adbTool.executeCommand(command);
     if(!ret.startsWith("connected to")) {
-        DMessageBox::information(this, "提示", "连接失败，请检查信息是否填写正确");
+        DDialog dlg("提示", "连接失败，请检查信息是否填写正确");
+        dlg.addButton("好的", true, DDialog::ButtonRecommend);
+        dlg.setIcon(QIcon::fromTheme("dialog-information"));
+        dlg.exec();
         return;
     }
-    DMessageBox::information(this, "提示", "连接成功");
+    DDialog dlg("提示", "连接成功");
+    dlg.addButton("好的", true, DDialog::ButtonRecommend);
+    dlg.setIcon(QIcon::fromTheme("dialog-information"));
+    dlg.exec();
     mainW->setCurrentIndex(CheckW);
     CheckConnect();
 }
@@ -205,7 +218,7 @@ void WirelessConnectWidget::CheckConnect()
 {
     QString ip = conIpEdit->text();
     QString port = conPortEdit->text();
-    QString command = "adb -s  %1:%2 shell echo suc";
+    QString command = "adb -s %1:%2 shell echo suc";
     command = command.arg(ip).arg(port);
     QString&& ret = adbTool.executeCommand(command);
     ret = ret.simplified();

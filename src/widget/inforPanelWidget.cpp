@@ -19,13 +19,6 @@ void InfoPannelWidget::initUI()
     QHBoxLayout *headLayout = new QHBoxLayout();
 
     deviceName = new DLabel("Android Tools");
-//    deviceBox = new DComboBox();
-//    flashBtn = new DPushButton("刷新设备");
-//    flashBtn->setFixedWidth(80);
-//    deviceBox->setFixedWidth(150);
-
-//    deviceBox->addItem("test1");
-//    deviceBox->addItem("test2");
 
     headLayout->addWidget(deviceName);
 //    headLayout->addWidget(flashBtn);
@@ -77,10 +70,15 @@ void InfoPannelWidget::initUI()
     }
 //    deviceInfo->setColumnWidth(1, int(deviceInfo->width() * 0.7));
 
+    DFrame *frame = new DFrame();
+    frame->setFrameRounded(true);
+    QVBoxLayout *frameLayout = new QVBoxLayout();
+    frame->setLayout(frameLayout);
+    frameLayout->addWidget(deviceInfoTable);
 
     mainLayout->addLayout(headLayout);
     mainLayout->addLayout(pgLayout);
-    mainLayout->addWidget(deviceInfoTable);
+    mainLayout->addWidget(frame);
 
     this->setLayout(mainLayout);
 

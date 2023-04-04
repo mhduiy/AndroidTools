@@ -23,8 +23,10 @@ include_directories(${CMAKE_SOURCE_DIR}/include/widget)
 include_directories(${CMAKE_SOURCE_DIR}/include/tools)
 include_directories(${CMAKE_SOURCE_DIR}/include/Thread)
 
+set(RES_LIST ${CMAKE_SOURCE_DIR}/res/myres.qrc)
+
 add_executable(${PROJECT_NAME}
-        ${SRC} ${HEAD})
+        ${SRC} ${HEAD} ${RES_LIST})
 
 target_link_libraries(AndroidTools PRIVATE
     Qt5::Widgets

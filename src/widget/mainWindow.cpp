@@ -2,6 +2,7 @@
 #include <DTitlebar>
 #include <QLayout>
 #include "deviceDetailTool.h"
+#include <DSuggestButton>
 
 MainWindow::MainWindow(QWidget *parent) : DMainWindow (parent)
 {
@@ -23,16 +24,19 @@ void MainWindow::initUI()
 
     //标题栏
     deviceBox = new DComboBox();
-    flashBtn = new DPushButton("刷新");
-    wirelessBtn = new DPushButton("无线连接");
+    flashBtn = new DIconButton();
+    wirelessBtn = new DSuggestButton("无线连接");
 
-    flashBtn->setFixedWidth(50);
+    flashBtn->setIcon(QIcon(":/Icon/Refresh.png"));
+
     wirelessBtn->setFixedWidth(80);
     deviceBox->setFixedWidth(150);
 
     this->titlebar()->addWidget(deviceBox, Qt::AlignRight);
     this->titlebar()->addWidget(flashBtn, Qt::AlignRight);
     this->titlebar()->addWidget(wirelessBtn, Qt::AlignRight);
+
+    this->titlebar()->setIcon(QIcon(":/Icon/appIcon.png"));
 
     wirelessConWidget = new WirelessConnectWidget();
 
@@ -52,6 +56,8 @@ void MainWindow::initUI()
     model->appendRow(new DStandardItem("设备镜像"));
     model->appendRow(new DStandardItem("终端"));
     funcView->setModel(model);
+//    setSidebarWidget(funcView);
+//    setSidebarWidth(200);
     //设置不可编辑
     funcView->setEditTriggers(QListView::EditTrigger::NoEditTriggers);
 

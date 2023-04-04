@@ -5,6 +5,7 @@
 #include <DPushButton>
 #include "myTypes.h"
 #include "ADBTools.h"
+#include "deviceControlItem.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -24,6 +25,16 @@ private:
     QVector<DPushButton*> keySimulationBtns;    //按键模拟按钮组
     QVector<DPushButton*> advancedRestartBtns;  //高级重启按钮组
     QVector<DPushButton*> mediaControlBtns;     //媒体控制按钮组
+
+    //dpi
+    DLineEdit *dpiEdit;
+    DLineEdit *resolutionEditw;
+    DLineEdit *resolutionEdith;
+    DPushButton *dpiResetBtn;
+    DPushButton *dpiSetBtn;
+
+    DeviceControlItem *dpiControl;
+
     ADBTools tool;
 };
 

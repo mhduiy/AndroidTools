@@ -59,7 +59,7 @@ private:
     QTimer timer;
     UpdateThread *updateThreadTool;
     QThread *flashThread;
-    DPushButton *flashBtn;
+    DIconButton *flashBtn;
     DPushButton *wirelessBtn;
     DComboBox *deviceBox;
     QSystemTrayIcon *sysIcon;                   //托盘图标

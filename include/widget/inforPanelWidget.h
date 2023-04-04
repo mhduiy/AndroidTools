@@ -16,6 +16,7 @@
 #include <DComboBox>
 #include "myTypes.h"
 #include <DPushButton>
+#include <DFrame>
 
 
 DWIDGET_USE_NAMESPACE

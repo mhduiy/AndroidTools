@@ -2,6 +2,8 @@
 #include <DGroupBox>
 #include <QLayout>
 #include <QDebug>
+#include <DLabel>
+#include <DSuggestButton>
 #include "deviceConnect.h"
 
 DeviceControlWidget::DeviceControlWidget(QWidget *parent) : DWidget(parent)
@@ -21,8 +23,8 @@ void DeviceControlWidget::initUI()
     QVBoxLayout *leftKeyLayout = new QVBoxLayout();
     QVBoxLayout *rightContorlLayout = new QVBoxLayout();
 
-    /* test */
-    rightContorlLayout->addWidget(new DPushButton("占位"));
+//    /* test */
+//    rightContorlLayout->addWidget(new DPushButton("占位"));
 
     DGroupBox *keySimulationBox = new DGroupBox();
     DGroupBox *advancedRestartBox = new DGroupBox();
@@ -80,11 +82,64 @@ void DeviceControlWidget::initUI()
         });
     }
 
+//    DGroupBox *dpiBox = new DGroupBox();
+//    QVBoxLayout *dpiBoxLayout = new QVBoxLayout(dpiBox);
+//    dpiBoxLayout->setAlignment(Qt::AlignTop);
+//    DLabel *l = new DLabel("修改设备的分辨率和DPI");
+//    QPalette pa = l->palette();
+//    pa.setColor(QPalette::WindowText, Qt::gray);
+//    l->setPalette(pa);
+//    dpiBoxLayout->addWidget(l);
+    /*dpi&分辨率设置*/
+    DWidget *dpiControlW  = new DWidget();
+    dpiControl = new DeviceControlItem(dpiControlW);
+    dpiControl->setTitle("DPI&分辨率");
+    dpiControl->setDescribe("设置dpi和分辨率可能会导致设备显示异常");
+    QVBoxLayout *dpiLayout = new QVBoxLayout(dpiControlW);
+
+    QHBoxLayout *dpiEdLayout = new QHBoxLayout();
+    dpiEdit = new DLineEdit();
+    dpiEdLayout->addWidget(new DLabel("DPI: "));
+    dpiEdLayout->addWidget(dpiEdit);
+
+    QHBoxLayout *resuEdLayout = new QHBoxLayout();
+    resolutionEditw = new DLineEdit();
+    resolutionEdith = new DLineEdit();
+
+    resolutionEditw->setFixedWidth(100);
+    resolutionEdith->setFixedWidth(100);
+    dpiEdit->setFixedWidth(100);
+
+    DLabel *resolutionChat = new DLabel("x");
+    resolutionChat->setFixedWidth(10);
+    resolutionChat->setAlignment(Qt::AlignCenter);
+
+    QHBoxLayout *resolutionLineEditLayout = new QHBoxLayout();
+    resolutionLineEditLayout->addWidget(resolutionEditw);
+    resolutionLineEditLayout->addWidget(resolutionChat);
+    resolutionLineEditLayout->addWidget(resolutionEdith);
+
+    resuEdLayout->addWidget(new DLabel("分辨率: "));
+    resuEdLayout->addLayout(resolutionLineEditLayout, Qt::AlignRight);
+
+    QHBoxLayout *dpiBtnLayout = new QHBoxLayout();
+    dpiResetBtn = new DPushButton("恢复");
+    dpiSetBtn = new DSuggestButton("设置");
+    dpiBtnLayout->addWidget(dpiResetBtn);
+    dpiBtnLayout->addWidget(dpiSetBtn);
+
+    dpiLayout->addLayout(dpiEdLayout);
+    dpiLayout->addLayout(resuEdLayout);
+    dpiLayout->addLayout(dpiBtnLayout);
+
     leftKeyLayout->addWidget(keySimulationBox);
     leftKeyLayout->addWidget(advancedRestartBox);
     leftKeyLayout->addWidget(mediaControlBox);
+    rightContorlLayout->addWidget(dpiControl);
     mainLayout->addLayout(leftKeyLayout);
     mainLayout->addLayout(rightContorlLayout);
+    mainLayout->setStretch(0,2);
+    mainLayout->setStretch(1,1);
     this->setLayout(mainLayout);
 }
 
