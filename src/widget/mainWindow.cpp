@@ -38,7 +38,7 @@ void MainWindow::initUI()
 
     this->titlebar()->setIcon(QIcon(":/Icon/appIcon.png"));
 
-    wirelessConWidget = new WirelessConnectWidget();
+    wirelessConWidget = new WirelessConnectWidget(this);
 
     //设置托盘图标
     sysIcon = new QSystemTrayIcon(this);

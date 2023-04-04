@@ -25,6 +25,7 @@ void DeviceControlWidget::initUI()
 
 //    /* test */
 //    rightContorlLayout->addWidget(new DPushButton("占位"));
+    rightContorlLayout->setAlignment(Qt::AlignTop);
 
     DGroupBox *keySimulationBox = new DGroupBox();
     DGroupBox *advancedRestartBox = new DGroupBox();
@@ -131,11 +132,47 @@ void DeviceControlWidget::initUI()
     dpiLayout->addLayout(dpiEdLayout);
     dpiLayout->addLayout(resuEdLayout);
     dpiLayout->addLayout(dpiBtnLayout);
+    /*输入文本*/
+    DWidget *inputW = new DWidget();
+    inputControl = new DeviceControlItem(inputW);
+    inputControl->setTitle("文本输入");
+    inputControl->setDescribe("在焦点处于某文本框时，可以控制输入文本");
+
+    QVBoxLayout *inputLayout = new QVBoxLayout(inputW);
+    QHBoxLayout *inputEdLayout = new QHBoxLayout();
+    inputEdit = new DLineEdit();
+    inputEdLayout->addWidget(new DLabel("文本: "));
+    inputEdLayout->addWidget(inputEdit);
+    inputBtn = new DSuggestButton("发送");
+
+    inputLayout->addLayout(inputEdLayout);
+    inputLayout->addWidget(inputBtn);
+    /*执行脚本*/
+    DWidget *scriptW = new DWidget();
+    scriptControl = new DeviceControlItem(scriptW);
+    scriptControl->setTitle("执行脚本");
+    scriptControl->setDescribe("选择一个脚本，发送到设备执行");
+
+    QVBoxLayout *scriptLayout = new QVBoxLayout(scriptW);
+    QHBoxLayout *scriptEdLayout = new QHBoxLayout();
+    scriptEdit = new DLineEdit();
+    scriptSelectBtn = new DSuggestButton("选择");
+    scriptBtn = new DSuggestButton("执行");
+
+    scriptEdLayout->addWidget(new DLabel("脚本路径"));
+    scriptEdLayout->addWidget(scriptEdit);
+    scriptEdLayout->addWidget(scriptSelectBtn);
+
+    scriptLayout->addLayout(scriptEdLayout);
+    scriptLayout->addWidget(scriptBtn);
+
 
     leftKeyLayout->addWidget(keySimulationBox);
     leftKeyLayout->addWidget(advancedRestartBox);
     leftKeyLayout->addWidget(mediaControlBox);
     rightContorlLayout->addWidget(dpiControl);
+    rightContorlLayout->addWidget(inputControl);
+    rightContorlLayout->addWidget(scriptControl);
     mainLayout->addLayout(leftKeyLayout);
     mainLayout->addLayout(rightContorlLayout);
     mainLayout->setStretch(0,2);

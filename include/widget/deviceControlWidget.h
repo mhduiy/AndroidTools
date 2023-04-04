@@ -27,13 +27,22 @@ private:
     QVector<DPushButton*> mediaControlBtns;     //媒体控制按钮组
 
     //dpi
+    DeviceControlItem *dpiControl;
     DLineEdit *dpiEdit;
     DLineEdit *resolutionEditw;
     DLineEdit *resolutionEdith;
     DPushButton *dpiResetBtn;
     DPushButton *dpiSetBtn;
+    //输入文本
+    DeviceControlItem *inputControl;
+    DLineEdit *inputEdit;
+    DPushButton *inputBtn;
+    //执行脚本
+    DeviceControlItem *scriptControl;
+    DLineEdit *scriptEdit;
+    DPushButton *scriptSelectBtn;
+    DPushButton *scriptBtn;
 
-    DeviceControlItem *dpiControl;
 
     ADBTools tool;
 };
