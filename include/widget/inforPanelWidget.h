@@ -31,6 +31,7 @@ public:
     void setInfoToDetialsTable(MHDUIY::deviceDetailsInfo *info);
 signals:
     void flashDevice();
+    void sendMsgToMainWindow(const QString &msg);
 
 private:
     DLabel *deviceName;

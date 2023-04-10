@@ -2,7 +2,7 @@
 
 FlashToolWidget::FlashToolWidget(QWidget *parent) : DWidget (parent)
 {
-
+    initUI();
 }
 
 FlashToolWidget::~FlashToolWidget()

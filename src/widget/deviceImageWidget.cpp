@@ -2,7 +2,7 @@
 
 DeviceImageWidget::DeviceImageWidget(QWidget *parent) : DWidget (parent)
 {
-
+    initUI();
 }
 
 DeviceImageWidget::~DeviceImageWidget()

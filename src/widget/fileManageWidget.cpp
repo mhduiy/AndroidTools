@@ -2,7 +2,7 @@
 
 FileManageWidget::FileManageWidget(QWidget *parent) : DWidget (parent)
 {
-
+    initUI();
 }
 
 FileManageWidget::~FileManageWidget()

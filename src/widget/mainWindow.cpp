@@ -138,7 +138,14 @@ void MainWindow::initUI()
         this->mainStackedWidget->setCurrentIndex(index.row());
     });
 
+    //子界面提示信息发送到主界面显示
+    connect(infoPannelWidget, &InfoPannelWidget::sendMsgToMainWindow, this, &MainWindow::noticeMsg);
     connect(deviceControlWidget, &DeviceControlWidget::sendMsgToMainWindow, this, &MainWindow::noticeMsg);
+    connect(softwareManageWidget, &SoftwareManageWidget::sendMsgToMainWindow, this, &MainWindow::noticeMsg);
+    connect(fileManageWidget, &FileManageWidget::sendMsgToMainWindow, this, &MainWindow::noticeMsg);
+    connect(flashToolWidget, &FlashToolWidget::sendMsgToMainWindow, this, &MainWindow::noticeMsg);
+    connect(deviceImageWidget, &DeviceImageWidget::sendMsgToMainWindow, this, &MainWindow::noticeMsg);
+    connect(terminalWidget, &TerminalWidget::sendMsgToMainWindow, this, &MainWindow::noticeMsg);
 
     //无线连接按钮
     connect(wirelessBtn, &DPushButton::clicked, this, [this](){

@@ -2,7 +2,7 @@
 
 TerminalWidget::TerminalWidget(QWidget *parent) : DWidget (parent)
 {
-
+    initUI();
 }
 
 TerminalWidget::~TerminalWidget()

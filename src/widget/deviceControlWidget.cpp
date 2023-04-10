@@ -166,7 +166,6 @@ void DeviceControlWidget::initUI()
     scriptLayout->addLayout(scriptEdLayout);
     scriptLayout->addWidget(scriptBtn);
 
-
     leftKeyLayout->addWidget(keySimulationBox);
     leftKeyLayout->addWidget(advancedRestartBox);
     leftKeyLayout->addWidget(mediaControlBox);

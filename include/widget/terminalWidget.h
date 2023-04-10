@@ -13,6 +13,9 @@ public:
 
     void initUI();
 
+signals:
+    void sendMsgToMainWindow(const QString &msg);
+
 private:
 
 };
