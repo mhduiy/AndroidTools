@@ -9,6 +9,11 @@
 #include <DPushButton>
 #include <DFileDialog>
 #include <DComboBox>
+#include <DTableView>
+#include <DTableWidget>
+#include <QStandardItemModel>
+#include "softManageTool.h"
+#include <DWarningButton>
 
 DWIDGET_USE_NAMESPACE
 
@@ -17,6 +22,8 @@ class SoftwareManageWidget : public DWidget {
 public:
     explicit SoftwareManageWidget(QWidget *parent = nullptr);
     ~SoftwareManageWidget();
+    void showSoftList();
+    void showDetailInfo(const QModelIndex &index);
 
     void initUI();
 
@@ -28,16 +35,23 @@ private:
     DeviceControlItem *softListControl;
     DComboBox *softListOptionBox;
     DPushButton *loadSoftListBtn;
+    DTableView *softListTable;
+    QStandardItemModel *softListModel;
 
     //软件包详细信息
     DeviceControlItem *detailInfoControl;
+    DTableWidget *softDetailTable;
+    QVector<QLabel*> softDetailLabels;
+    DPushButton *extractBtn;
+    DPushButton *clearDataBtn;
+    DPushButton *uninstallBtn;
 
     //软件安装
     DeviceControlItem *installControl;
     DLineEdit *installSoftPath;
     DSuggestButton *selectSoftBtn;
     DSuggestButton *installBtn;
-
+    SoftManageTool *softTool;
 };
 
 

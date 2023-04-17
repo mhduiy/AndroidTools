@@ -77,6 +77,17 @@ QStringList mediaControlInfo::CMDSTR {
     "adb -s %1 shell input keyevent 87"
 };
 
+QStringList SoftInfo::OUTSTR {
+    "软件名",
+    "包名",
+    "安装时间",
+    "安装路径",
+    "版本",
+    "版本code",
+    "目标SDK",
+    "最低SDK"
+};
+
 QMap<QString, QString> MHDUIY::serializationInformation(QString &info)
 {
     QMap<QString, QString> res;

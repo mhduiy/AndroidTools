@@ -1,6 +1,7 @@
 #include "inforPanelWidget.h"
 #include <QLayout>
 #include <QHeaderView>
+#include <QPalette>
 #include "ADBTools.h"
 
 InfoPannelWidget::InfoPannelWidget(QWidget *parent) : DWidget (parent)
@@ -47,9 +48,19 @@ void InfoPannelWidget::initUI()
     deviceInfoTable->verticalHeader()->hide();   //隐藏垂直表头
     deviceInfoTable->horizontalHeader()->setStretchLastSection(true);
     deviceInfoTable->setSelectionMode(QAbstractItemView::NoSelection);  //设置不可选择
-    deviceInfoTable->setEditTriggers(QAbstractItemView::NoEditTriggers);//设置不可编辑
-    deviceInfoTable->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
+    deviceInfoTable->setEditTriggers(QAbstractItemView::NoEditTriggers);//设置不可编辑    
+    // 设置无边框
+    deviceInfoTable->setFrameStyle(QFrame::NoFrame);
 
+    // 隐藏网格线
+    deviceInfoTable->setShowGrid(false);
+    deviceInfoTable->viewport()->setAutoFillBackground(true);
+    deviceInfoTable->setAlternatingRowColors(true);
+    deviceInfoTable->setAttribute(Qt::WA_TranslucentBackground);//设置窗口背景透明
+    deviceInfoTable->setWindowFlags(Qt::FramelessWindowHint);   //设置无边框窗口
+    QPalette palette = deviceInfoTable->palette();
+    palette.setColor(QPalette::Inactive, QPalette::Text, palette.color(QPalette::Text));
+    deviceInfoTable->setPalette(palette);
     /*test*/
     tableModel = new QStandardItemModel();
     deviceInfoTable->setModel(tableModel);

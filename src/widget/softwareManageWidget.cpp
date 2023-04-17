@@ -1,15 +1,31 @@
 #include "softwareManageWidget.h"
 #include <QLayout>
+#include <QHeaderView>
 #include <DAlertControl>
 
 SoftwareManageWidget::SoftwareManageWidget(QWidget *parent) : DWidget (parent)
 {
     initUI();
+    softTool = SoftManageTool::getInstance();
 }
 
 SoftwareManageWidget::~SoftwareManageWidget()
 {
 
+}
+
+void SoftwareManageWidget::showSoftList()
+{
+    QStringList &&list = softTool->getSoftList(static_cast<SoftManageTool::SOFTFLAG>(softListOptionBox->currentData().toInt()));
+    softListModel->clear();
+    for(auto &it : list) {
+        softListModel->appendRow(new QStandardItem(it));
+    }
+}
+
+void SoftwareManageWidget::showDetailInfo(const QModelIndex &index)
+{
+    qDebug() << index.data();
 }
 
 void SoftwareManageWidget::initUI()
@@ -20,22 +36,67 @@ void SoftwareManageWidget::initUI()
     DWidget *softListW = new DWidget();
     softListControl = new DeviceControlItem(softListW);
     softListControl->setTitle("软件包列表");
+    softListControl->setDescribe("通过下方加载列表按钮来加载设备软件包列表");
     QVBoxLayout * softListLayout = new QVBoxLayout(softListW);
 
     softListOptionBox = new DComboBox();
     loadSoftListBtn = new DSuggestButton("加载列表");
-    softListOptionBox->addItems({"全部","系统应用","第三方应用"});
+    softListOptionBox->addItem("全部", QVariant(SoftManageTool::SOFT_TOTAL));
+    softListOptionBox->addItem("系统应用", QVariant(SoftManageTool::SOFT_SYS));
+    softListOptionBox->addItem("第三方应用", QVariant(SoftManageTool::SOFT_THIRD));
+
+    connect(loadSoftListBtn, &DPushButton::clicked, this, &SoftwareManageWidget::showSoftList);
+
+    softListTable = new DTableView();
+    softListTable->setAlternatingRowColors(true);
+    softListTable->horizontalHeader()->setVisible(false);
+    softListTable->setEditTriggers(QAbstractItemView::NoEditTriggers);  //设置不可编辑
+    softListTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    softListTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    softListTable->setSelectionMode(QAbstractItemView::SingleSelection);    //设置单行选中
+    softListTable->setSortingEnabled(true);//设置可以排序
+    connect(softListTable, &DTableView::clicked, this, &SoftwareManageWidget::showDetailInfo);
+
+
+    softListModel = new QStandardItemModel();
+    softListTable->setModel(softListModel);
+
 
     QHBoxLayout *softListOptionLayout = new QHBoxLayout();
     softListOptionLayout->addWidget(softListOptionBox);
     softListOptionLayout->addWidget(loadSoftListBtn);
 
     softListLayout->addLayout(softListOptionLayout);
+    softListLayout->addWidget(softListTable);
     /*软件包详细信息*/
     DWidget *detailW = new DWidget();
     detailInfoControl = new DeviceControlItem(detailW);
     detailInfoControl->setTitle("360安全卫士");
-    QVBoxLayout * detailLayout = new QVBoxLayout(detailW);
+    detailInfoControl->setDescribe("这里是包名");
+    QVBoxLayout *detailLayout = new QVBoxLayout(detailW);
+    detailLayout->setSpacing(30);
+    QGridLayout *softDetailInfoLayout = new QGridLayout();
+    softDetailInfoLayout->setSpacing(15);
+    softDetailInfoLayout->setColumnStretch(0,1);
+    softDetailInfoLayout->setColumnStretch(1,3);
+    for(int i = 2; i < MHDUIY::SoftInfo::TOTAL; i++) {  //去除软件名和包名
+        QLabel *labelValue = new QLabel("测试数据");
+        softDetailLabels.push_back(labelValue);
+        softDetailInfoLayout->addWidget(new QLabel(MHDUIY::SoftInfo::OUTSTR.value(i) + ":"), i-2, 0);
+        softDetailInfoLayout->addWidget(labelValue, i-2,1);
+    }
+    QHBoxLayout *softDetailBtnLayout = new QHBoxLayout();
+    softDetailBtnLayout->setSpacing(30);
+    extractBtn = new DPushButton("提取软件");
+    clearDataBtn = new DPushButton("清除数据");
+    uninstallBtn = new DPushButton("卸载软件");
+    softDetailBtnLayout->addWidget(extractBtn);
+    softDetailBtnLayout->addWidget(clearDataBtn);
+    softDetailBtnLayout->addWidget(uninstallBtn);
+
+    detailLayout->addLayout(softDetailInfoLayout);
+    detailLayout->addLayout(softDetailBtnLayout);
+
     /*软件安装*/
     DWidget *installW = new DWidget();
     installControl = new DeviceControlItem(installW);

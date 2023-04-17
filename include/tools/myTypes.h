@@ -105,6 +105,24 @@ namespace MHDUIY {
         inline mediaControlInfo(){}
     };
 
+    //软件包信息
+    struct SoftInfo {
+        static QStringList OUTSTR;
+        enum {
+            Name = 0,       //软件名
+            PackageName,    //包名
+            InstallTime,    //安装时间
+            InstallPath,    //安装路径
+            Version,        //版本
+            VersionCode,    //版本code
+            TargetSDK,      //目标SDK
+            MinSDK,         //最低SDK
+            TOTAL
+        };
+        QVector<QString> info;
+        inline SoftInfo():info(TOTAL){}
+    };
+
     QMap<QString, QString> serializationInformation(QString &info);
 }
 
