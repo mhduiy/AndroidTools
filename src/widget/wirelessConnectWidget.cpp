@@ -37,6 +37,7 @@ void WirelessConnectWidget::initUI()
     enterPairBtn = new DSuggestButton("配对设备");
     enterConnectBtn = new DSuggestButton("连接设备");
     preEdit->setReadOnly(true);
+    preEdit->setFocusPolicy(Qt::NoFocus);
     preEdit->append("进行无线连接操作之前，需要保证待连接设备满足以下条件：\n");
     preEdit->append("1. 待连接设备安卓版本至少为安卓11\n");
     preEdit->append("2. 打开开发者模式中的无线调试\n");
@@ -80,6 +81,7 @@ void WirelessConnectWidget::initUI()
     pairGridLayout->addWidget(pairCodeEdit, 1, 1, 1, 2);
 
     pairEdit->setReadOnly(true);
+    pairEdit->setFocusPolicy(Qt::NoFocus);
     pairEdit->append("请打开设备无线调试->使用配对码配对设备\n");
     pairEdit->append("填写ip地址，和配对码，然后点击配对设备\n\n");
     pairEdit->append("注意：这里需要填写的ip地址端口来自 '使用配对码配对设备' 界面下，而非无线调试页面中的IP和端口");
@@ -100,6 +102,7 @@ void WirelessConnectWidget::initUI()
     conReturnbtn = new DPushButton("返回");
 
     conEdit->setReadOnly(true);
+    conEdit->setFocusPolicy(Qt::NoFocus);
     conEdit->append("请打开设备无线调试, 找到ip地址和端口\n");
     conEdit->append("填写ip地址和端口，然后点击连接设备\n\n");
 

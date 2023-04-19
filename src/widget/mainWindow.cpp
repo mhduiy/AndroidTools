@@ -1,4 +1,4 @@
-﻿#include "mainWindow.h"
+#include "mainWindow.h"
 #include <DTitlebar>
 #include <QLayout>
 #include "deviceDetailTool.h"
