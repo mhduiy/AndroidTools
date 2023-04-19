@@ -2,6 +2,7 @@
 #include <QLayout>
 #include <QHeaderView>
 #include <DAlertControl>
+#include <DWarningButton>
 
 SoftwareManageWidget::SoftwareManageWidget(QWidget *parent) : DWidget (parent)
 {
@@ -26,6 +27,17 @@ void SoftwareManageWidget::showSoftList()
 void SoftwareManageWidget::showDetailInfo(const QModelIndex &index)
 {
     qDebug() << index.data();
+    MHDUIY::SoftInfo _info = softTool->getSoftInfo(index.data().toString());
+
+    detailInfoControl->setTitle(_info.info[MHDUIY::SoftInfo::Name]);
+    detailInfoControl->setTitle(_info.info[MHDUIY::SoftInfo::PackageName]);
+
+    for(int i = 2; i < MHDUIY::SoftInfo::TOTAL; i++) {  //去除软件名和包名
+//        softDetailLabels.value(i-2)->setText(_info.info.value(i));
+        softDetailLabels.value(i-2)->setText( _info.info.value(i).isEmpty() ? "无" : _info.info.value(i) );
+
+    }
+
 }
 
 void SoftwareManageWidget::initUI()
@@ -88,8 +100,12 @@ void SoftwareManageWidget::initUI()
     QHBoxLayout *softDetailBtnLayout = new QHBoxLayout();
     softDetailBtnLayout->setSpacing(30);
     extractBtn = new DPushButton("提取软件");
-    clearDataBtn = new DPushButton("清除数据");
-    uninstallBtn = new DPushButton("卸载软件");
+    DWarningButton *clearDataBtn = new DWarningButton;
+    DWarningButton *uninstallBtn = new DWarningButton;
+
+    clearDataBtn->setText("清除数据");
+    uninstallBtn->setText("卸载软件");
+
     softDetailBtnLayout->addWidget(extractBtn);
     softDetailBtnLayout->addWidget(clearDataBtn);
     softDetailBtnLayout->addWidget(uninstallBtn);

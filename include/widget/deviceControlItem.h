@@ -16,9 +16,9 @@ public:
     explicit DeviceControlItem(DWidget *mainW,  DWidget *parent = nullptr);
     ~DeviceControlItem();
     void initUI(DWidget *mainW);
-    void setTitle(const QString &title);
+    void setTitle(const QString &title);        // 标题
     void setWidget(DWidget *w);
-    void setDescribe(const QString &describe);
+    void setDescribe(const QString &describe);  // 小字
 private:
     DGroupBox *box;         //控件盒
     DLabel *title;          //标题

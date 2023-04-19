@@ -109,14 +109,14 @@ namespace MHDUIY {
     struct SoftInfo {
         static QStringList OUTSTR;
         enum {
-            Name = 0,       //软件名
-            PackageName,    //包名
-            InstallTime,    //安装时间
-            InstallPath,    //安装路径
-            Version,        //版本
-            VersionCode,    //版本code
-            TargetSDK,      //目标SDK
-            MinSDK,         //最低SDK
+            Name = 0,       //软件名       0
+            PackageName,    //包名        1
+            InstallTime,    //安装时间     2
+            InstallPath,    //安装路径     3
+            Version,        //版本        4
+            VersionCode,    //版本code    5
+            TargetSDK,      //目标SDK     6
+            MinSDK,         //最低SDK     7
             TOTAL
         };
         QVector<QString> info;
