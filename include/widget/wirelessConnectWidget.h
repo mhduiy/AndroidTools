@@ -9,6 +9,7 @@
 #include <DLabel>
 #include <DIpv4LineEdit>
 #include <DLineEdit>
+#include <DComboBox>
 #include "ADBTools.h"
 
 
@@ -24,6 +25,8 @@ public:
     void startPair();
     void startConnect();
     void CheckConnect();
+    void setRightConnFromHistory(int index); //通过历史连接记录在设置正确的信息
+    void readConnHistory();
 
 private:
     enum {PrepareW = 0, PairW, ConnectW, CheckW, TOTALW};   //界面枚举定义
@@ -46,6 +49,7 @@ private:
     DLineEdit *conPortEdit = nullptr;
     DPushButton *conReturnbtn = nullptr;
     DPushButton *conBtn = nullptr;
+    DComboBox *historyConnBox;
     /*检查界面*/
     QLabel *connectStatus = nullptr;
     bool connectSuccess = false;

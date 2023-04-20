@@ -4,6 +4,11 @@
 #include <DSuggestButton>
 #include <QDebug>
 #include <DMessageBox>
+#include <QDir>
+#include <QTextStream>
+
+const QString connCachePath = QDir::homePath() + QDir::separator() + ".config/AndroidTool";
+const QString connCacheFileName = "connHistory.log";
 
 WirelessConnectWidget::WirelessConnectWidget(QWidget *parent) : QDialog (parent)
 {
@@ -114,6 +119,15 @@ void WirelessConnectWidget::initUI()
     conIpLayout->addWidget(conIpEdit);
     conIpLayout->addWidget(conPortEdit);
 
+    historyConnBox = new DComboBox();
+    QHBoxLayout *histortConnLayout = new QHBoxLayout();
+    histortConnLayout->addWidget(new DLabel("通过历史连接记录自动填写"));
+    histortConnLayout->addWidget(historyConnBox);
+
+    readConnHistory();
+
+    connect(historyConnBox, QOverload<int>::of(&DComboBox::currentIndexChanged), this, &WirelessConnectWidget::setRightConnFromHistory);
+
     QHBoxLayout *conBtnsLayout = new QHBoxLayout();
     conBtnsLayout->addWidget(conReturnbtn);
     conBtnsLayout->addWidget(conBtn);
@@ -121,6 +135,7 @@ void WirelessConnectWidget::initUI()
     QVBoxLayout *conLayout = new QVBoxLayout();
     conLayout->addWidget(conEdit);
     conLayout->addLayout(conIpLayout);
+    conLayout->addLayout(histortConnLayout);
     conLayout->addLayout(conBtnsLayout);
     itemW[ConnectW]->setLayout(conLayout);
 
@@ -140,6 +155,33 @@ void WirelessConnectWidget::initUI()
 
     connect(funcBtn, &DPushButton::clicked, this, [this](){
         if(this->connectSuccess) {
+            if(!QFile::exists(connCachePath + QDir::separator() +connCacheFileName)) {
+                QDir dir;
+                dir.mkdir(connCachePath);
+                QFile file(connCachePath + QDir::separator() +connCacheFileName);
+                file.open(QIODevice::WriteOnly);
+                file.close();
+            }
+            //保存历史连接记录
+            QFile connHisFile(connCachePath + QDir::separator() + connCacheFileName);
+            if(connHisFile.open(QIODevice::ReadOnly)) { //读取文件
+                QString fileinfo = QString(connHisFile.readAll());
+                fileinfo.append(QString(conIpEdit->text() + ':' + conPortEdit->text()));
+                QStringList fileinfoList = fileinfo.split('\n');
+                int fileinfoSize = fileinfoList.size();
+                connHisFile.close();
+                if(connHisFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {//清空文件
+                    connHisFile.close();
+                }
+                if(connHisFile.open(QIODevice::WriteOnly)) {//写入文件
+                    for(int i = fileinfoSize<=5? 0:fileinfoSize-5; i < fileinfoSize; i++) {
+                        connHisFile.write(QString(fileinfoList.value(i) + '\n').toLocal8Bit());
+                    }
+                    connHisFile.close();
+                }
+
+                readConnHistory();
+            }
             this->accept();
         }
         else {
@@ -234,4 +276,32 @@ void WirelessConnectWidget::CheckConnect()
         connectStatus->setText("设备验证成功, 点击确定返回");
         connectSuccess = true;
     }
+}
+
+void WirelessConnectWidget::setRightConnFromHistory(int index)
+{
+    if(index == 0) {return;}
+    QString &&currentIp = historyConnBox->itemText(index);
+    QStringList IPInfo = currentIp.split(":");
+    if(IPInfo.size() != 2) {return;}
+    conIpEdit->setText(IPInfo.first());
+    conPortEdit->setText(IPInfo.last());
+}
+
+void WirelessConnectWidget::readConnHistory()
+{
+    //读取连接历史
+    historyConnBox->clear();
+    historyConnBox->addItem("请选择");
+    QFile connHisFile(connCachePath + QDir::separator() +connCacheFileName);
+    connHisFile.open(QIODevice::ReadOnly);
+    QTextStream connHisFileStream(&connHisFile);
+    QString lineInfo;
+    while(!connHisFileStream.atEnd()) {
+        lineInfo = connHisFileStream.readLine();
+        if(!lineInfo.isEmpty()) {
+            historyConnBox->addItem(lineInfo);
+        }
+    }
+    connHisFile.close();
 }
