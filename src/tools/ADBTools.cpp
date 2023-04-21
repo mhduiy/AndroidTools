@@ -14,6 +14,9 @@ ADBTools::~ADBTools()
 
 QString ADBTools::executeCommand(const QString &cmd)
 {
+    if(cmd.isEmpty()) {
+        return QString();
+    }
     QString command = cmd;
     //使用新的adb路径
     if(cmd.startsWith("adb")) {
