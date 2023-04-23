@@ -54,11 +54,11 @@ MHDUIY::SoftInfo &SoftManageTool::getSoftInfo(const QString &packageName)
    QString ret = "I am 360";
    _info.info[MHDUIY::SoftInfo::Name] = ret;
 //   qDebug() << "index.()";
+
    /*包名1*/
 //   getInstance = QString("adb -s %1 shell dumpsys package").arg(currentDeviceCode);
 //   ret = tool.executeCommand(getInstance).simplified();
-   ret = "packge name";
-   _info.info[MHDUIY::SoftInfo::PackageName] = ret;
+   _info.info[MHDUIY::SoftInfo::PackageName] = packageName;
 //   qDebug() << "ind1";
 
 //   /*安装时间2*/
@@ -146,8 +146,31 @@ MHDUIY::SoftInfo &SoftManageTool::getSoftInfo(const QString &packageName)
 
 bool SoftManageTool::operateSoft(OPERATFLAG flag, const QString &packageName)
 {
+    //if(packageName == ''){}
+    switch( flag ){
+    case OP_INSTALL:
+        break;
+    case OP_UNINSTALL:
+        break;
+    case OP_CLEARDATA:
+        break;
+    case OP_EXTRACT:
+        qDebug() << packageName;
+        qDebug() << "1";
+        break;
+    default:
+        break;
+
+    }
+
     return true;
 }
+
+//enum OPERATFLAG {
+//    OP_INSTALL = 0, //安装
+//    OP_UNINSTALL,   //卸载
+//    OP_CLEARDATA,   //清除数据
+//    OP_EXTRACT      //提取
 
 SoftManageTool *SoftManageTool::getInstance(QObject *parent)
 {

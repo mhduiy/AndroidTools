@@ -29,7 +29,9 @@ void SoftwareManageWidget::showDetailInfo(const QModelIndex &index)
     qDebug() << index.data();
     MHDUIY::SoftInfo _info = softTool->getSoftInfo(index.data().toString());
 
-    detailInfoControl->setTitle(_info.info[MHDUIY::SoftInfo::Name]);
+    // 不显示描述，标题位置显示包名
+    //detailInfoControl->setTitle(_info.info[MHDUIY::SoftInfo::Name]);
+    //detailInfoControl->setDescribe(_info.info[MHDUIY::SoftInfo::PackageName]);
     detailInfoControl->setTitle(_info.info[MHDUIY::SoftInfo::PackageName]);
 
     for(int i = 2; i < MHDUIY::SoftInfo::TOTAL; i++) {  //去除软件名和包名
@@ -38,6 +40,19 @@ void SoftwareManageWidget::showDetailInfo(const QModelIndex &index)
 
     }
 
+}
+
+void SoftwareManageWidget::responseBtn(const SoftManageTool::OPERATFLAG flag)
+{
+    // QString packageName =  "None";
+    auto packageNameList =  softListTable->selectionModel()->selectedRows();
+    if(packageNameList.size() <= 0){
+        emit sendMsgToMainWindow("请先在左侧列表中选择软件包！");
+
+        return ;
+    }
+    softTool->operateSoft(flag, packageNameList.first().data().toString());
+    return ;
 }
 
 void SoftwareManageWidget::initUI()
@@ -84,7 +99,7 @@ void SoftwareManageWidget::initUI()
     DWidget *detailW = new DWidget();
     detailInfoControl = new DeviceControlItem(detailW);
     detailInfoControl->setTitle("360安全卫士");
-    detailInfoControl->setDescribe("这里是包名");
+    //  detailInfoControl->setDescribe("这里是包名");
     QVBoxLayout *detailLayout = new QVBoxLayout(detailW);
     detailLayout->setSpacing(30);
     QGridLayout *softDetailInfoLayout = new QGridLayout();
@@ -100,9 +115,9 @@ void SoftwareManageWidget::initUI()
     QHBoxLayout *softDetailBtnLayout = new QHBoxLayout();
     softDetailBtnLayout->setSpacing(30);
     extractBtn = new DPushButton("提取软件");
+
     DWarningButton *clearDataBtn = new DWarningButton;
     DWarningButton *uninstallBtn = new DWarningButton;
-
     clearDataBtn->setText("清除数据");
     uninstallBtn->setText("卸载软件");
 
@@ -141,4 +156,21 @@ void SoftwareManageWidget::initUI()
     mainLayout->addLayout(rightLayout);
     mainLayout->setStretch(0,1);
     mainLayout->setStretch(1,1);
+
+
+
+    connect(extractBtn, &DPushButton::clicked, [this](){
+        this->responseBtn(SoftManageTool::OPERATFLAG::OP_EXTRACT);
+    });
+    connect(clearDataBtn, &DPushButton::clicked, [this](){
+        this->responseBtn(SoftManageTool::OPERATFLAG::OP_EXTRACT);
+    });
+    connect(uninstallBtn, &DPushButton::clicked, [this](){
+        this->responseBtn(SoftManageTool::OPERATFLAG::OP_EXTRACT);
+    });
+    connect(installBtn, &DPushButton::clicked, [this](){
+        this->responseBtn(SoftManageTool::OPERATFLAG::OP_EXTRACT);
+    });
+
+
 }

@@ -24,6 +24,7 @@ public:
     ~SoftwareManageWidget();
     void showSoftList();
     void showDetailInfo(const QModelIndex &index);
+    void responseBtn(const SoftManageTool::OPERATFLAG flag);
 
     void initUI();
 
