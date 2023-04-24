@@ -17,6 +17,7 @@
 #include "myTypes.h"
 #include <DPushButton>
 #include <DFrame>
+#include "deviceControlItem.h"
 
 
 DWIDGET_USE_NAMESPACE
@@ -36,11 +37,10 @@ signals:
 private:
     DLabel *deviceName;
     QVector<MyCircleProgress*> deviceRealTimePG;    //实时面板
-//    DComboBox *deviceBox;
-    DTableView *deviceInfoTable;
-    /*test*/
+    DTableView *deviceInfoTable;    //设备信息表格
     QStandardItemModel *tableModel;
-//    DPushButton *flashBtn;
+    DeviceControlItem *baseInfoControl;     //设备基础信息列表
+    DeviceControlItem *currentActivityControl;  //设备当前活动
 };
 
 #endif

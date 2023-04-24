@@ -3,6 +3,7 @@
 #include <QLayout>
 #include <DFontSizeManager>
 #include <QPalette>
+#include "myTypes.h"
 
 FlashToolWidget::FlashToolWidget(QWidget *parent) : DWidget (parent)
 {
@@ -39,6 +40,9 @@ void FlashToolWidget::initUI()
     QHBoxLayout *funcLayout = new QHBoxLayout();    //左右两边功能区域
     QVBoxLayout *leftLayout = new QVBoxLayout();
     QVBoxLayout *rightLayout = new QVBoxLayout();
+
+    leftLayout->setAlignment(Qt::AlignTop);
+    rightLayout->setAlignment(Qt::AlignTop);
 
     /*刷写分区*/
     DWidget *flashPartitionW = new DWidget(this);
@@ -99,13 +103,58 @@ void FlashToolWidget::initUI()
     clearPartitionLayout->addLayout(clearPartitionSelectLayout);
     clearPartitionLayout->addWidget(clearBtn);
 
-
     leftLayout->addWidget(flashPartitionControl);
     leftLayout->addWidget(tempStartImgControl);
     leftLayout->addWidget(clearPartitionControl);
     funcLayout->addLayout(leftLayout);
-    DPushButton *testBtn = new DPushButton("占位");
-    rightLayout->addWidget(testBtn);
+
+    /*right Layout*/
+    /*解包*/
+    DWidget *unPackW = new DWidget(this);
+    unPackControl = new DeviceControlItem(unPackW);
+    unPackControl->setTitle("解包");
+    unPackControl->setDescribe("解压卡刷包，支持解压payload.img");
+    QVBoxLayout *unPackLayout = new QVBoxLayout(unPackW);
+    QHBoxLayout *selectUnPackLayout = new QHBoxLayout();
+    unPackPathEdit = new DLineEdit();
+    selectUnPackBtn = new DSuggestButton("选择");
+    selectUnPackLayout->addWidget(new DLabel("选择一个卡刷包"));
+    selectUnPackLayout->addWidget(unPackPathEdit);
+    selectUnPackLayout->addWidget(selectUnPackBtn);
+    isUnPackPayload = new DCheckBox();
+    isUnPackPayload->setText("是否解压payLoad.img");
+    isUnPackPayload->setCheckState(Qt::Unchecked);
+
+    QHBoxLayout *unPackBtnLayout = new QHBoxLayout();
+    unPackBtn = new DSuggestButton("开始解压");
+    openUnPackOutDir = new DPushButton("打开文件夹");
+    unPackBtnLayout->addWidget(unPackBtn);
+    unPackBtnLayout->addWidget(openUnPackOutDir);
+
+    unPackLayout->addLayout(selectUnPackLayout);
+    unPackLayout->addWidget(isUnPackPayload);
+    unPackLayout->addLayout(unPackBtnLayout);
+
+    /*快捷重启*/
+    DWidget *fastRebootW = new DWidget(this);
+    fastRebootControl = new DeviceControlItem(fastRebootW);
+    fastRebootControl->setTitle("快捷重启");
+    fastRebootControl->setDescribe("控制设备重启到指定位置");
+    QGridLayout *fastReBootLayout = new QGridLayout(fastRebootW);
+    fastReBootLayout->setSpacing(10);
+    for(int i = 0; i < MHDUIY::FastRebootInfo::TOTAL; i++) {
+        static int j = 0;
+        DPushButton *btn = new DPushButton(MHDUIY::FastRebootInfo::OUTSTR[i]);
+        fastRebootBtns.push_back(btn);
+        connect(btn, &DPushButton::clicked, [this, i](){this->responseFastRebootBtn(i);});
+        if(i != 0 && i % 3 == 0) {
+            j++;
+        }
+        fastReBootLayout->addWidget(btn, j, i % 3);
+    }
+
+    rightLayout->addWidget(unPackControl);
+    rightLayout->addWidget(fastRebootControl);
     funcLayout->addLayout(rightLayout);
     funcLayout->setStretch(0,1);
     funcLayout->setStretch(1,1);
@@ -113,4 +162,9 @@ void FlashToolWidget::initUI()
     mainLayout->addWidget(alertLabel);
     mainLayout->addLayout(deviceLayout);
     mainLayout->addLayout(funcLayout);
+}
+
+void FlashToolWidget::responseFastRebootBtn(int i)
+{
+    emit sendMsgToMainWindow("已触发 " + MHDUIY::FastRebootInfo::OUTSTR[i]);
 }

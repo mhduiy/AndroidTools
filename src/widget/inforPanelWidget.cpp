@@ -60,6 +60,7 @@ void InfoPannelWidget::initUI()
     deviceInfoTable->setWindowFlags(Qt::FramelessWindowHint);   //设置无边框窗口
     QPalette palette = deviceInfoTable->palette();
     palette.setColor(QPalette::Inactive, QPalette::Text, palette.color(QPalette::Text));
+    palette.setColor(QPalette::Inactive, QPalette::AlternateBase, palette.color(QPalette::AlternateBase));
     deviceInfoTable->setPalette(palette);
     /*test*/
     tableModel = new QStandardItemModel();
@@ -68,10 +69,6 @@ void InfoPannelWidget::initUI()
     tableModel->setColumnCount(2);
     for(QString &s : MHDUIY::deviceDetailsInfo::OUTSTR) {
         QStandardItem *item = new QStandardItem(s);
-        item->setBackground(QBrush(QColor(247, 247, 247)));
-//        QFont font = item->font();
-//        font.setBold(true);
-//        item->setFont(font);
         tableModel->appendRow(item);
     }
     //设置表格列宽和行高
@@ -79,17 +76,27 @@ void InfoPannelWidget::initUI()
     for(int i = 0; i < MHDUIY::deviceDetailsInfo::TOTAL; i++) {
         deviceInfoTable->setRowHeight(i, 40);
     }
-//    deviceInfo->setColumnWidth(1, int(deviceInfo->width() * 0.7));
+    QHBoxLayout *deviceInfoLayout = new QHBoxLayout();
 
-    DFrame *frame = new DFrame();
-    frame->setFrameRounded(true);
-    QVBoxLayout *frameLayout = new QVBoxLayout();
-    frame->setLayout(frameLayout);
-    frameLayout->addWidget(deviceInfoTable);
+    DWidget *baseInfoW = new DWidget(this);
+    baseInfoControl = new DeviceControlItem(baseInfoW);
+    baseInfoControl->setTitle("设备基础信息");
+    QVBoxLayout *baseInfoLayout = new QVBoxLayout(baseInfoW);
+    baseInfoLayout->addWidget(deviceInfoTable);
+
+    DWidget *currentActivityW = new DWidget(this);
+    currentActivityControl = new DeviceControlItem(currentActivityW);
+    currentActivityControl->setTitle("设备当前活动");
+    QVBoxLayout *cutActivityLayout = new QVBoxLayout(currentActivityW);
+
+    deviceInfoLayout->addWidget(baseInfoControl);
+    deviceInfoLayout->addWidget(currentActivityControl);
+    deviceInfoLayout->setStretch(0,1);
+    deviceInfoLayout->setStretch(1,1);
 
     mainLayout->addLayout(headLayout);
     mainLayout->addLayout(pgLayout);
-    mainLayout->addWidget(frame);
+    mainLayout->addLayout(deviceInfoLayout);
 
     this->setLayout(mainLayout);
 

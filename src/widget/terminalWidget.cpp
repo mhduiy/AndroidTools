@@ -19,7 +19,7 @@ void TerminalWidget::initUI()
     execBtn = new DSuggestButton("执行");
     clearBtn = new DSuggestButton("清除");
     commandEdit = new DLineEdit();
-    commandEdit->setPlaceholderText("暂时无法使用管道命令");
+    commandEdit->setPlaceholderText("在这里输入命令");
     controlLayout->addWidget(commandEdit);
     controlLayout->addWidget(execBtn);
     controlLayout->addWidget(clearBtn);

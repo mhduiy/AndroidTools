@@ -123,6 +123,22 @@ namespace MHDUIY {
         inline SoftInfo():info(TOTAL){}
     };
 
+    //刷机-快捷重启
+    struct FastRebootInfo {
+        static QStringList OUTSTR;
+        static QStringList CMDSTR;
+        enum {
+            FastBootToSys = 0,      //fastboot重启到系统
+            FastBootToRec,          //fastboot重启到rec
+            FastBootToFastBoot,     //重启fastboot
+            RecToSys,               //rec重启到系统
+            RecToFastBoot,          //rec重启到fastboot
+            RecToRec,               //重启rec
+            TOTAL
+        };
+        inline FastRebootInfo(){}
+    };
+
     QMap<QString, QString> serializationInformation(QString &info);
 }
 

@@ -88,6 +88,24 @@ QStringList SoftInfo::OUTSTR {
     "最低SDK"
 };
 
+QStringList FastRebootInfo::OUTSTR {
+    "fastboot重启到系统",
+    "fastboot重启到rec",
+    "重启fastboot",
+    "rec重启到系统",
+    "rec重启到fastboot",
+    "重启rec"
+};
+
+QStringList FastRebootInfo::CMDSTR {
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+};
+
 QMap<QString, QString> MHDUIY::serializationInformation(QString &info)
 {
     QMap<QString, QString> res;

@@ -190,14 +190,17 @@ void DeviceControlWidget::responseBtn(MHDUIY::deviceControlCode code, int i)
         case MHDUIY::deviceControlCode::KeySimulation:
             tool.executeCommand(MHDUIY::keySimulationInfo::CMDSTR[i]
                                 .arg(currentDevice));
+            emit sendMsgToMainWindow(QString("已触发 %1").arg(MHDUIY::keySimulationInfo::OUTSTR[i]));
             break;
         case MHDUIY::deviceControlCode::AdvancedReBoot:
             tool.executeCommand(MHDUIY::advancedRestartInfo::CMDSTR[i]
                                 .arg(currentDevice));
+            emit sendMsgToMainWindow(QString("已触发 %1").arg(MHDUIY::advancedRestartInfo::OUTSTR[i]));
             break;
         case MHDUIY::deviceControlCode::MediaControl:
             tool.executeCommand(MHDUIY::mediaControlInfo::CMDSTR[i]
                                 .arg(currentDevice));
+            emit sendMsgToMainWindow(QString("已触发 %1").arg(MHDUIY::mediaControlInfo::OUTSTR[i]));
             break;
     }
 }

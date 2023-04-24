@@ -9,6 +9,8 @@
 #include <DIconButton>
 #include <DWarningButton>
 #include <DSuggestButton>
+#include <DRadioButton>
+#include <DCheckBox>
 
 
 DWIDGET_USE_NAMESPACE
@@ -23,6 +25,8 @@ public:
 
 signals:
     void sendMsgToMainWindow(const QString &msg);
+private:
+    void responseFastRebootBtn(int i);    //响应快速重启按钮
 
 private:
 //    DTickEffect *warningEffect;     //警示控件
@@ -45,6 +49,18 @@ private:
     DeviceControlItem *clearPartitionControl;
     QComboBox *clearPartitionBox;
     DSuggestButton *clearBtn;
+    /*解包*/
+    DeviceControlItem *unPackControl;
+    DLineEdit *unPackPathEdit;
+    DSuggestButton *selectUnPackBtn;
+    DCheckBox *isUnPackPayload;  //是否解包Payload.img
+    DSuggestButton *unPackBtn;
+    DPushButton *openUnPackOutDir;
+
+    /*快捷重启*/
+    DeviceControlItem *fastRebootControl;
+    QVector<QPushButton *> fastRebootBtns;
+    /*快捷链接*/
 };
 
 
