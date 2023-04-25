@@ -106,6 +106,30 @@ QStringList FastRebootInfo::CMDSTR {
     "",
 };
 
+QStringList QuickConnItem::websiteNames {
+    "XiaoMiROM",
+    "PE OS",
+    "Pixel OS",
+    "fiimeROM",
+    "orangefox Recovery"
+};
+
+QStringList QuickConnItem::websiteDes {
+    "小米官方刷机包集合",
+    "PixelExperience类原生系统官网",
+    "Pixel OS类原生系统官网",
+    "第三方的刷机包及工具集合",
+    "橙狐REC官网"
+};
+
+QStringList QuickConnItem::websiteStrs {
+    "https://xiaomirom.com/",
+    "https://get.pixelexperience.org/",
+    "https://pixelos.net/",
+    "https://mi.fiime.cn/OriginROM/",
+    "https://orangefox.download/"
+};
+
 QMap<QString, QString> MHDUIY::serializationInformation(QString &info)
 {
     QMap<QString, QString> res;

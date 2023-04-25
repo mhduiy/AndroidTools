@@ -11,6 +11,8 @@
 #include <DSuggestButton>
 #include <DRadioButton>
 #include <DCheckBox>
+#include <DListView>
+#include <QStandardItemModel>
 
 
 DWIDGET_USE_NAMESPACE
@@ -61,6 +63,9 @@ private:
     DeviceControlItem *fastRebootControl;
     QVector<QPushButton *> fastRebootBtns;
     /*快捷链接*/
+    DeviceControlItem *quickConnectControl;
+    DListView *quickConnPane;
+    QStandardItemModel *quickConnModel;
 };
 
 

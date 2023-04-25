@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     a.setApplicationName("Android Tools");
     a.setApplicationVersion("1.0");
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
-    a.loadTranslator(QList<QLocale>() << QLocale::system());
+    a.loadTranslator();
     a.setProductIcon(QIcon(":/Icon/appIcon.png"));
     a.setWindowIcon(QIcon(":/Icon/appIcon.png"));
 
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 
     MainWindow w;
     w.show();
-    w.resize(a.primaryScreen()->size() / 1.5);
+    w.resize(1200,700);
     Dtk::Widget::moveToCenter(&w);
 
     a.exec();

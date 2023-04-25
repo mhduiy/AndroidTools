@@ -139,6 +139,12 @@ namespace MHDUIY {
         inline FastRebootInfo(){}
     };
 
+    struct QuickConnItem {
+        static QStringList websiteNames;
+        static QStringList websiteDes;
+        static QStringList websiteStrs;
+    };
+
     QMap<QString, QString> serializationInformation(QString &info);
 }
 

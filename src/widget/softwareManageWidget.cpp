@@ -3,6 +3,7 @@
 #include <QHeaderView>
 #include <DAlertControl>
 #include <DWarningButton>
+#include "deviceConnect.h"
 
 SoftwareManageWidget::SoftwareManageWidget(QWidget *parent) : DWidget (parent)
 {
@@ -17,6 +18,11 @@ SoftwareManageWidget::~SoftwareManageWidget()
 
 void SoftwareManageWidget::showSoftList()
 {
+    QString currentDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
+    if(currentDevice.isEmpty()) {
+        emit sendMsgToMainWindow("没有连接任何设备");
+        return;
+    }
     QStringList &&list = softTool->getSoftList(static_cast<SoftManageTool::SOFTFLAG>(softListOptionBox->currentData().toInt()));
     softListModel->clear();
     for(auto &it : list) {

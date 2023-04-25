@@ -20,7 +20,6 @@ void MainWindow::initUI()
     QHBoxLayout *mainLayout = new QHBoxLayout;
 
     funcView = new DListView;
-    funcView->setFixedWidth(150);
 
     //标题栏
     deviceBox = new DComboBox();
@@ -84,7 +83,11 @@ void MainWindow::initUI()
     mainStackedWidget->setCurrentIndex(0);
 
     //将左边的功能区和右边的内容显示区域加入到布局中
-    mainLayout->addWidget(funcView);
+    DFrame *funcFrame = new DFrame(this);
+    funcFrame->setFixedWidth(160);
+    QVBoxLayout *funcFrameLayout = new QVBoxLayout(funcFrame);
+    funcFrameLayout->addWidget(funcView);
+    mainLayout->addWidget(funcFrame);
     mainLayout->addWidget(mainStackedWidget);
 
     mainW = new DWidget(this);
@@ -111,7 +114,7 @@ void MainWindow::initUI()
         //没有找到任何设备
         if(devices.size() <= 0) {
             //发送消息
-            this->sendMessage(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning), "当前没有连接到任何设备，请检查数据线的连接并确保打开了USB调试");
+            this->sendMessage(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation), "当前没有连接到任何设备，请检查数据线的连接并确保打开了USB调试");
             return;
         }
         DeviceConnect::getInstance()->setCurrentDevice(0);    //设置默认设备为第一个

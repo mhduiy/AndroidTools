@@ -20,15 +20,16 @@ QStringList SoftManageTool::getSoftList(SOFTFLAG flag)
     static QString thirdCmd = "adb -s %1 shell pm list packages -3";
     QStringList l;
     QStringList res;
+    QString currentDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
     switch (flag) {
         case SOFT_TOTAL:
-        l = tool.executeCommand(totalCmd.arg(DeviceConnect::getInstance()->getCurrentDeviceCode())).split('\n');
+        l = tool.executeCommand(totalCmd.arg(currentDevice)).split('\n');
             break;
         case SOFT_SYS:
-        l = tool.executeCommand(sysCmd.arg(DeviceConnect::getInstance()->getCurrentDeviceCode())).split('\n');
+        l = tool.executeCommand(sysCmd.arg(currentDevice)).split('\n');
             break;
         case SOFT_THIRD:
-        l = tool.executeCommand(thirdCmd.arg(DeviceConnect::getInstance()->getCurrentDeviceCode())).split('\n');
+        l = tool.executeCommand(thirdCmd.arg(currentDevice)).split('\n');
             break;
         default:
             break;

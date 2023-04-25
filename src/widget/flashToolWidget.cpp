@@ -4,6 +4,9 @@
 #include <DFontSizeManager>
 #include <QPalette>
 #include "myTypes.h"
+#include <DStyledItemDelegate>
+#include <QDesktopServices>
+#include <QUrl>
 
 FlashToolWidget::FlashToolWidget(QWidget *parent) : DWidget (parent)
 {
@@ -152,9 +155,41 @@ void FlashToolWidget::initUI()
         }
         fastReBootLayout->addWidget(btn, j, i % 3);
     }
+    /*快捷链接*/
+    quickConnModel = new QStandardItemModel();
+    DWidget *quickConnW = new DWidget();
+    quickConnectControl = new DeviceControlItem(quickConnW);
+    quickConnectControl->setTitle("快捷链接");
+    quickConnectControl->setDescribe("收录了可能会用到的网站，双击即可跳转访问");
+    QVBoxLayout *quickConnLayout = new QVBoxLayout(quickConnW);
+    quickConnPane = new DListView();
+    quickConnPane->setModel(quickConnModel);
+    for(int i = 0; i < MHDUIY::QuickConnItem::websiteNames.size(); i++) {
+        DStandardItem *item = new DStandardItem(MHDUIY::QuickConnItem::websiteNames.value(i));
+        item->setData(MHDUIY::QuickConnItem::websiteStrs.value(i));
+        item->setFontSize(DFontSizeManager::T5);
+        DViewItemAction *itemAction = new DViewItemAction;
+        itemAction->setText(MHDUIY::QuickConnItem::websiteDes.value(i));
+        itemAction->setFontSize(DFontSizeManager::T8);
+        itemAction->setTextColorRole(DPalette::TextTips);
+        itemAction->setParent(this);
+        item->setTextActionList({itemAction});
+
+        quickConnModel->appendRow(item);
+    }
+
+    quickConnPane->setEditTriggers(QListView::EditTrigger::NoEditTriggers);
+    quickConnPane->setBackgroundType(DStyledItemDelegate::BackgroundType::RoundedBackground);
+
+    connect(quickConnPane, &DListView::doubleClicked, [this](const QModelIndex &index){ //调用默认浏览器打开链接
+        QDesktopServices::openUrl(QUrl(index.data(Qt::UserRole+1).toString()));
+    });
+
+    quickConnLayout->addWidget(quickConnPane);
 
     rightLayout->addWidget(unPackControl);
     rightLayout->addWidget(fastRebootControl);
+    rightLayout->addWidget(quickConnectControl);
     funcLayout->addLayout(rightLayout);
     funcLayout->setStretch(0,1);
     funcLayout->setStretch(1,1);
