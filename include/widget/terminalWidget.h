@@ -2,11 +2,12 @@
 #define TERMINALWIDGET_H
 
 #include <DWidget>
-#include <DTextBrowser>
+#include <DTextEdit>
 #include "ADBTools.h"
 #include "deviceConnect.h"
 #include <DSuggestButton>
 #include <DLineEdit>
+#include "terminaltextedit.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -22,11 +23,10 @@ signals:
     void sendMsgToMainWindow(const QString &msg);
 
 private:
-    DTextBrowser *textBrowser;  //临时功能
+    TerminalTextEdit *textBrowser;
     ADBTools adbTool;
-    DPushButton *execBtn;
+    DSuggestButton *pasteBtn;
     DPushButton *clearBtn;
-    DLineEdit *commandEdit;
 };
 
 

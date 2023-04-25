@@ -1,5 +1,7 @@
 #include "terminalWidget.h"
 #include <QLayout>
+#include <QClipboard>
+#include <QGuiApplication>
 
 TerminalWidget::TerminalWidget(QWidget *parent) : DWidget (parent)
 {
@@ -14,38 +16,39 @@ TerminalWidget::~TerminalWidget()
 void TerminalWidget::initUI()
 {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    textBrowser = new DTextBrowser();
+    textBrowser = new TerminalTextEdit();
+
     QHBoxLayout *controlLayout = new QHBoxLayout();
-    execBtn = new DSuggestButton("执行");
+    pasteBtn = new DSuggestButton("从剪切板粘贴");
     clearBtn = new DSuggestButton("清除");
-    commandEdit = new DLineEdit();
-    commandEdit->setPlaceholderText("在这里输入命令");
-    controlLayout->addWidget(commandEdit);
-    controlLayout->addWidget(execBtn);
-    controlLayout->addWidget(clearBtn);
-    controlLayout->setStretch(0,5);
+    pasteBtn->setFixedWidth(120);
+    clearBtn->setFixedWidth(120);
+    controlLayout->setStretch(0,1);
     controlLayout->setStretch(1,1);
-    controlLayout->setStretch(2,1);
+    controlLayout->setSpacing(20);
+    controlLayout->setAlignment(Qt::AlignLeft);
+
+    controlLayout->addWidget(pasteBtn);
+    controlLayout->addWidget(clearBtn);
 
     mainLayout->addWidget(textBrowser);
     mainLayout->addLayout(controlLayout);
-
-    connect(execBtn, &DPushButton::clicked, [this](){   //按下执行按钮
-        QString &&cmd = commandEdit->text();
+    //按下回车键， 执行命令
+    connect(textBrowser, &TerminalTextEdit::returnPressed, [this](const QString &cmd){
+        if(cmd.isEmpty()) {
+            return;
+        }
         QString &&ret = adbTool.executeCommand(cmd);
-        textBrowser->append(QString(R"(命令:  %1  )").arg(cmd) + "执行结果：\n" + ret + "\n");
-        commandEdit->clear();
+        this->textBrowser->setCommandRetInfo(ret);
     });
+
     connect(clearBtn, &DPushButton::clicked, [this](){  //按下清除按钮
-        commandEdit->clear();
         textBrowser->clear();
     });
-    connect(commandEdit, &DLineEdit::returnPressed, [this](){
-        if(commandEdit->hasFocus()){
-            QString &&cmd = commandEdit->text();
-            QString &&ret = adbTool.executeCommand(cmd);
-            textBrowser->append(QString(R"(命令:  %1  )").arg(cmd) + "执行结果：\n" + ret + "\n");
-            commandEdit->clear();
-        }
+    //读取剪切板数据
+    connect(pasteBtn, &DPushButton::clicked, [this](){
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        QString info = clipboard->text();
+        this->textBrowser->append(info);
     });
 }
