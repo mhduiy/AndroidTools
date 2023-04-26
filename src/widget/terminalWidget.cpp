@@ -17,6 +17,7 @@ void TerminalWidget::initUI()
 {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     textBrowser = new TerminalTextEdit();
+    textBrowser->setFocusPolicy(Qt::StrongFocus);   //设置强焦点
 
     QHBoxLayout *controlLayout = new QHBoxLayout();
     pasteBtn = new DSuggestButton("从剪切板粘贴");
