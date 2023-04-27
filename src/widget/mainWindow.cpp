@@ -171,7 +171,7 @@ void MainWindow::myCmd(QString cmd)
 
 void MainWindow::noticeMsg(const QString &msg)
 {
-    this->sendMessage(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning), msg);
+    this->sendMessage(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation), msg);
 }
 
 void MainWindow::paintBtyIcon(int level)

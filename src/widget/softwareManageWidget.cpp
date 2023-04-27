@@ -4,11 +4,13 @@
 #include <DAlertControl>
 #include <DWarningButton>
 #include "deviceConnect.h"
+#include <QThread>
 
 SoftwareManageWidget::SoftwareManageWidget(QWidget *parent) : DWidget (parent)
 {
     initUI();
     softTool = SoftManageTool::getInstance();
+    qDebug() << "cur" << QThread::currentThreadId();
 }
 
 SoftwareManageWidget::~SoftwareManageWidget()
@@ -50,11 +52,9 @@ void SoftwareManageWidget::showDetailInfo(const QModelIndex &index)
 
 void SoftwareManageWidget::responseBtn(const SoftManageTool::OPERATFLAG flag)
 {
-    // QString packageName =  "None";
     auto packageNameList =  softListTable->selectionModel()->selectedRows();
-    if(packageNameList.size() <= 0){
+    if(packageNameList.size() <= 0 && flag != SoftManageTool::OP_INSTALL){
         emit sendMsgToMainWindow("请先在左侧列表中选择软件包！");
-
         return ;
     }
     softTool->operateSoft(flag, packageNameList.first().data().toString());
@@ -169,13 +169,13 @@ void SoftwareManageWidget::initUI()
         this->responseBtn(SoftManageTool::OPERATFLAG::OP_EXTRACT);
     });
     connect(clearDataBtn, &DPushButton::clicked, [this](){
-        this->responseBtn(SoftManageTool::OPERATFLAG::OP_EXTRACT);
+        this->responseBtn(SoftManageTool::OPERATFLAG::OP_CLEARDATA);
     });
     connect(uninstallBtn, &DPushButton::clicked, [this](){
-        this->responseBtn(SoftManageTool::OPERATFLAG::OP_EXTRACT);
+        this->responseBtn(SoftManageTool::OPERATFLAG::OP_UNINSTALL);
     });
     connect(installBtn, &DPushButton::clicked, [this](){
-        this->responseBtn(SoftManageTool::OPERATFLAG::OP_EXTRACT);
+        this->responseBtn(SoftManageTool::OPERATFLAG::OP_INSTALL);
     });
 
 

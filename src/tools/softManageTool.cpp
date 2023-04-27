@@ -1,11 +1,21 @@
 #include "softManageTool.h"
 #include "deviceConnect.h"
+#include <QDir>
+#include <QStandardPaths>
+#include <QThread>
 
 SoftManageTool* SoftManageTool::instance = nullptr;
 
 SoftManageTool::SoftManageTool(QObject *parent) : QObject((parent))
 {
-
+    QThread *thread = new QThread();
+    softTool = SoftTools::getInstance();
+    connect(this, &SoftManageTool::installApp, softTool, &SoftTools::installApp);
+    connect(this, &SoftManageTool::clearData, softTool, &SoftTools::clearData);
+    connect(this, &SoftManageTool::uninstallApp, softTool, &SoftTools::uninstallApp);
+    connect(this, &SoftManageTool::extractApp, softTool, &SoftTools::extractApp);
+    softTool->moveToThread(thread);
+    thread->start();    //将耗时任务移动到子线程中执行
 }
 
 SoftManageTool::~SoftManageTool()
@@ -147,31 +157,25 @@ MHDUIY::SoftInfo &SoftManageTool::getSoftInfo(const QString &packageName)
 
 bool SoftManageTool::operateSoft(OPERATFLAG flag, const QString &packageName)
 {
-    //if(packageName == ''){}
+    QString doc_path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     switch( flag ){
     case OP_INSTALL:
+        emit installApp(packageName);
         break;
     case OP_UNINSTALL:
+        emit uninstallApp(packageName);
         break;
     case OP_CLEARDATA:
+        emit clearData(packageName);
         break;
     case OP_EXTRACT:
-        qDebug() << packageName;
-        qDebug() << "1";
+        emit extractApp(packageName, doc_path + QDir::separator() + packageName + ".apk");
         break;
     default:
         break;
-
     }
-
     return true;
 }
-
-//enum OPERATFLAG {
-//    OP_INSTALL = 0, //安装
-//    OP_UNINSTALL,   //卸载
-//    OP_CLEARDATA,   //清除数据
-//    OP_EXTRACT      //提取
 
 SoftManageTool *SoftManageTool::getInstance(QObject *parent)
 {
