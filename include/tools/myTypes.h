@@ -23,6 +23,11 @@ namespace MHDUIY {
             StorageUsed,        //存储
             CPUUsed,            //CPU使用率
             GPUUsed,            //GPU使用率
+
+            /*当前活动*/
+            WindowsCode,        //窗口标识符
+            CurrentPackage,     //当前前台包名
+            CurrentActivity,    //当前前台活动
             TOTAL
         };
         QVector<QString> info;

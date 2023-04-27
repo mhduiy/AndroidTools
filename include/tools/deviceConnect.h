@@ -14,12 +14,18 @@ public:
     static DeviceConnect *getInstance(QObject *parent = nullptr);
 
     QVector<MHDUIY::deviceBaceInfo*> getDevices();
-    QVector<MHDUIY::deviceBaceInfo *> flashDevices();
+    QVector<MHDUIY::deviceBaceInfo*> flashDevices();
+    QVector<MHDUIY::deviceBaceInfo*> flashFastBootDevices();
 
     void setCurrentDevice(MHDUIY::deviceBaceInfo *currentInfo);
     void setCurrentDevice(int index);
     QString getCurrentDeviceCode();
     MHDUIY::deviceBaceInfo *getCurrentDevice();
+
+    void setCurrentFastBootDevice(MHDUIY::deviceBaceInfo *currentInfo);
+    void setCurrentFastBootDevice(int index);
+    QString getCurrentFastBootDeviceCode();
+    MHDUIY::deviceBaceInfo *getCurrentFastBootDevice();
 
 signals:
     void flashDevicesFinish();
@@ -27,7 +33,9 @@ signals:
 private:
     static DeviceConnect *instance;
     QVector<MHDUIY::deviceBaceInfo*> devices;
+    QVector<MHDUIY::deviceBaceInfo*> fastBootDevices;
     MHDUIY::deviceBaceInfo * currentDevice = nullptr;
+    MHDUIY::deviceBaceInfo * currentFastBootDevice = nullptr;
 };
 
 #endif

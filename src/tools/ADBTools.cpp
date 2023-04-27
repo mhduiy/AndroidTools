@@ -1,6 +1,7 @@
 #include "ADBTools.h"
 
 const QString ADBPATH = "../tools/platform-tools/adb";
+const QString FASTBOOTPATH = "../tools/platform-tools/fastboot";
 
 ADBTools::ADBTools(QObject *parent) : QObject (parent)
 {
@@ -22,6 +23,10 @@ QString ADBTools::executeCommand(const QString &cmd)
     if(cmd.startsWith("adb")) {
         command = command.right(command.size() - 3);
         command = ADBPATH + command;
+    }
+    else if(cmd.startsWith("fastboot")) {
+        command = command.right(command.size() - 8);
+        command = FASTBOOTPATH + command;
     }
     QProcess pro;
     pro.start(command);

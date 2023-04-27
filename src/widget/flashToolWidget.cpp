@@ -7,6 +7,7 @@
 #include <DStyledItemDelegate>
 #include <QDesktopServices>
 #include <QUrl>
+#include <deviceConnect.h>
 
 FlashToolWidget::FlashToolWidget(QWidget *parent) : DWidget (parent)
 {
@@ -39,6 +40,11 @@ void FlashToolWidget::initUI()
     deviceLayout->addWidget(deviceBox);
     deviceLayout->addWidget(updateBtn);
     deviceLayout->addWidget(new DLabel("请将设备重启到FastBoot模式，然后点击左边刷新按钮"));
+
+    connect(deviceBox, QOverload<int>::of(&DComboBox::currentIndexChanged), [this](int index){
+        DeviceConnect::getInstance()->setCurrentDevice(index);
+    });
+    connect(updateBtn, &DPushButton::clicked, this, &FlashToolWidget::getFastBootDevices);  //刷新新设备
 
     QHBoxLayout *funcLayout = new QHBoxLayout();    //左右两边功能区域
     QVBoxLayout *leftLayout = new QVBoxLayout();
@@ -202,4 +208,19 @@ void FlashToolWidget::initUI()
 void FlashToolWidget::responseFastRebootBtn(int i)
 {
     emit sendMsgToMainWindow("已触发 " + MHDUIY::FastRebootInfo::OUTSTR[i]);
+}
+
+void FlashToolWidget::getFastBootDevices()
+{
+    auto devices = DeviceConnect::getInstance()->flashFastBootDevices();
+    this->deviceBox->clear();
+    if(devices.size() == 0) {
+        emit sendMsgToMainWindow("当前未连接到任何FastBoot设备");
+        return;
+    }
+    for(auto info : devices) {
+        this->deviceBox->addItem(info->info[MHDUIY::deviceBaceInfo::DeviceCodeName]);
+    }
+    deviceBox->setCurrentIndex(0);
+    DeviceConnect::getInstance()->setCurrentFastBootDevice(0);
 }

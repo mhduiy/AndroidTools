@@ -30,6 +30,8 @@ signals:
 private:
     void responseFastRebootBtn(int i);    //响应快速重启按钮
 
+    void getFastBootDevices();
+
 private:
 //    DTickEffect *warningEffect;     //警示控件
 

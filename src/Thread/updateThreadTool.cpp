@@ -53,6 +53,25 @@ void UpdateThread::FlashPGInfo()
                 .arg(ll.value(1));
         resInfo->valueInfo[MHDUIY::deviceRealTimeInfo::StorageUsed] = 100-ll.value(4).left(ll.value(4).size() - 1).toInt();
     }
+    /*当前活动*/
+    command = QString("adb -s %1 shell dumpsys window | grep mCurrentFocus");
+    ret = tool.executeCommand(command).simplified();
+    if(ret.startsWith("mCurrentFocus=Window", Qt::CaseInsensitive)) {
+        QString rightInfo = ret.split("Window{").value(1).replace('}', "");
+        QStringList rightInfoItemList = rightInfo.split(' ');
+        if(rightInfoItemList.size() == 3) {
+            resInfo->info[MHDUIY::deviceRealTimeInfo::WindowsCode] = rightInfoItemList.value(0);
+            QStringList activityItem = rightInfoItemList.value(0).split('/');
+            if(activityItem.size() == 2) {
+                resInfo->info[MHDUIY::deviceRealTimeInfo::CurrentPackage] = activityItem.value(0);
+                resInfo->info[MHDUIY::deviceRealTimeInfo::CurrentActivity] = activityItem.value(1);
+            }
+            else if(activityItem.size() == 1){
+                resInfo->info[MHDUIY::deviceRealTimeInfo::CurrentPackage] = "无前台应用";
+                resInfo->info[MHDUIY::deviceRealTimeInfo::CurrentActivity] = "无前台应用";
+            }
+        }
+    }
 
 
     info = resInfo;

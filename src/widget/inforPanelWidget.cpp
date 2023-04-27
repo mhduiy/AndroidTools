@@ -32,9 +32,9 @@ void InfoPannelWidget::initUI()
 
     QHBoxLayout *pgLayout = new QHBoxLayout();
 
-    deviceRealTimePG.resize(MHDUIY::deviceRealTimeInfo::TOTAL);
+    deviceRealTimePG.resize(MHDUIY::deviceRealTimeInfo::GPUUsed+1);
     pgLayout->setAlignment(Qt::AlignLeft);
-    for (int i = 0; i < MHDUIY::deviceRealTimeInfo::TOTAL; i++) {
+    for (int i = 0; i < MHDUIY::deviceRealTimeInfo::GPUUsed+1; i++) {
         deviceRealTimePG[i] = new MyCircleProgress();
         deviceRealTimePG[i]->setFixedSize(100,150);
         deviceRealTimePG[i]->setTopText(MHDUIY::deviceRealTimeInfo::OUTSTR[i]);
@@ -87,7 +87,13 @@ void InfoPannelWidget::initUI()
     DWidget *currentActivityW = new DWidget(this);
     currentActivityControl = new DeviceControlItem(currentActivityW);
     currentActivityControl->setTitle("设备当前活动");
-    QVBoxLayout *cutActivityLayout = new QVBoxLayout(currentActivityW);
+    QGridLayout *cutActivityLayout = new QGridLayout(currentActivityW);
+    for(int i = 0; i < 3; i++) {
+        DLabel *l = new DLabel();
+        currentActivityLabels.push_back(l);
+        cutActivityLayout->addWidget(new DLabel(MHDUIY::deviceRealTimeInfo::OUTSTR.value(i+7)), i, 0);
+        cutActivityLayout->addWidget(l, i, 1);
+    }
 
     deviceInfoLayout->addWidget(baseInfoControl);
     deviceInfoLayout->addWidget(currentActivityControl);
@@ -106,9 +112,12 @@ void InfoPannelWidget::initUI()
 
 void InfoPannelWidget::setInfoToRealTimePG(MHDUIY::deviceRealTimeInfo *info)
 {
-    for(int i = 0; i < info->TOTAL ; i++) {
+    for(int i = 0; i < int(info->GPUUsed) + 1 ; i++) {
         deviceRealTimePG[i]->setBottomText(info->info[i]);
         deviceRealTimePG[i]->getPG()->setValue(info->valueInfo[i]);
+    }
+    for(int i = info->WindowsCode; i < info->TOTAL; i++) {
+        currentActivityLabels.value(i - info->WindowsCode)->setText(info->info[i]);
     }
 }
 

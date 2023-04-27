@@ -8,7 +8,10 @@ QStringList deviceRealTimeInfo::OUTSTR {
     "剩余内存",
     "剩余存储",
     "CPU占用",
-    "GPU占用"
+    "GPU占用",
+    "窗口标识符",
+    "当前前台包名",
+    "当前前台活动"
 };
 
 QStringList deviceDetailsInfo::OUTSTR {

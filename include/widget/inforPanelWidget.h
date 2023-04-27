@@ -41,6 +41,7 @@ private:
     QStandardItemModel *tableModel;
     DeviceControlItem *baseInfoControl;     //设备基础信息列表
     DeviceControlItem *currentActivityControl;  //设备当前活动
+    QVector<DLabel *> currentActivityLabels;
 };
 
 #endif
