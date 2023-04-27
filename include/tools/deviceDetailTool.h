@@ -13,6 +13,7 @@ public:
     ~DeviceDetailTool();
     static DeviceDetailTool* getInstance(QObject *parent = nullptr);
     MHDUIY::deviceDetailsInfo *flashInfo();
+    MHDUIY::deviceDetailsInfo *getInfo();
 
 signals:
     void readDeviceInfoFinish(MHDUIY::deviceDetailsInfo *info);

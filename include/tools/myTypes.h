@@ -45,7 +45,7 @@ namespace MHDUIY {
             DeviceCodeName,     //设备代号
             AndroidVersion,     //安卓版本
             CPUInfo,            //CPU信息
-            GPUInfo,            //GPU信息
+            Dpi,                //Dpi
             Resolution,         //分辨率
             PoweredOnTime,      //开机时间
             TOTAL

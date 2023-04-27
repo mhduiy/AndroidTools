@@ -3,9 +3,11 @@
 
 #include <DWidget>
 #include <DPushButton>
+#include <DSpinBox>
 #include "myTypes.h"
 #include "ADBTools.h"
 #include "deviceControlItem.h"
+#include "deviceDetailTool.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -22,15 +24,18 @@ signals:
     void sendMsgToMainWindow(const QString &msg);
 
 private:
+    void setDefaultDpiData(MHDUIY::deviceDetailsInfo *);
+
+private:
     QVector<DPushButton*> keySimulationBtns;    //按键模拟按钮组
     QVector<DPushButton*> advancedRestartBtns;  //高级重启按钮组
     QVector<DPushButton*> mediaControlBtns;     //媒体控制按钮组
 
     //dpi
     DeviceControlItem *dpiControl;
-    DLineEdit *dpiEdit;
-    DLineEdit *resolutionEditw;
-    DLineEdit *resolutionEdith;
+    DSpinBox *dpiEdit;
+    DSpinBox *resolutionEditw;
+    DSpinBox *resolutionEdith;
     DPushButton *dpiResetBtn;
     DPushButton *dpiSetBtn;
     //输入文本

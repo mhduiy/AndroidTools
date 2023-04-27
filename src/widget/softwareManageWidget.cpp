@@ -113,7 +113,7 @@ void SoftwareManageWidget::initUI()
     softDetailInfoLayout->setColumnStretch(0,1);
     softDetailInfoLayout->setColumnStretch(1,3);
     for(int i = 2; i < MHDUIY::SoftInfo::TOTAL; i++) {  //去除软件名和包名
-        QLabel *labelValue = new QLabel("测试数据");
+        QLabel *labelValue = new QLabel("");
         softDetailLabels.push_back(labelValue);
         softDetailInfoLayout->addWidget(new QLabel(MHDUIY::SoftInfo::OUTSTR.value(i) + ":"), i-2, 0);
         softDetailInfoLayout->addWidget(labelValue, i-2,1);

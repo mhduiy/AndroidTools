@@ -49,11 +49,10 @@ MHDUIY::deviceDetailsInfo *DeviceDetailTool::flashInfo()
     ret = tool.executeCommand(command);
     auto serialInfo = MHDUIY::serializationInformation(ret);
     res->info[MHDUIY::deviceDetailsInfo::CPUInfo] = serialInfo["Hardware"];
-    /*GPU*/
-//    command = QString("adb -s %1 shell cat /proc/cpuinfo").arg(currentDeviceCode);
-//    ret = tool.executeCommand(command).simplified();
-//    serialInfo = MHDUIY::serializationInformation(ret);
-//    res->info[MHDUIY::deviceDetailsInfo::CPUInfo] = serialInfo["Hardware"];
+    /*Dpi*/
+    command = QString("adb -s %1 shell getprop ro.sf.lcd_density").arg(currentDeviceCode);
+    ret = tool.executeCommand(command).simplified();
+    res->info[MHDUIY::deviceDetailsInfo::Dpi] = ret.simplified();
     /*分辨率*/
     command = QString("adb -s %1 shell wm size").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();
@@ -63,4 +62,9 @@ MHDUIY::deviceDetailsInfo *DeviceDetailTool::flashInfo()
     emit readDeviceInfoFinish(res);
     this->info = res;
     return res;
+}
+
+MHDUIY::deviceDetailsInfo *DeviceDetailTool::getInfo()
+{
+    return this->info;
 }

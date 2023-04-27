@@ -99,17 +99,25 @@ void DeviceControlWidget::initUI()
     QVBoxLayout *dpiLayout = new QVBoxLayout(dpiControlW);
 
     QHBoxLayout *dpiEdLayout = new QHBoxLayout();
-    dpiEdit = new DLineEdit();
+    dpiEdit = new DSpinBox();
     dpiEdLayout->addWidget(new DLabel("DPI: "));
     dpiEdLayout->addWidget(dpiEdit);
 
     QHBoxLayout *resuEdLayout = new QHBoxLayout();
-    resolutionEditw = new DLineEdit();
-    resolutionEdith = new DLineEdit();
+    resolutionEditw = new DSpinBox();
+    resolutionEdith = new DSpinBox();
 
     resolutionEditw->setFixedWidth(100);
     resolutionEdith->setFixedWidth(100);
     dpiEdit->setFixedWidth(100);
+
+    resolutionEditw->setEnabledEmbedStyle(true);
+    resolutionEdith->setEnabledEmbedStyle(true);
+    dpiEdit->setEnabledEmbedStyle(true);
+
+    dpiEdit->setMaximum(10000);
+    resolutionEditw->setMaximum(10000);
+    resolutionEdith->setMaximum(10000);
 
     DLabel *resolutionChat = new DLabel("x");
     resolutionChat->setFixedWidth(10);
@@ -132,6 +140,46 @@ void DeviceControlWidget::initUI()
     dpiLayout->addLayout(dpiEdLayout);
     dpiLayout->addLayout(resuEdLayout);
     dpiLayout->addLayout(dpiBtnLayout);
+    connect(DeviceDetailTool::getInstance(), &DeviceDetailTool::readDeviceInfoFinish, this, &DeviceControlWidget::setDefaultDpiData);
+    connect(dpiSetBtn, &DPushButton::clicked, [this](){
+
+        if(this->dpiEdit->text().isEmpty()) {
+            this->dpiEdit->showAlertMessage("信息不完整");
+        }
+        if(this->resolutionEditw->text().isEmpty()) {
+            this->resolutionEditw->showAlertMessage("信息不完整");
+        }
+        if(this->resolutionEdith->text().isEmpty()) {
+            this->resolutionEdith->showAlertMessage("信息不完整");
+        }
+        QString currentDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
+        if(currentDevice.isEmpty()) {
+            emit this->sendMsgToMainWindow("没有连接任何设备");
+            return;
+        }
+        QString dpiStr = dpiEdit->text();
+        QString xStr = resolutionEditw->text();
+        QString yStr = resolutionEdith->text();
+        QString sizeCommand = QString("adb -s %1 shell wm size %2x%3").arg(currentDevice).arg(xStr).arg(yStr);
+        QString dpiCommand = QString("adb -s %1 shell wm density %2").arg(currentDevice).arg(dpiStr);
+        tool.executeCommand(sizeCommand);
+        tool.executeCommand(dpiCommand);
+        emit this->sendMsgToMainWindow("设置成功");
+    });
+
+    connect(dpiResetBtn, &DPushButton::clicked, [this](){
+        QString currentDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
+        if(currentDevice.isEmpty()) {
+            emit this->sendMsgToMainWindow("没有连接任何设备");
+            return;
+        }
+        QString sizeCommand = QString("adb -s %1 shell wm size reset").arg(DeviceConnect::getInstance()->getCurrentDeviceCode());
+        QString dpiCommand = QString("adb -s %1 shell wm density reset").arg(DeviceConnect::getInstance()->getCurrentDeviceCode());
+        tool.executeCommand(sizeCommand);
+        tool.executeCommand(dpiCommand);
+        emit this->sendMsgToMainWindow("恢复成功");
+        DeviceDetailTool::getInstance()->flashInfo();
+    });
     /*输入文本*/
     DWidget *inputW = new DWidget();
     inputControl = new DeviceControlItem(inputW);
@@ -144,6 +192,17 @@ void DeviceControlWidget::initUI()
     inputEdLayout->addWidget(new DLabel("文本: "));
     inputEdLayout->addWidget(inputEdit);
     inputBtn = new DSuggestButton("发送");
+
+    connect(inputBtn, &DPushButton::clicked, [this](){
+        QString inputStr = inputEdit->text();
+        if(inputStr.isEmpty()) {
+            emit this->inputEdit->showAlertMessage("请输入信息");
+            return;
+        }
+        QString command = QString("adb -s %1 shell input text '%2'").arg(DeviceConnect::getInstance()->getCurrentDeviceCode()).arg(inputStr);
+        tool.executeCommand(command);
+        emit this->inputEdit->showAlertMessage("发送成功");
+    });
 
     inputLayout->addLayout(inputEdLayout);
     inputLayout->addWidget(inputBtn);
@@ -172,10 +231,8 @@ void DeviceControlWidget::initUI()
     rightContorlLayout->addWidget(dpiControl);
     rightContorlLayout->addWidget(inputControl);
     rightContorlLayout->addWidget(scriptControl);
-    mainLayout->addLayout(leftKeyLayout);
-    mainLayout->addLayout(rightContorlLayout);
-    mainLayout->setStretch(0,2);
-    mainLayout->setStretch(1,1);
+    mainLayout->addLayout(leftKeyLayout,4);
+    mainLayout->addLayout(rightContorlLayout,3);
     this->setLayout(mainLayout);
 }
 
@@ -204,3 +261,17 @@ void DeviceControlWidget::responseBtn(MHDUIY::deviceControlCode code, int i)
             break;
     }
 }
+
+void DeviceControlWidget::setDefaultDpiData(MHDUIY::deviceDetailsInfo * info)
+{
+    if(nullptr == info) {
+        return;
+    }
+
+    this->dpiEdit->setValue(info->info[MHDUIY::deviceDetailsInfo::Dpi].toInt());
+    QString sizeInfo = info->info[MHDUIY::deviceDetailsInfo::Resolution];
+
+    this->resolutionEditw->setValue(sizeInfo.split('x').value(0).toUInt());
+    this->resolutionEdith->setValue(sizeInfo.split('x').value(1).toUInt());
+}
+

@@ -21,7 +21,7 @@ QStringList deviceDetailsInfo::OUTSTR {
     "设备代号",
     "安卓版本",
     "CPU信息",
-    "GPU信息",
+    "屏幕密度",
     "分辨率",
     "开机时间"
 };

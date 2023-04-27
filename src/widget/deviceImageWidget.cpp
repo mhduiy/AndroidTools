@@ -70,6 +70,9 @@ bool DeviceImageWidget::saveCurrentDeviceImage()
     bool isSuc = false;
     QString pictures_path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
     if(QFile::exists("./sc.png")) {
+        if(QFile::exists(pictures_path + QDir::separator() + "androidTools_out.png")) { //如果存在则先删除
+            QFile::remove(pictures_path + QDir::separator() + "androidTools_out.png");
+        }
         isSuc = QFile::copy("./sc.png", pictures_path + QDir::separator() + "androidTools_out.png");
     }
     if(isSuc) {

@@ -54,14 +54,14 @@ void UpdateThread::FlashPGInfo()
         resInfo->valueInfo[MHDUIY::deviceRealTimeInfo::StorageUsed] = 100-ll.value(4).left(ll.value(4).size() - 1).toInt();
     }
     /*当前活动*/
-    command = QString("adb -s %1 shell dumpsys window | grep mCurrentFocus");
+    command = QString("adb -s %1 shell dumpsys window | grep mCurrentFocus").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();
     if(ret.startsWith("mCurrentFocus=Window", Qt::CaseInsensitive)) {
         QString rightInfo = ret.split("Window{").value(1).replace('}', "");
         QStringList rightInfoItemList = rightInfo.split(' ');
         if(rightInfoItemList.size() == 3) {
             resInfo->info[MHDUIY::deviceRealTimeInfo::WindowsCode] = rightInfoItemList.value(0);
-            QStringList activityItem = rightInfoItemList.value(0).split('/');
+            QStringList activityItem = rightInfoItemList.value(2).split('/');
             if(activityItem.size() == 2) {
                 resInfo->info[MHDUIY::deviceRealTimeInfo::CurrentPackage] = activityItem.value(0);
                 resInfo->info[MHDUIY::deviceRealTimeInfo::CurrentActivity] = activityItem.value(1);
