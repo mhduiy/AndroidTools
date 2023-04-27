@@ -9,7 +9,8 @@ namespace MHDUIY {
     enum class deviceControlCode {
         KeySimulation,
         AdvancedReBoot,
-        MediaControl
+        MediaControl,
+        broadcastControl
     };
 
     //设备实时更新的信息
@@ -108,6 +109,58 @@ namespace MHDUIY {
             TOTAL
         };
         inline mediaControlInfo(){}
+    };
+
+    //广播控制
+    struct broadcastControlInfo {
+        static QStringList OUTSTR;
+        static QStringList CMDSTR;
+        enum {
+            CONNCHANGE,
+            SCREENON,
+            SCREENOFF,
+            BATTERYLOW,
+            BATTERYOK,
+            BOOTCOMPLETED,
+            STORAGELOW,
+            STORAGEOK,
+            PACKAGEADD,
+            WIFICHANGE,
+            BATTERYCHANGE,
+            INPUTMETHODCHANGE,
+            POWERCONN,
+            POWERDISCONN,
+            DREAMINGSTART,
+            DREAMSTOP,
+            HEADSETPLUG,
+            UNMOUNTED,
+            MOUNTED,
+            POWERSAVECHANGE,
+            TOTAL
+            /*
+            "网络连接发生变化",
+            "屏幕点亮",
+            "屏幕熄灭",
+            "电量低",
+            "电量恢复了",
+            "设备启动完毕",
+            "存储空间过低",
+            "存储空间恢复",
+            "安装了新的应用",
+            "WiFi连接状态发生变化",
+            "电池电量发生变化",
+            "系统输入法发生变化",
+            "外部电源连接",
+            "外部电源断开连接",
+            "系统开始休眠",
+            "系统停止休眠",
+            "插入耳机",
+            "卸载外部介质",
+            "挂载外部介质",
+            "省电模式开启"
+            */
+        };
+        inline broadcastControlInfo(){}
     };
 
     //软件包信息

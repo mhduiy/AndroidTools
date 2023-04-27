@@ -11,6 +11,15 @@
 
 DWIDGET_USE_NAMESPACE
 
+enum BatteryControlFlag {
+    Bty_SetLevel,
+    Bty_StartCharge,
+    Bty_StopCharge,
+    Bty_BreakCharge,
+    Bty_ResetCharge,
+    TOTAL
+};
+
 class DeviceControlWidget : public DWidget {
     Q_OBJECT
 public:
@@ -25,11 +34,13 @@ signals:
 
 private:
     void setDefaultDpiData(MHDUIY::deviceDetailsInfo *);
+    void responseBtn(BatteryControlFlag flag);
 
 private:
     QVector<DPushButton*> keySimulationBtns;    //按键模拟按钮组
     QVector<DPushButton*> advancedRestartBtns;  //高级重启按钮组
     QVector<DPushButton*> mediaControlBtns;     //媒体控制按钮组
+    QVector<DPushButton*> broadcastControlBtns; //广播控制按钮组
 
     //dpi
     DeviceControlItem *dpiControl;
@@ -47,7 +58,14 @@ private:
     DLineEdit *scriptEdit;
     DPushButton *scriptSelectBtn;
     DPushButton *scriptBtn;
-
+    //电量伪装
+    DeviceControlItem *BtyCamouflageControl;
+    DSpinBox *BtyLevelEdit;
+    DPushButton *setBtyLevelBtn;
+    DPushButton *startChargeBtn;
+    DPushButton *stopChargeBtn;
+    DPushButton *breakChargeBtn;
+    DPushButton *resetChargeBtn;
 
     ADBTools tool;
 };

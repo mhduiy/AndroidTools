@@ -6,6 +6,7 @@
 
 MainWindow::MainWindow(QWidget *parent) : DMainWindow (parent)
 {
+    setWindowFlags(windowFlags()& ~Qt::WindowMinMaxButtonsHint);//去除最大化窗口
     this->titlebar()->setTitle("Android Tools");
     initUI();
 }

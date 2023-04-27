@@ -80,6 +80,52 @@ QStringList mediaControlInfo::CMDSTR {
     "adb -s %1 shell input keyevent 87"
 };
 
+QStringList broadcastControlInfo::OUTSTR {
+    "网络连接发生变化",
+    "屏幕点亮",
+    "屏幕熄灭",
+    "电量低",
+    "电量恢复了",
+    "设备启动完毕",
+    "存储空间过低",
+    "存储空间恢复",
+    "安装了新的应用",
+    "WiFi连接状态发生变化",
+    "电池电量发生变化",
+    "系统输入法发生变化",
+    "外部电源连接",
+    "外部电源断开连接",
+    "系统开始休眠",
+    "系统停止休眠",
+    "插入耳机",
+    "卸载外部介质",
+    "挂载外部介质",
+    "省电模式开启"
+};
+
+QStringList broadcastControlInfo::CMDSTR {
+    "adb -s %1 shell am broadcast -a android.net.conn.CONNECTIVITY_CHANGE",
+    "adb -s %1 shell am broadcast -a android.intent.action.SCREEN_ON",
+    "adb -s %1 shell am broadcast -a android.intent.action.SCREEN_OFF",
+    "adb -s %1 shell am broadcast -a android.intent.action.BATTERY_LOW",
+    "adb -s %1 shell am broadcast -a android.intent.action.BATTERY_OKAY",
+    "adb -s %1 shell am broadcast -a android.intent.action.BOOT_COMPLETED",
+    "adb -s %1 shell am broadcast -a android.intent.action.DEVICE_STORAGE_LOW",
+    "adb -s %1 shell am broadcast -a android.intent.action.DEVICE_STORAGE_OK",
+    "adb -s %1 shell am broadcast -a android.intent.action.PACKAGE_ADDED",
+    "adb -s %1 shell am broadcast -a android.net.wifi.STATE_CHANGE",
+    "adb -s %1 shell am broadcast -a android.intent.action.BATTERY_CHANGED",
+    "adb -s %1 shell am broadcast -a android.intent.action.INPUT_METHOD_CHANGED",
+    "adb -s %1 shell am broadcast -a android.intent.action.ACTION_POWER_CONNECTED",
+    "adb -s %1 shell am broadcast -a android.intent.action.ACTION_POWER_DISCONNECTED",
+    "adb -s %1 shell am broadcast -a android.intent.action.DREAMING_STARTED",
+    "adb -s %1 shell am broadcast -a android.intent.action.DREAMING_STOPPED",
+    "adb -s %1 shell am broadcast -a android.intent.action.HEADSET_PLUG",
+    "adb -s %1 shell am broadcast -a android.intent.action.MEDIA_UNMOUNTED",
+    "adb -s %1 shell am broadcast -a android.intent.action.MEDIA_MOUNTED",
+    "adb -s %1 shell am broadcast -a android.os.action.POWER_SAVE_MODE_CHANGED"
+};
+
 QStringList SoftInfo::OUTSTR {
     "软件名",
     "包名",

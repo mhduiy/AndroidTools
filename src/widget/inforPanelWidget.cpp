@@ -3,6 +3,7 @@
 #include <QHeaderView>
 #include <QPalette>
 #include "ADBTools.h"
+#include "deviceConnect.h"
 
 InfoPannelWidget::InfoPannelWidget(QWidget *parent) : DWidget (parent)
 {
@@ -88,17 +89,22 @@ void InfoPannelWidget::initUI()
     currentActivityControl = new DeviceControlItem(currentActivityW);
     currentActivityControl->setTitle("设备当前活动");
     QGridLayout *cutActivityLayout = new QGridLayout(currentActivityW);
+    cutActivityLayout->setColumnStretch(0, 1);
+    cutActivityLayout->setColumnStretch(1, 4);
     for(int i = 0; i < 3; i++) {
         DLabel *l = new DLabel();
+        l->setWordWrap(true);
         currentActivityLabels.push_back(l);
         cutActivityLayout->addWidget(new DLabel(MHDUIY::deviceRealTimeInfo::OUTSTR.value(i+7)), i, 0);
         cutActivityLayout->addWidget(l, i, 1);
     }
+    stopCutAppBtn = new DWarningButton();
+    connect(stopCutAppBtn, &DPushButton::clicked, this, &InfoPannelWidget::stopCutApp);
+    stopCutAppBtn->setText("停止当前应用");
+    cutActivityLayout->addWidget(stopCutAppBtn, 3, 0, 1, 2);
 
-    deviceInfoLayout->addWidget(baseInfoControl);
-    deviceInfoLayout->addWidget(currentActivityControl);
-    deviceInfoLayout->setStretch(0,1);
-    deviceInfoLayout->setStretch(1,1);
+    deviceInfoLayout->addWidget(baseInfoControl, 1);
+    deviceInfoLayout->addWidget(currentActivityControl, 1);
 
     mainLayout->addLayout(headLayout);
     mainLayout->addLayout(pgLayout);
@@ -131,4 +137,22 @@ void InfoPannelWidget::setInfoToDetialsTable(MHDUIY::deviceDetailsInfo *info)
     deviceName->setText(info->info[MHDUIY::deviceDetailsInfo::Manufacturer]
             + " "
             + info->info[MHDUIY::deviceDetailsInfo::DeviceModel]);
+}
+
+void InfoPannelWidget::stopCutApp()
+{
+    QString package= currentActivityLabels.value(1)->text();
+    if(package == "无前台应用" || package.isEmpty()) {
+        emit sendMsgToMainWindow("没有活动可以停止");
+        return;
+    }
+    QString cutDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
+    if(cutDevice.isEmpty()) {
+        emit sendMsgToMainWindow("当前无设备连接");
+        return;
+    }
+    QString command = QString("adb -s %1 shell am force-stop '%2'").arg(cutDevice).arg(package);
+    ADBTools tool;
+    tool.executeCommand(command);
+    emit sendMsgToMainWindow("已停止");
 }

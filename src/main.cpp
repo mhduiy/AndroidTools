@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 
     MainWindow w;
     w.show();
-    w.resize(1200,700);
+    w.setFixedSize(1200,800);
     Dtk::Widget::moveToCenter(&w);
 
     a.exec();

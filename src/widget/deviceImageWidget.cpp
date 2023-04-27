@@ -56,10 +56,10 @@ void DeviceImageWidget::screenshotFromDevice()
     deviceCurrentFrameImg = new QImage("./sc.png");
     QPixmap pixmap = QPixmap::fromImage(*deviceCurrentFrameImg);
     if(pixmap.width() <= pixmap.height()) {
-        pixmap = pixmap.scaledToHeight(imageFrame->height());
+        pixmap = pixmap.scaledToHeight(imageFrame->height()-2); //-2防止界面被持续拉大
     }
     else {
-        pixmap = pixmap.scaledToWidth(imageFrame->width());
+        pixmap = pixmap.scaledToWidth(imageFrame->width()-2);
     }
     deviceImgLabel->setPixmap(pixmap);
     deviceImgLabel->setFixedSize(pixmap.size());

@@ -5,6 +5,8 @@
 #include <DLabel>
 #include <DSuggestButton>
 #include "deviceConnect.h"
+#include <DDialog>
+#include <DScrollArea>
 
 DeviceControlWidget::DeviceControlWidget(QWidget *parent) : DWidget(parent)
 {
@@ -20,28 +22,38 @@ void DeviceControlWidget::initUI()
 {
     QHBoxLayout *mainLayout = new QHBoxLayout();
 
-    QVBoxLayout *leftKeyLayout = new QVBoxLayout();
-    QVBoxLayout *rightContorlLayout = new QVBoxLayout();
-
 //    /* test */
 //    rightContorlLayout->addWidget(new DPushButton("占位"));
-    rightContorlLayout->setAlignment(Qt::AlignTop);
 
-    DGroupBox *keySimulationBox = new DGroupBox();
-    DGroupBox *advancedRestartBox = new DGroupBox();
-    DGroupBox *mediaControlBox = new DGroupBox();
+    DWidget *keySimulationBoxW = new DWidget(this);
+    DWidget *advancedRestartBoxW = new DWidget(this);
+    DWidget *mediaControlBoxW = new DWidget(this);
+    DWidget *broadcastControlBoxW = new DWidget(this);
 
-    QGridLayout *keySimulationLayout = new QGridLayout();
-    QGridLayout *advancedRestartLayout = new QGridLayout();
-    QGridLayout *mediaControlLayout = new QGridLayout();
+    DeviceControlItem *keySimulationBox = new DeviceControlItem(keySimulationBoxW);
+    DeviceControlItem *advancedRestartBox = new DeviceControlItem(advancedRestartBoxW);
+    DeviceControlItem *mediaControlBox = new DeviceControlItem(mediaControlBoxW);
+    DeviceControlItem *broadcastControlBox = new DeviceControlItem(broadcastControlBoxW);
 
-    keySimulationBox->setLayout(keySimulationLayout);
-    advancedRestartBox->setLayout(advancedRestartLayout);
-    mediaControlBox->setLayout(mediaControlLayout);
+    QGridLayout *keySimulationLayout = new QGridLayout(keySimulationBoxW);
+    QGridLayout *advancedRestartLayout = new QGridLayout(advancedRestartBoxW);
+    QGridLayout *mediaControlLayout = new QGridLayout(mediaControlBoxW);
+    QGridLayout *broadcastControlLayout = new QGridLayout(broadcastControlBoxW);
+
+    keySimulationLayout->setSpacing(20);
+    advancedRestartLayout->setSpacing(20);
+    mediaControlLayout->setSpacing(20);
+    broadcastControlLayout->setSpacing(20);
 
     keySimulationBox->setTitle("按键模拟");
     advancedRestartBox->setTitle("高级重启");
     mediaControlBox->setTitle("媒体控制");
+    broadcastControlBox->setTitle("广播控制");
+
+    keySimulationBox->setDescribe("可以实现模拟手机按下某个按键");
+    advancedRestartBox->setDescribe("重启到对应位置，这个重启可能会没有动画提示");
+    mediaControlBox->setDescribe("控制手机的多媒体播放状态，例如音乐或者视频");
+    broadcastControlBox->setDescribe("发送特定全局广播到手机，模拟某些状态的发生");
 
     //添加按钮，设置按钮响应
     for(int i = 0; i < MHDUIY::keySimulationInfo::TOTAL; i++) {
@@ -83,14 +95,20 @@ void DeviceControlWidget::initUI()
         });
     }
 
-//    DGroupBox *dpiBox = new DGroupBox();
-//    QVBoxLayout *dpiBoxLayout = new QVBoxLayout(dpiBox);
-//    dpiBoxLayout->setAlignment(Qt::AlignTop);
-//    DLabel *l = new DLabel("修改设备的分辨率和DPI");
-//    QPalette pa = l->palette();
-//    pa.setColor(QPalette::WindowText, Qt::gray);
-//    l->setPalette(pa);
-//    dpiBoxLayout->addWidget(l);
+    for(int i = 0; i < MHDUIY::broadcastControlInfo::TOTAL; i++) {
+        static int j = 0;
+        DPushButton *btn = new DPushButton(MHDUIY::broadcastControlInfo::OUTSTR[i]);
+        if(i != 0 && i % 2 == 0) {
+            j++;
+        }
+        broadcastControlLayout->addWidget(btn, j, i % 2);
+        broadcastControlBtns.push_back(btn);
+        connect(btn, &DPushButton::clicked, this, [this, i](){
+            this->responseBtn(MHDUIY::deviceControlCode::broadcastControl, i);
+        });
+    }
+
+
     /*dpi&分辨率设置*/
     DWidget *dpiControlW  = new DWidget();
     dpiControl = new DeviceControlItem(dpiControlW);
@@ -224,15 +242,62 @@ void DeviceControlWidget::initUI()
 
     scriptLayout->addLayout(scriptEdLayout);
     scriptLayout->addWidget(scriptBtn);
+    /*电量伪装*/
+    DWidget *btyCamouflageW = new DWidget(this);
+    BtyCamouflageControl = new DeviceControlItem(btyCamouflageW);
+    BtyCamouflageControl->setTitle("电量伪装");
+    BtyCamouflageControl->setDescribe("模拟手机的电池或者充电状态");
+    QGridLayout *btyCamouflageLayout = new QGridLayout(btyCamouflageW);
+    btyCamouflageLayout->setSpacing(20);
+    BtyLevelEdit = new DSpinBox();
+    setBtyLevelBtn = new DPushButton("模拟电量");
+    startChargeBtn = new DPushButton("模拟开始充电");
+    stopChargeBtn = new DPushButton("模拟插上不充电");
+    breakChargeBtn = new DPushButton("模拟断开充电");
+    resetChargeBtn = new DPushButton("恢复状态");
+    BtyLevelEdit->setMaximum(100);
+    BtyLevelEdit->setMinimum(0);
+    BtyLevelEdit->setValue(100);
+    BtyLevelEdit->setEnabledEmbedStyle(true);
+
+    btyCamouflageLayout->addWidget(BtyLevelEdit, 0, 0);
+    btyCamouflageLayout->addWidget(setBtyLevelBtn, 0, 1);
+    btyCamouflageLayout->addWidget(startChargeBtn, 1, 0);
+    btyCamouflageLayout->addWidget(stopChargeBtn, 1, 1);
+    btyCamouflageLayout->addWidget(breakChargeBtn, 2, 0);
+    btyCamouflageLayout->addWidget(resetChargeBtn, 2, 1);
+
+    connect(setBtyLevelBtn, &DPushButton::clicked, [this](){this->responseBtn(Bty_SetLevel);});
+    connect(startChargeBtn, &DPushButton::clicked, [this](){this->responseBtn(Bty_StartCharge);});
+    connect(stopChargeBtn, &DPushButton::clicked, [this](){this->responseBtn(Bty_StopCharge);});
+    connect(breakChargeBtn, &DPushButton::clicked, [this](){this->responseBtn(Bty_BreakCharge);});
+    connect(resetChargeBtn, &DPushButton::clicked, [this](){this->responseBtn(Bty_ResetCharge);});
+
+    DScrollArea *leftArea = new DScrollArea();
+    DScrollArea *rightArea = new DScrollArea();
+    DWidget *leftW = new DWidget();
+    DWidget *rightW = new DWidget();
+    QVBoxLayout *leftKeyLayout = new QVBoxLayout(leftW);
+    QVBoxLayout *rightContorlLayout = new QVBoxLayout(rightW);
+
+    leftArea->setWidgetResizable(true);
+    rightArea->setWidgetResizable(true);
+
+    leftKeyLayout->setAlignment(Qt::AlignTop|Qt::AlignHCenter);
+    rightContorlLayout->setAlignment(Qt::AlignTop);
 
     leftKeyLayout->addWidget(keySimulationBox);
     leftKeyLayout->addWidget(advancedRestartBox);
     leftKeyLayout->addWidget(mediaControlBox);
+    leftKeyLayout->addWidget(broadcastControlBox);
     rightContorlLayout->addWidget(dpiControl);
     rightContorlLayout->addWidget(inputControl);
     rightContorlLayout->addWidget(scriptControl);
-    mainLayout->addLayout(leftKeyLayout,4);
-    mainLayout->addLayout(rightContorlLayout,3);
+    rightContorlLayout->addWidget(BtyCamouflageControl);
+    leftArea->setWidget(leftW);
+    rightArea->setWidget(rightW);
+    mainLayout->addWidget(leftArea,4);
+    mainLayout->addWidget(rightArea,3);
     this->setLayout(mainLayout);
 }
 
@@ -250,14 +315,30 @@ void DeviceControlWidget::responseBtn(MHDUIY::deviceControlCode code, int i)
             emit sendMsgToMainWindow(QString("已触发 %1").arg(MHDUIY::keySimulationInfo::OUTSTR[i]));
             break;
         case MHDUIY::deviceControlCode::AdvancedReBoot:
+    {
+            DDialog dlg("提示", "确定要重启吗?");
+            dlg.addButton("是", true, DDialog::ButtonWarning);
+            dlg.addButton("否", false, DDialog::ButtonNormal);
+            dlg.setIcon(QIcon::fromTheme("dialog-information"));
+            int ret = dlg.exec();
+            qDebug() << ret;
+            if(ret != 0) {  //选择了否或者关闭窗口
+                return;
+            }
             tool.executeCommand(MHDUIY::advancedRestartInfo::CMDSTR[i]
                                 .arg(currentDevice));
             emit sendMsgToMainWindow(QString("已触发 %1").arg(MHDUIY::advancedRestartInfo::OUTSTR[i]));
             break;
+    }
         case MHDUIY::deviceControlCode::MediaControl:
             tool.executeCommand(MHDUIY::mediaControlInfo::CMDSTR[i]
                                 .arg(currentDevice));
             emit sendMsgToMainWindow(QString("已触发 %1").arg(MHDUIY::mediaControlInfo::OUTSTR[i]));
+            break;
+        case MHDUIY::deviceControlCode::broadcastControl:
+            tool.executeCommand(MHDUIY::broadcastControlInfo::CMDSTR[i]
+                                .arg(currentDevice));
+            emit sendMsgToMainWindow(QString("已触发 %1").arg(MHDUIY::broadcastControlInfo::OUTSTR[i]));
             break;
     }
 }
@@ -273,5 +354,43 @@ void DeviceControlWidget::setDefaultDpiData(MHDUIY::deviceDetailsInfo * info)
 
     this->resolutionEditw->setValue(sizeInfo.split('x').value(0).toUInt());
     this->resolutionEdith->setValue(sizeInfo.split('x').value(1).toUInt());
+}
+
+void DeviceControlWidget::responseBtn(BatteryControlFlag flag)
+{
+    static QStringList CMDlist {
+        "adb -s %1 shell dumpsys battery set level %2",
+        "adb -s %1 shell dumpsys battery set status 2",
+        "adb -s %1 shell dumpsys battery set status 1",
+        "adb -s %1 shell dumpsys battery unplug",
+        "adb -s %1 shell dumpsys battery reset"
+    };
+    QString cutDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
+    if(cutDevice.isEmpty()) {
+        emit sendMsgToMainWindow("没有设备连接");
+        return;
+    }
+    int inputBtyLevel = 0;
+    switch (flag) {
+    case Bty_SetLevel:
+        inputBtyLevel = BtyLevelEdit->value();
+        tool.executeCommand(CMDlist.value(Bty_SetLevel).arg(cutDevice).arg(inputBtyLevel));
+        break;
+    case Bty_StartCharge:
+        tool.executeCommand(CMDlist.value(Bty_StartCharge).arg(cutDevice));
+        break;
+    case Bty_StopCharge:
+        tool.executeCommand(CMDlist.value(Bty_StopCharge).arg(cutDevice));
+        break;
+    case Bty_BreakCharge:
+        tool.executeCommand(CMDlist.value(Bty_BreakCharge).arg(cutDevice));
+        break;
+    case Bty_ResetCharge:
+        tool.executeCommand(CMDlist.value(Bty_ResetCharge).arg(cutDevice));
+        break;
+    default:
+        return;
+    }
+    emit sendMsgToMainWindow("设置成功");
 }
 

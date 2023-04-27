@@ -5,6 +5,7 @@
 DeviceControlItem::DeviceControlItem(Dtk::Widget::DWidget *mainW, Dtk::Widget::DWidget *parent) : DWidget (parent)
 {
     initUI(mainW);
+    this->w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 }
 
 DeviceControlItem::~DeviceControlItem()

@@ -18,6 +18,7 @@
 #include <DPushButton>
 #include <DFrame>
 #include "deviceControlItem.h"
+#include <DWarningButton>
 
 
 DWIDGET_USE_NAMESPACE
@@ -42,6 +43,8 @@ private:
     DeviceControlItem *baseInfoControl;     //设备基础信息列表
     DeviceControlItem *currentActivityControl;  //设备当前活动
     QVector<DLabel *> currentActivityLabels;
+    DWarningButton *stopCutAppBtn;
+    void stopCutApp(); //停止当前App
 };
 
 #endif
