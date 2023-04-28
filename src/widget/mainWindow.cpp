@@ -3,6 +3,7 @@
 #include <QLayout>
 #include "deviceDetailTool.h"
 #include <DSuggestButton>
+#include <QSpacerItem>
 
 MainWindow::MainWindow(QWidget *parent) : DMainWindow (parent)
 {
@@ -26,12 +27,20 @@ void MainWindow::initUI()
     deviceBox = new DComboBox();
     flashBtn = new DIconButton();
     wirelessBtn = new DSuggestButton("无线连接");
+    spinner = new DSpinner();
+    spinnerTip = new DLabel();
 
     flashBtn->setIcon(QIcon(":/Icon/Refresh.png"));
 
     wirelessBtn->setFixedWidth(80);
     deviceBox->setFixedWidth(150);
+    spinner->setFixedSize(30,30);
+    spinnerTip->setMargin(5);
+    spinner->hide();
+    spinnerTip->hide();
 
+    this->titlebar()->addWidget(spinner, Qt::AlignRight);
+    this->titlebar()->addWidget(spinnerTip, Qt::AlignRight);
     this->titlebar()->addWidget(deviceBox, Qt::AlignRight);
     this->titlebar()->addWidget(flashBtn, Qt::AlignRight);
     this->titlebar()->addWidget(wirelessBtn, Qt::AlignRight);
@@ -226,4 +235,20 @@ void MainWindow::paintBtyIcon(int level)
     // 将QImage对象转换为QIcon对象，并设置为托盘图标
     sysIcon->setIcon(QIcon(QPixmap::fromImage(image).scaled(32, 32, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
     l = level;
+}
+
+void MainWindow::showSpinner(const QString &tip)
+{
+    spinner->start();
+    spinner->show();
+    spinnerTip->setText(tip);
+    spinnerTip->show();
+}
+
+void MainWindow::stopSpinner()
+{
+    spinner->hide();
+    spinner->stop();
+    spinnerTip->hide();
+    spinnerTip->setText("");
 }

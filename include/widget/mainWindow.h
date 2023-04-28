@@ -15,6 +15,7 @@
 #include <DPushButton>
 #include "deviceConnect.h"
 #include <QSystemTrayIcon>
+#include <DSpinner>
 
 #include "inforPanelWidget.h"
 #include "deviceControlWidget.h"
@@ -39,6 +40,8 @@ public:
 
     void noticeMsg(const QString &msg); //发出提示消息
     void paintBtyIcon(int level);       //画一个电池图标
+    void showSpinner(const QString& tip);
+    void stopSpinner();
 
 private:
     DWidget *mainW;
@@ -63,6 +66,8 @@ private:
     DPushButton *wirelessBtn;
     DComboBox *deviceBox;
     QSystemTrayIcon *sysIcon;                   //托盘图标
+    DSpinner *spinner;  //加载图标
+    DLabel *spinnerTip;
 };
 
 #endif

@@ -29,15 +29,15 @@ MHDUIY::deviceDetailsInfo *DeviceDetailTool::flashInfo()
     QString currentDeviceCode = DeviceConnect::getInstance()->getCurrentDeviceCode();
 
     /*厂商*/
-    QString command = QString("adb -s %1 shell getprop ro.product.product.manufacturer").arg(currentDeviceCode);
+    QString command = QString("adb -s %1 shell getprop ro.product.manufacturer").arg(currentDeviceCode);
     QString ret = tool.executeCommand(command).simplified();
     res->info[MHDUIY::deviceDetailsInfo::Manufacturer] = ret;
     /*品牌*/
-    command = QString("adb -s %1 shell getprop ro.product.product.brand").arg(currentDeviceCode);
+    command = QString("adb -s %1 shell getprop ro.product.brand").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();
     res->info[MHDUIY::deviceDetailsInfo::DeviceBrand] = ret;
     /*型号*/
-    command = QString("adb -s %1 shell getprop ro.product.product.marketname").arg(currentDeviceCode);
+    command = QString("adb -s %1 shell getprop ro.product.model").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();
     res->info[MHDUIY::deviceDetailsInfo::DeviceModel] = ret;
     /*设备代号*/
@@ -71,6 +71,11 @@ MHDUIY::deviceDetailsInfo *DeviceDetailTool::flashInfo()
     ret = tool.executeCommand(command).simplified();
     res->info[MHDUIY::deviceDetailsInfo::SerialNum] = ret.split(' ').value(0);
 
+    /*
+ro.product.model
+ro.product.manufacturer
+ro.product.brand
+*/
 
     emit readDeviceInfoFinish(res);
     this->info = res;
