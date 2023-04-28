@@ -6,6 +6,7 @@
 #include "deviceConnect.h"
 #include <QThread>
 #include <DDialog>
+#include <QStandardPaths>
 
 SoftwareManageWidget::SoftwareManageWidget(QWidget *parent) : DWidget (parent)
 {
@@ -192,29 +193,33 @@ void SoftwareManageWidget::initUI()
 //        this->responseBtn(SoftManageTool::OPERATFLAG::OP_UNINSTALL);
 //    });
     connect(installBtn, &DPushButton::clicked, [this](){
-        this->responseBtn(SoftManageTool::OPERATFLAG::OP_INSTALL);
+        installApp();
     });
 
     connect(clearDataBtn, &DPushButton::clicked, [this](){
-        ClearData();
+        clearData();
     });
     connect(this, &SoftwareManageWidget::_clearYes, [this](){
         this->responseBtn(SoftManageTool::OPERATFLAG::OP_CLEARDATA);
     });
 
     connect(uninstallBtn, &DPushButton::clicked, [this](){
-        DeleteApp1();
+        deleteApp1();
     });
     connect(this, &SoftwareManageWidget::_deleteYes1, [this](){
-        DeleteApp2();
+        deleteApp2();
     });
     connect(this, &SoftwareManageWidget::_deleteYes2, [this](){
         this->responseBtn(SoftManageTool::OPERATFLAG::OP_UNINSTALL);
     });
 
+    connect(selectSoftBtn, &DPushButton::clicked, [this](){
+        selectApk();
+    });
+
 }
 
-void SoftwareManageWidget::ClearData(){
+void SoftwareManageWidget::clearData(){
     DDialog dlgClear("提示", "确定要清除该软件的数据吗?");
     dlgClear.addButton("是", true, DDialog::ButtonWarning);
     dlgClear.addButton("否", false, DDialog::ButtonNormal);
@@ -228,7 +233,7 @@ void SoftwareManageWidget::ClearData(){
 
 }
 
-void SoftwareManageWidget::DeleteApp1(){
+void SoftwareManageWidget::deleteApp1(){
     DDialog dlgDelete1("提示", "确定要卸载此软件吗?");
     dlgDelete1.addButton("是", true, DDialog::ButtonWarning);
     dlgDelete1.addButton("否", false, DDialog::ButtonNormal);
@@ -241,7 +246,7 @@ void SoftwareManageWidget::DeleteApp1(){
     emit this->_deleteYes1();
 
 }
-void SoftwareManageWidget::DeleteApp2(){
+void SoftwareManageWidget::deleteApp2(){
     DDialog dlgDelete2("二次提示", "确定要卸载此软件吗?");
     dlgDelete2.setStyleSheet("color:red;");
     dlgDelete2.addButton("是", true, DDialog::ButtonWarning);
@@ -254,4 +259,26 @@ void SoftwareManageWidget::DeleteApp2(){
     }
     emit this->_deleteYes2();
 
+}
+
+void SoftwareManageWidget::selectApk(){
+
+    QString doc_path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    QString filePath = QFileDialog::getOpenFileName(this, tr("请选择一个APK"), doc_path, tr("APK Files (*.apk)"));
+    installSoftPath->setText(filePath);
+
+    qDebug() << filePath;
+
+    return ;
+
+}
+
+void SoftwareManageWidget::installApp(){
+    if( !QFile::exists(installSoftPath->text()) || installSoftPath->text().isEmpty() ){
+        installSoftPath->showAlertMessage("请选择正确的apk路径！");
+        return;
+    }
+
+    softTool->operateSoft(SoftManageTool::OP_INSTALL, installSoftPath->text());
+    return ;
 }

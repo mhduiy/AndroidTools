@@ -25,9 +25,11 @@ public:
     void showSoftList();
     void showDetailInfo(const QModelIndex &index);
     void responseBtn(const SoftManageTool::OPERATFLAG flag);
-    void ClearData();
-    void DeleteApp1();
-    void DeleteApp2();
+    void clearData();
+    void deleteApp1();
+    void deleteApp2();
+    void selectApk();
+    void installApp();
 
     void initUI();
 

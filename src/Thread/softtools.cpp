@@ -15,6 +15,7 @@ bool SoftTools::installApp(const QString &Path)
     QString cutDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
     qDebug() << "安装" << Path << QThread::currentThreadId();
     QString command = QString("adb -s %1 install %2").arg(cutDevice).arg(Path);
+    qDebug() << command;
     adbTool.executeCommand(command);
     return true;
 }
@@ -58,6 +59,17 @@ bool SoftTools::unfreezeApp(const QString &packageName)
 bool SoftTools::extractApp(const QString &packageName, const QString &targetPath)
 {
     qDebug() << "提取" << packageName << " " << targetPath<< QThread::currentThreadId();
+
+    QString cutDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
+
+    QString command1 = QString("adb -s %1 shell pm path %2").arg(cutDevice).arg(packageName);
+    QString _apkPath =  adbTool.executeCommand(command1);
+
+    _apkPath = _apkPath.simplified().split(':').value(1);
+    qDebug() << packageName << "路径：" << _apkPath;
+
+    QString command = QString("adb -s %1 pull %2 %3").arg(cutDevice).arg(_apkPath).arg(targetPath);
+    adbTool.executeCommand(command);
     return true;
 }
 
