@@ -316,10 +316,12 @@ void DeviceControlWidget::responseBtn(MHDUIY::deviceControlCode code, int i)
             break;
         case MHDUIY::deviceControlCode::AdvancedReBoot:
     {
-            DDialog dlg("提示", "确定要重启吗?");
+            DDialog dlg("提示", "确定要执行此操作吗?");
             dlg.addButton("是", true, DDialog::ButtonWarning);
             dlg.addButton("否", false, DDialog::ButtonNormal);
-            dlg.setIcon(QIcon::fromTheme("dialog-information"));
+            // dlg.setIcon(QIcon::fromTheme("dialog-inform ation"));
+            // dlg.setIcon(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning));
+            dlg.setIcon(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation));
             int ret = dlg.exec();
             qDebug() << ret;
             if(ret != 0) {  //选择了否或者关闭窗口

@@ -25,11 +25,17 @@ public:
     void showSoftList();
     void showDetailInfo(const QModelIndex &index);
     void responseBtn(const SoftManageTool::OPERATFLAG flag);
+    void ClearData();
+    void DeleteApp1();
+    void DeleteApp2();
 
     void initUI();
 
 signals:
     void sendMsgToMainWindow(const QString &msg);
+    void _clearYes();
+    void _deleteYes1();
+    void _deleteYes2();
 
 private:
     //软件包列表
@@ -46,6 +52,8 @@ private:
     DPushButton *extractBtn;
     DPushButton *clearDataBtn;
     DPushButton *uninstallBtn;
+    DPushButton *freezeBtn;
+    DPushButton *unfreezeBtn;
 
     //软件安装
     DeviceControlItem *installControl;

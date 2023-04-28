@@ -37,6 +37,24 @@ bool SoftTools::uninstallApp(const QString &packageName)
     return true;
 }
 
+bool SoftTools::freezeApp(const QString &packageName)
+{
+    QString cutDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
+    qDebug() << "冻结" << packageName<< QThread::currentThreadId();
+    QString command = QString("adb shell pm disable-user %1").arg(packageName);
+    adbTool.executeCommand(command);
+    return true;
+}
+
+bool SoftTools::unfreezeApp(const QString &packageName)
+{
+    QString cutDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
+    qDebug() << "解冻" << packageName<< QThread::currentThreadId();
+    QString command = QString("adb shell pm enable %1").arg(packageName);
+    adbTool.executeCommand(command);
+    return true;
+}
+
 bool SoftTools::extractApp(const QString &packageName, const QString &targetPath)
 {
     qDebug() << "提取" << packageName << " " << targetPath<< QThread::currentThreadId();

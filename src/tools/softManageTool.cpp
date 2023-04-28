@@ -14,6 +14,8 @@ SoftManageTool::SoftManageTool(QObject *parent) : QObject((parent))
     connect(this, &SoftManageTool::clearData, softTool, &SoftTools::clearData);
     connect(this, &SoftManageTool::uninstallApp, softTool, &SoftTools::uninstallApp);
     connect(this, &SoftManageTool::extractApp, softTool, &SoftTools::extractApp);
+    connect(this, &SoftManageTool::freezeApp, softTool, &SoftTools::freezeApp);
+    connect(this, &SoftManageTool::unfreezeApp, softTool, &SoftTools::unfreezeApp);
     softTool->moveToThread(thread);
     thread->start();    //将耗时任务移动到子线程中执行
 }
@@ -170,6 +172,12 @@ bool SoftManageTool::operateSoft(OPERATFLAG flag, const QString &packageName)
         break;
     case OP_EXTRACT:
         emit extractApp(packageName, doc_path + QDir::separator() + packageName + ".apk");
+        break;
+    case OP_FREEZE:
+        emit freezeApp(packageName);
+        break;
+    case OP_UNFREEZE:
+        emit unfreezeApp(packageName);
         break;
     default:
         break;

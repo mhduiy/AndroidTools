@@ -5,6 +5,7 @@
 #include <DWarningButton>
 #include "deviceConnect.h"
 #include <QThread>
+#include <DDialog>
 
 SoftwareManageWidget::SoftwareManageWidget(QWidget *parent) : DWidget (parent)
 {
@@ -131,8 +132,18 @@ void SoftwareManageWidget::initUI()
     softDetailBtnLayout->addWidget(clearDataBtn);
     softDetailBtnLayout->addWidget(uninstallBtn);
 
+    QHBoxLayout *softDetailBtnLayout1 = new QHBoxLayout();
+    softDetailBtnLayout->setSpacing(30);
+    freezeBtn = new DPushButton("冻结软件");
+    unfreezeBtn = new DPushButton("解冻软件");
+
+    softDetailBtnLayout1->addWidget(freezeBtn);
+    softDetailBtnLayout1->addWidget(unfreezeBtn);
+
+
     detailLayout->addLayout(softDetailInfoLayout);
     detailLayout->addLayout(softDetailBtnLayout);
+    detailLayout->addLayout(softDetailBtnLayout1);
 
     /*软件安装*/
     DWidget *installW = new DWidget();
@@ -163,20 +174,84 @@ void SoftwareManageWidget::initUI()
     mainLayout->setStretch(0,1);
     mainLayout->setStretch(1,1);
 
+    connect(freezeBtn, &DPushButton::clicked, [this](){
+        this->responseBtn(SoftManageTool::OPERATFLAG::OP_FREEZE);
+    });
 
+    connect(unfreezeBtn, &DPushButton::clicked, [this](){
+        this->responseBtn(SoftManageTool::OPERATFLAG::OP_UNFREEZE);
+    });
 
     connect(extractBtn, &DPushButton::clicked, [this](){
         this->responseBtn(SoftManageTool::OPERATFLAG::OP_EXTRACT);
     });
-    connect(clearDataBtn, &DPushButton::clicked, [this](){
-        this->responseBtn(SoftManageTool::OPERATFLAG::OP_CLEARDATA);
-    });
-    connect(uninstallBtn, &DPushButton::clicked, [this](){
-        this->responseBtn(SoftManageTool::OPERATFLAG::OP_UNINSTALL);
-    });
+//    connect(clearDataBtn, &DPushButton::clicked, [this](){
+//        this->responseBtn(SoftManageTool::OPERATFLAG::OP_CLEARDATA);
+//    });
+//    connect(uninstallBtn, &DPushButton::clicked, [this](){
+//        this->responseBtn(SoftManageTool::OPERATFLAG::OP_UNINSTALL);
+//    });
     connect(installBtn, &DPushButton::clicked, [this](){
         this->responseBtn(SoftManageTool::OPERATFLAG::OP_INSTALL);
     });
 
+    connect(clearDataBtn, &DPushButton::clicked, [this](){
+        ClearData();
+    });
+    connect(this, &SoftwareManageWidget::_clearYes, [this](){
+        this->responseBtn(SoftManageTool::OPERATFLAG::OP_CLEARDATA);
+    });
+
+    connect(uninstallBtn, &DPushButton::clicked, [this](){
+        DeleteApp1();
+    });
+    connect(this, &SoftwareManageWidget::_deleteYes1, [this](){
+        DeleteApp2();
+    });
+    connect(this, &SoftwareManageWidget::_deleteYes2, [this](){
+        this->responseBtn(SoftManageTool::OPERATFLAG::OP_UNINSTALL);
+    });
+
+}
+
+void SoftwareManageWidget::ClearData(){
+    DDialog dlgClear("提示", "确定要清除该软件的数据吗?");
+    dlgClear.addButton("是", true, DDialog::ButtonWarning);
+    dlgClear.addButton("否", false, DDialog::ButtonNormal);
+    dlgClear.setIcon(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning));
+    int ret = dlgClear.exec();
+    qDebug() << ret;
+    if(ret != 0) {  //选择了否或者关闭窗口
+        return;
+    }
+    emit this->_clearYes();
+
+}
+
+void SoftwareManageWidget::DeleteApp1(){
+    DDialog dlgDelete1("提示", "确定要卸载此软件吗?");
+    dlgDelete1.addButton("是", true, DDialog::ButtonWarning);
+    dlgDelete1.addButton("否", false, DDialog::ButtonNormal);
+    dlgDelete1.setIcon(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning));
+    int ret = dlgDelete1.exec();
+    qDebug() << ret;
+    if(ret != 0) {  //选择了否或者关闭窗口
+        return;
+    }
+    emit this->_deleteYes1();
+
+}
+void SoftwareManageWidget::DeleteApp2(){
+    DDialog dlgDelete2("二次提示", "确定要卸载此软件吗?");
+    dlgDelete2.setStyleSheet("color:red;");
+    dlgDelete2.addButton("是", true, DDialog::ButtonWarning);
+    dlgDelete2.addButton("否", false, DDialog::ButtonNormal);
+    dlgDelete2.setIcon(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning));
+    int ret = dlgDelete2.exec();
+    qDebug() << ret;
+    if(ret != 0) {  //选择了否或者关闭窗口
+        return;
+    }
+    emit this->_deleteYes2();
 
 }

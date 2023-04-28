@@ -12,6 +12,8 @@ public:
     explicit SoftTools(QObject *parent = nullptr);
     bool installApp(const QString& Path);                                   //安装软件
     bool clearData(const QString& packageName);                             //清除数据
+    bool unfreezeApp(const QString& packageName);                           //解冻软件
+    bool freezeApp(const QString& packageName);                             //冻结软件
     bool uninstallApp(const QString& packageName);                          //卸载软件
     bool extractApp(const QString& packageName, const QString& targetPath); //提取软件
     static SoftTools* getInstance(QObject *parent = nullptr);

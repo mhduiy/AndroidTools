@@ -21,7 +21,9 @@ public:
         OP_INSTALL = 0, //安装
         OP_UNINSTALL,   //卸载
         OP_CLEARDATA,   //清除数据
-        OP_EXTRACT      //提取
+        OP_EXTRACT,      //提取
+        OP_FREEZE,      //冻结
+        OP_UNFREEZE     //解冻
     };
 
     explicit SoftManageTool(QObject *parent = nullptr);
@@ -34,6 +36,8 @@ signals:
     void installApp(const QString& Path);
     void clearData(const QString& packageName);
     void uninstallApp(const QString& packageName);
+    void freezeApp(const QString& packageName);
+    void unfreezeApp(const QString& packageName);
     void extractApp(const QString& packageName, const QString& targetPath);
 private:
     static SoftManageTool* instance;
