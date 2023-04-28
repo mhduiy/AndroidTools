@@ -41,7 +41,7 @@ bool SoftTools::freezeApp(const QString &packageName)
 {
     QString cutDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
     qDebug() << "冻结" << packageName<< QThread::currentThreadId();
-    QString command = QString("adb shell pm disable-user %1").arg(packageName);
+    QString command = QString("adb -s %1 shell pm disable-user %2").arg(cutDevice).arg(packageName);
     adbTool.executeCommand(command);
     return true;
 }
@@ -50,7 +50,7 @@ bool SoftTools::unfreezeApp(const QString &packageName)
 {
     QString cutDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
     qDebug() << "解冻" << packageName<< QThread::currentThreadId();
-    QString command = QString("adb shell pm enable %1").arg(packageName);
+    QString command = QString("adb -s %1 shell pm enable %2").arg(cutDevice).arg(packageName);
     adbTool.executeCommand(command);
     return true;
 }
