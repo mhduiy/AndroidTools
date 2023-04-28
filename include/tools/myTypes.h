@@ -41,14 +41,15 @@ namespace MHDUIY {
         static QStringList OUTSTR;
         enum {
             Manufacturer = 0,   //厂商
+            DeviceBrand,        //品牌
             DeviceModel,        //型号
-            SystemInfo,         //系统
             DeviceCodeName,     //设备代号
+            SystemInfo,         //系统
             AndroidVersion,     //安卓版本
             CPUInfo,            //CPU信息
             Dpi,                //Dpi
             Resolution,         //分辨率
-            PoweredOnTime,      //开机时间
+            SerialNum,          //序列号
             TOTAL
         };
         QVector<QString> info;

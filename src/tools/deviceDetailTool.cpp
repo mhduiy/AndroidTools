@@ -29,17 +29,26 @@ MHDUIY::deviceDetailsInfo *DeviceDetailTool::flashInfo()
     QString currentDeviceCode = DeviceConnect::getInstance()->getCurrentDeviceCode();
 
     /*厂商*/
-    QString command = QString("adb -s %1 shell getprop ro.product.brand").arg(currentDeviceCode);
+    QString command = QString("adb -s %1 shell getprop ro.product.product.manufacturer").arg(currentDeviceCode);
     QString ret = tool.executeCommand(command).simplified();
     res->info[MHDUIY::deviceDetailsInfo::Manufacturer] = ret;
+    /*品牌*/
+    command = QString("adb -s %1 shell getprop ro.product.product.brand").arg(currentDeviceCode);
+    ret = tool.executeCommand(command).simplified();
+    res->info[MHDUIY::deviceDetailsInfo::DeviceBrand] = ret;
     /*型号*/
-    command = QString("adb -s %1 shell getprop ro.product.model").arg(currentDeviceCode);
+    command = QString("adb -s %1 shell getprop ro.product.product.marketname").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();
     res->info[MHDUIY::deviceDetailsInfo::DeviceModel] = ret;
     /*设备代号*/
-    command = QString("adb -s %1 shell getprop ro.product.name").arg(currentDeviceCode);
+    command = QString("adb -s %1 shell getprop ro.product.product.device").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();
     res->info[MHDUIY::deviceDetailsInfo::DeviceCodeName] = ret;
+    /*系统信息*/
+    command = QString("adb -s %1 shell getprop ro.custom.version").arg(currentDeviceCode);
+    ret = tool.executeCommand(command).simplified();
+    res->info[MHDUIY::deviceDetailsInfo::SystemInfo] = ret;
+
     /*安卓版本*/
     command = QString("adb -s %1 shell getprop ro.build.version.release").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();
@@ -57,7 +66,11 @@ MHDUIY::deviceDetailsInfo *DeviceDetailTool::flashInfo()
     command = QString("adb -s %1 shell wm size").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();
     res->info[MHDUIY::deviceDetailsInfo::Resolution] = ret.split(' ').last();
-    /*开机时间*/
+    /*序列号*/
+    command = QString("adb -s %1 shell getprop ro.serialno").arg(currentDeviceCode);
+    ret = tool.executeCommand(command).simplified();
+    res->info[MHDUIY::deviceDetailsInfo::SerialNum] = ret.split(' ').value(0);
+
 
     emit readDeviceInfoFinish(res);
     this->info = res;

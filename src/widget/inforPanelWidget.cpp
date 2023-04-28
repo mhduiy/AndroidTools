@@ -73,7 +73,7 @@ void InfoPannelWidget::initUI()
         tableModel->appendRow(item);
     }
     //设置表格列宽和行高
-    deviceInfoTable->setColumnWidth(0, int(deviceInfoTable->width() * 0.3));
+    deviceInfoTable->setColumnWidth(0, 100);
     for(int i = 0; i < MHDUIY::deviceDetailsInfo::TOTAL; i++) {
         deviceInfoTable->setRowHeight(i, 40);
     }
@@ -135,6 +135,8 @@ void InfoPannelWidget::setInfoToDetialsTable(MHDUIY::deviceDetailsInfo *info)
         tableModel->setItem(i, 1, item);
     }
     deviceName->setText(info->info[MHDUIY::deviceDetailsInfo::Manufacturer]
+            + "-"
+            + info->info[MHDUIY::deviceDetailsInfo::DeviceBrand]
             + " "
             + info->info[MHDUIY::deviceDetailsInfo::DeviceModel]);
 }

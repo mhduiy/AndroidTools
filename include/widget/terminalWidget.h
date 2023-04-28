@@ -27,6 +27,7 @@ private:
     ADBTools adbTool;
     DSuggestButton *pasteBtn;
     DPushButton *clearBtn;
+    DPushButton *openExternalTerminalBtn;   //打开外部终端
 };
 
 

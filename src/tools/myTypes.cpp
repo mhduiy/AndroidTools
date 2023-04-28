@@ -16,14 +16,15 @@ QStringList deviceRealTimeInfo::OUTSTR {
 
 QStringList deviceDetailsInfo::OUTSTR {
     "厂商",
+    "品牌",
     "型号",
-    "系统",
     "设备代号",
+    "系统信息",
     "安卓版本",
     "CPU信息",
     "屏幕密度",
     "分辨率",
-    "开机时间"
+    "序列号"
 };
 
 QStringList deviceBaceInfo::OUTSTR {
