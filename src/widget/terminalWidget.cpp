@@ -4,7 +4,7 @@
 #include <QGuiApplication>
 #include <QApplication>
 
-TerminalWidget::TerminalWidget(QWidget *parent) : DWidget (parent)
+TerminalWidget::TerminalWidget(QWidget *parent)  : MyBaceWidget(parent)
 {
     initUI();
 }

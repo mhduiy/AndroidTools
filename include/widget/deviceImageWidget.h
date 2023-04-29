@@ -10,10 +10,11 @@
 #include <QImage>
 #include <QLabel>
 #include <DSuggestButton>
+#include "mybacewidget.h"
 
 DWIDGET_USE_NAMESPACE
 
-class DeviceImageWidget : public DWidget {
+class DeviceImageWidget : public MyBaceWidget {
     Q_OBJECT
 public:
     explicit DeviceImageWidget(QWidget *parent = nullptr);
@@ -24,7 +25,6 @@ public:
     bool saveCurrentDeviceImage();
 
 signals:
-    void sendMsgToMainWindow(const QString &msg);
 
 private:
     DLabel *deviceImgLabel;

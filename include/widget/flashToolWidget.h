@@ -13,11 +13,13 @@
 #include <DCheckBox>
 #include <DListView>
 #include <QStandardItemModel>
+#include "mybacewidget.h"
+
 
 
 DWIDGET_USE_NAMESPACE
 
-class FlashToolWidget : public DWidget {
+class FlashToolWidget : public MyBaceWidget {
     Q_OBJECT
 public:
     explicit FlashToolWidget(QWidget *parent = nullptr);
@@ -26,7 +28,6 @@ public:
     void initUI();
 
 signals:
-    void sendMsgToMainWindow(const QString &msg);
 private:
     void responseFastRebootBtn(int i);    //响应快速重启按钮
 

@@ -1,7 +1,6 @@
 #include "fileManageWidget.h"
 
-FileManageWidget::FileManageWidget(QWidget *parent) : DWidget (parent)
-{
+FileManageWidget::FileManageWidget(QWidget *parent)  : MyBaceWidget(parent){
     initUI();
 }
 

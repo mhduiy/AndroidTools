@@ -55,62 +55,11 @@ QStringList SoftManageTool::getSoftList(SOFTFLAG flag)
 
 MHDUIY::SoftInfo &SoftManageTool::getSoftInfo(const QString &packageName)
 {
-   //static QString getInstance = "adb -s %1 shell dumpsys package";
-
    static MHDUIY::SoftInfo _info;
-   // MHDUIY::deviceDetailsInfo *res = new MHDUIY::deviceDetailsInfo();
    QString currentDeviceCode = DeviceConnect::getInstance()->getCurrentDeviceCode();
-
-   /*软件名0*/
-//   QString getInstance = QString("adb -s %1 shell dumpsys package").arg(currentDeviceCode);
-//   QString ret = tool.executeCommand(getInstance).simplified();
    QString ret = "I am 360";
    _info.info[MHDUIY::SoftInfo::Name] = ret;
-//   qDebug() << "index.()";
-
-   /*包名1*/
-//   getInstance = QString("adb -s %1 shell dumpsys package").arg(currentDeviceCode);
-//   ret = tool.executeCommand(getInstance).simplified();
    _info.info[MHDUIY::SoftInfo::PackageName] = packageName;
-//   qDebug() << "ind1";
-
-//   /*安装时间2*/
-//   QString _cmd = QString("adb -s %1 shell dumpsys package %2|grep -i 'firstInstallTime'").arg(currentDeviceCode).arg(packageName);
-//   ret = tool.executeCommand(_cmd).simplified();
-//   ret = ret.split("=").last();
-//   _info.info[MHDUIY::SoftInfo::InstallTime] = ret;
-
-//   /*安装路径3*/
-//   _cmd = QString("adb -s %1 shell dumpsys package %2|grep -i 'resourcePath'").arg(currentDeviceCode).arg(packageName);
-//   ret = tool.executeCommand(_cmd).simplified();
-//   ret = ret.split("=").last();
-//   _info.info[MHDUIY::SoftInfo::InstallPath] = ret;
-
-//   /*版本4*/
-//   _cmd = QString("adb -s %1 shell dumpsys package %2|grep -i 'versionName'").arg(currentDeviceCode).arg(packageName);
-//   ret = tool.executeCommand(_cmd).simplified();
-//   ret = ret.split("=").last();
-//   _info.info[MHDUIY::SoftInfo::Version] = ret;
-
-//   /*版本code5*/
-//   _cmd = QString("adb -s %1 shell dumpsys package %2|grep -i 'VersionCode'").arg(currentDeviceCode).arg(packageName);
-//   ret = tool.executeCommand(_cmd).simplified();
-//   QStringList qslist = ret.split(" ");
-//   _info.info[MHDUIY::SoftInfo::VersionCode] = qslist.value(0).split("=").last();
-
-
-
-//   /*目标sdk6*/
-//   _info.info[MHDUIY::SoftInfo::TargetSDK] = qslist.value(2).split("=").last();
-
-//   /*最低sdk7*/
-//   _info.info[MHDUIY::SoftInfo::MinSDK] = qslist.value(1).split("=").last();
-
-//   ret = tool.executeCommand(_cmd).simplified();
-//   ret = ret.split("=").last();
-//   _info.info[MHDUIY::SoftInfo::InstallTime] = ret;
-
-
    QString &&_cmd = QString("adb -s %1 shell dumpsys package %2").arg(currentDeviceCode).arg(packageName);
    QString &&_cmdInfo = tool.executeCommand(_cmd);
 
@@ -133,50 +82,30 @@ MHDUIY::SoftInfo &SoftManageTool::getSoftInfo(const QString &packageName)
        }
    }
 
-
-
    return _info;
 }
 
-/*
-    struct SoftInfo {
-        static QStringList OUTSTR;
-        enum {
-            Name = 0,       //软件名
-            PackageName,    //包名
-            InstallTime,    //安装时间
-            InstallPath,    //安装路径
-            Version,        //版本
-            VersionCode,    //版本code
-            TargetSDK,      //目标SDK
-            MinSDK,         //最低SDK
-            TOTAL
-        };
-        QVector<QString> info;
-        inline SoftInfo():info(TOTAL){}
-    };
-*/
-
-bool SoftManageTool::operateSoft(OPERATFLAG flag, const QString &packageName)
+//发出信号，在子线程中执行
+bool SoftManageTool::operateSoft(MHDUIY::OPERATFLAG flag, const QString &packageName)
 {
     QString doc_path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     switch( flag ){
-    case OP_INSTALL:
+    case MHDUIY::OP_INSTALL:
         emit installApp(packageName);
         break;
-    case OP_UNINSTALL:
+    case MHDUIY::OP_UNINSTALL:
         emit uninstallApp(packageName);
         break;
-    case OP_CLEARDATA:
+    case MHDUIY::OP_CLEARDATA:
         emit clearData(packageName);
         break;
-    case OP_EXTRACT:
+    case MHDUIY::OP_EXTRACT:
         emit extractApp(packageName, doc_path + QDir::separator() + packageName + ".apk");
         break;
-    case OP_FREEZE:
+    case MHDUIY::OP_FREEZE:
         emit freezeApp(packageName);
         break;
-    case OP_UNFREEZE:
+    case MHDUIY::OP_UNFREEZE:
         emit unfreezeApp(packageName);
         break;
     default:

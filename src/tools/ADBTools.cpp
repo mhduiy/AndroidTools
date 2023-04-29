@@ -30,7 +30,7 @@ QString ADBTools::executeCommand(const QString &cmd)
     }
     QProcess pro;
     pro.start(command);
-    pro.waitForFinished(5000);
+    pro.waitForFinished(200000);    //命令执行超过200秒强制提出
     QString ret = pro.readAllStandardOutput();
     if(ret.isEmpty()) {
         ret = pro.readAllStandardError();

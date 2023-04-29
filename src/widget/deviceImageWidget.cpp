@@ -4,7 +4,7 @@
 #include <QPixmap>
 #include <QStandardPaths>
 
-DeviceImageWidget::DeviceImageWidget(QWidget *parent) : DWidget (parent)
+DeviceImageWidget::DeviceImageWidget(QWidget *parent)  : MyBaceWidget(parent)
 {
     initUI();
 }

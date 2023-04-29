@@ -8,7 +8,7 @@
 #include <DDialog>
 #include <DScrollArea>
 
-DeviceControlWidget::DeviceControlWidget(QWidget *parent) : DWidget(parent)
+DeviceControlWidget::DeviceControlWidget(QWidget *parent) : MyBaceWidget(parent)
 {
     initUI();
 }

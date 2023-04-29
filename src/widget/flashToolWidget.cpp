@@ -9,7 +9,7 @@
 #include <QUrl>
 #include <deviceConnect.h>
 
-FlashToolWidget::FlashToolWidget(QWidget *parent) : DWidget (parent)
+FlashToolWidget::FlashToolWidget(QWidget *parent)  : MyBaceWidget(parent)
 {
     initUI();
 }

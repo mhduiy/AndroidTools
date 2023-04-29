@@ -13,6 +13,15 @@ namespace MHDUIY {
         broadcastControl
     };
 
+    enum OPERATFLAG {
+        OP_INSTALL = 0, //安装
+        OP_UNINSTALL,   //卸载
+        OP_CLEARDATA,   //清除数据
+        OP_EXTRACT,      //提取
+        OP_FREEZE,      //冻结
+        OP_UNFREEZE     //解冻
+    };
+
     //设备实时更新的信息
     struct deviceRealTimeInfo {
         static QStringList OUTSTR;

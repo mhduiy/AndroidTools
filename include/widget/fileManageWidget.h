@@ -2,10 +2,12 @@
 #define FILEMANAGEWIDGET_H
 
 #include <DWidget>
+#include "mybacewidget.h"
+
 
 DWIDGET_USE_NAMESPACE
 
-class FileManageWidget : public DWidget {
+class FileManageWidget : public MyBaceWidget {
     Q_OBJECT
 public:
     explicit FileManageWidget(QWidget *parent = nullptr);
@@ -14,7 +16,6 @@ public:
     void initUI();
 
 signals:
-    void sendMsgToMainWindow(const QString &msg);
 
 private:
 

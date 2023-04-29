@@ -8,6 +8,7 @@
 #include "ADBTools.h"
 #include "deviceControlItem.h"
 #include "deviceDetailTool.h"
+#include "mybacewidget.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -20,7 +21,7 @@ enum BatteryControlFlag {
     TOTAL
 };
 
-class DeviceControlWidget : public DWidget {
+class DeviceControlWidget : public MyBaceWidget {
     Q_OBJECT
 public:
     explicit DeviceControlWidget(QWidget *parent = nullptr);
@@ -29,8 +30,8 @@ public:
     void initUI();
     void responseBtn(MHDUIY::deviceControlCode code, int i);    //响应按钮
 
-signals:
-    void sendMsgToMainWindow(const QString &msg);
+//signals:
+//    void sendMsgToMainWindow(const QString &msg);
 
 private:
     void setDefaultDpiData(MHDUIY::deviceDetailsInfo *);

@@ -14,27 +14,29 @@
 #include <QStandardItemModel>
 #include "softManageTool.h"
 #include <DWarningButton>
+#include "mybacewidget.h"
 
 DWIDGET_USE_NAMESPACE
 
-class SoftwareManageWidget : public DWidget {
+class SoftwareManageWidget : public MyBaceWidget {
     Q_OBJECT
 public:
     explicit SoftwareManageWidget(QWidget *parent = nullptr);
     ~SoftwareManageWidget();
     void showSoftList();
     void showDetailInfo(const QModelIndex &index);
-    void responseBtn(const SoftManageTool::OPERATFLAG flag);
+    void responseBtn(const MHDUIY::OPERATFLAG flag);
     void clearData();
     void deleteApp1();
     void deleteApp2();
     void selectApk();
     void installApp();
+    void acceptRetStatus(MHDUIY::OPERATFLAG, bool isSuc);
 
     void initUI();
 
 signals:
-    void sendMsgToMainWindow(const QString &msg);
+//    void sendMsgToMainWindow(const QString &msg);
     void _clearYes();
     void _deleteYes1();
     void _deleteYes2();

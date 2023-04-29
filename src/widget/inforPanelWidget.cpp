@@ -5,7 +5,7 @@
 #include "ADBTools.h"
 #include "deviceConnect.h"
 
-InfoPannelWidget::InfoPannelWidget(QWidget *parent) : DWidget (parent)
+InfoPannelWidget::InfoPannelWidget(QWidget *parent)  : MyBaceWidget(parent)
 {
     initUI();
 }

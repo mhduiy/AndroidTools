@@ -17,6 +17,7 @@ bool SoftTools::installApp(const QString &Path)
     QString command = QString("adb -s %1 install %2").arg(cutDevice).arg(Path);
     qDebug() << command;
     adbTool.executeCommand(command);
+    emit finishOP(MHDUIY::OP_INSTALL, true);
     return true;
 }
 
@@ -26,6 +27,7 @@ bool SoftTools::clearData(const QString &packageName)
     qDebug() << "清除" << packageName << QThread::currentThreadId();
     QString command = QString("adb -s %1 shell pm clear %2").arg(cutDevice).arg(packageName);
     adbTool.executeCommand(command);
+    emit finishOP(MHDUIY::OP_CLEARDATA, true);
     return true;
 }
 
@@ -35,6 +37,7 @@ bool SoftTools::uninstallApp(const QString &packageName)
     qDebug() << "卸载" << packageName<< QThread::currentThreadId();
     QString command = QString("adb -s %1 uninstall %2").arg(cutDevice).arg(packageName);
     adbTool.executeCommand(command);
+    emit finishOP(MHDUIY::OP_UNINSTALL, true);
     return true;
 }
 
@@ -44,6 +47,7 @@ bool SoftTools::freezeApp(const QString &packageName)
     qDebug() << "冻结" << packageName<< QThread::currentThreadId();
     QString command = QString("adb -s %1 shell pm disable-user %2").arg(cutDevice).arg(packageName);
     adbTool.executeCommand(command);
+    emit finishOP(MHDUIY::OP_FREEZE, true);
     return true;
 }
 
@@ -53,6 +57,7 @@ bool SoftTools::unfreezeApp(const QString &packageName)
     qDebug() << "解冻" << packageName<< QThread::currentThreadId();
     QString command = QString("adb -s %1 shell pm enable %2").arg(cutDevice).arg(packageName);
     adbTool.executeCommand(command);
+    emit finishOP(MHDUIY::OP_UNFREEZE, true);
     return true;
 }
 
@@ -70,6 +75,7 @@ bool SoftTools::extractApp(const QString &packageName, const QString &targetPath
 
     QString command = QString("adb -s %1 pull %2 %3").arg(cutDevice).arg(_apkPath).arg(targetPath);
     adbTool.executeCommand(command);
+    emit finishOP(MHDUIY::OP_EXTRACT, true);
     return true;
 }
 

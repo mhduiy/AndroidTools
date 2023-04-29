@@ -7,8 +7,10 @@
 
 MainWindow::MainWindow(QWidget *parent) : DMainWindow (parent)
 {
-    setWindowFlags(windowFlags()& ~Qt::WindowMinMaxButtonsHint);//去除最大化窗口
+    setWindowFlags(windowFlags()& ~Qt::WindowMaximizeButtonHint);//去除最大化窗口
     this->titlebar()->setTitle("Android Tools");
+    //注册类型
+    qRegisterMetaType<MHDUIY::OPERATFLAG>("MHDUIY::OPERATFLAG");
     initUI();
 }
 
@@ -148,6 +150,15 @@ void MainWindow::initUI()
     //链接左边的功能区域和右边的设备
     connect(funcView, &DListView::clicked, [this](const QModelIndex &index){
         //实现点击左侧功能按钮右边界面切换
+        if(index.row() == 0 && !this->timer.isActive()) {
+            this->timer.start(1000); //如果在开始界面开始信息刷新
+            qDebug() << "start";
+        }
+        else {
+            this->timer.stop(); //在其他界面停止信息刷新
+            qDebug() << "stop";
+        }
+
         this->mainStackedWidget->setCurrentIndex(index.row());
     });
 
@@ -159,6 +170,22 @@ void MainWindow::initUI()
     connect(flashToolWidget, &FlashToolWidget::sendMsgToMainWindow, this, &MainWindow::noticeMsg);
     connect(deviceImageWidget, &DeviceImageWidget::sendMsgToMainWindow, this, &MainWindow::noticeMsg);
     connect(terminalWidget, &TerminalWidget::sendMsgToMainWindow, this, &MainWindow::noticeMsg);
+
+    connect(infoPannelWidget, &InfoPannelWidget::startSpinner, this, &MainWindow::showSpinner);
+    connect(deviceControlWidget, &DeviceControlWidget::startSpinner, this, &MainWindow::showSpinner);
+    connect(softwareManageWidget, &SoftwareManageWidget::startSpinner, this, &MainWindow::showSpinner);
+    connect(fileManageWidget, &FileManageWidget::startSpinner, this, &MainWindow::showSpinner);
+    connect(flashToolWidget, &FlashToolWidget::startSpinner, this, &MainWindow::showSpinner);
+    connect(deviceImageWidget, &DeviceImageWidget::startSpinner, this, &MainWindow::showSpinner);
+    connect(terminalWidget, &TerminalWidget::startSpinner, this, &MainWindow::showSpinner);
+
+    connect(infoPannelWidget, &InfoPannelWidget::stopSpinner, this, &MainWindow::stopSpinner);
+    connect(deviceControlWidget, &DeviceControlWidget::stopSpinner, this, &MainWindow::stopSpinner);
+    connect(softwareManageWidget, &SoftwareManageWidget::stopSpinner, this, &MainWindow::stopSpinner);
+    connect(fileManageWidget, &FileManageWidget::stopSpinner, this, &MainWindow::stopSpinner);
+    connect(flashToolWidget, &FlashToolWidget::stopSpinner, this, &MainWindow::stopSpinner);
+    connect(deviceImageWidget, &DeviceImageWidget::stopSpinner, this, &MainWindow::stopSpinner);
+    connect(terminalWidget, &TerminalWidget::stopSpinner, this, &MainWindow::stopSpinner);
 
     //无线连接按钮
     connect(wirelessBtn, &DPushButton::clicked, this, [this](){

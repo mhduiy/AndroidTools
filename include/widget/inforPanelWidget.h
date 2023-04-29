@@ -19,11 +19,13 @@
 #include <DFrame>
 #include "deviceControlItem.h"
 #include <DWarningButton>
+#include "mybacewidget.h"
+
 
 
 DWIDGET_USE_NAMESPACE
 
-class InfoPannelWidget : public DWidget {
+class InfoPannelWidget : public MyBaceWidget {
     Q_OBJECT
 public:
     explicit InfoPannelWidget(QWidget *parent = nullptr);
@@ -33,7 +35,6 @@ public:
     void setInfoToDetialsTable(MHDUIY::deviceDetailsInfo *info);
 signals:
     void flashDevice();
-    void sendMsgToMainWindow(const QString &msg);
 
 private:
     DLabel *deviceName;

@@ -4,6 +4,7 @@
 #include <QObject>
 #include "deviceConnect.h"
 #include "ADBTools.h"
+#include "myTypes.h"
 
 class SoftTools : public QObject
 {
@@ -17,6 +18,9 @@ public:
     bool uninstallApp(const QString& packageName);                          //卸载软件
     bool extractApp(const QString& packageName, const QString& targetPath); //提取软件
     static SoftTools* getInstance(QObject *parent = nullptr);
+
+signals:
+    void finishOP(MHDUIY::OPERATFLAG, bool isSuc);
 private:
     ADBTools adbTool;
     static SoftTools* instance;

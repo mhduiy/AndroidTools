@@ -7,12 +7,13 @@
 #include <QThread>
 #include <DDialog>
 #include <QStandardPaths>
+#include "softtools.h"
 
-SoftwareManageWidget::SoftwareManageWidget(QWidget *parent) : DWidget (parent)
+SoftwareManageWidget::SoftwareManageWidget(QWidget *parent) : MyBaceWidget(parent)
 {
     initUI();
     softTool = SoftManageTool::getInstance();
-    qDebug() << "cur" << QThread::currentThreadId();
+    connect(SoftTools::getInstance(), &SoftTools::finishOP, this, &SoftwareManageWidget::acceptRetStatus);  //接收执行成功的消息
 }
 
 SoftwareManageWidget::~SoftwareManageWidget()
@@ -52,14 +53,44 @@ void SoftwareManageWidget::showDetailInfo(const QModelIndex &index)
 
 }
 
-void SoftwareManageWidget::responseBtn(const SoftManageTool::OPERATFLAG flag)
+void SoftwareManageWidget::responseBtn(const MHDUIY::OPERATFLAG flag)
 {
     auto packageNameList =  softListTable->selectionModel()->selectedRows();
-    if(packageNameList.size() <= 0 && flag != SoftManageTool::OP_INSTALL){
+    if(packageNameList.size() <= 0 && flag != MHDUIY::OP_INSTALL){
         emit sendMsgToMainWindow("请先在左侧列表中选择软件包！");
         return ;
     }
-    softTool->operateSoft(flag, packageNameList.first().data().toString());
+    QString packageName = packageNameList.value(0).data().toString();
+    QString tip;
+    switch( flag ){
+    case MHDUIY::OP_INSTALL:
+        if( !QFile::exists(installSoftPath->text()) || installSoftPath->text().isEmpty() ){
+            installSoftPath->showAlertMessage("请选择正确的apk路径！");
+            return;
+        }
+        packageName = installSoftPath->text();
+        tip = "正在安装";
+        break;
+    case MHDUIY::OP_UNINSTALL:
+        tip = "正在卸载";
+        break;
+    case MHDUIY::OP_CLEARDATA:
+        tip = "正在清除";
+        break;
+    case MHDUIY::OP_EXTRACT:
+        tip = "正在提取";
+        break;
+    case MHDUIY::OP_FREEZE:
+        tip = "正在冻结";
+        break;
+    case MHDUIY::OP_UNFREEZE:
+        tip = "正在解冻";
+        break;
+    default:
+        break;
+    }
+    emit startSpinner(tip);
+    softTool->operateSoft(flag, packageName);
     return ;
 }
 
@@ -124,8 +155,8 @@ void SoftwareManageWidget::initUI()
     softDetailBtnLayout->setSpacing(30);
     extractBtn = new DPushButton("提取软件");
 
-    DWarningButton *clearDataBtn = new DWarningButton;
-    DWarningButton *uninstallBtn = new DWarningButton;
+    clearDataBtn = new DWarningButton;
+    uninstallBtn = new DWarningButton;
     clearDataBtn->setText("清除数据");
     uninstallBtn->setText("卸载软件");
 
@@ -175,32 +206,29 @@ void SoftwareManageWidget::initUI()
     mainLayout->setStretch(0,1);
     mainLayout->setStretch(1,1);
 
+    //冻结软件响应
     connect(freezeBtn, &DPushButton::clicked, [this](){
-        this->responseBtn(SoftManageTool::OPERATFLAG::OP_FREEZE);
+        this->responseBtn(MHDUIY::OPERATFLAG::OP_FREEZE);
     });
-
+    //解冻软件响应
     connect(unfreezeBtn, &DPushButton::clicked, [this](){
-        this->responseBtn(SoftManageTool::OPERATFLAG::OP_UNFREEZE);
+        this->responseBtn(MHDUIY::OPERATFLAG::OP_UNFREEZE);
     });
-
+    //提取软件响应
     connect(extractBtn, &DPushButton::clicked, [this](){
-        this->responseBtn(SoftManageTool::OPERATFLAG::OP_EXTRACT);
+        this->responseBtn(MHDUIY::OPERATFLAG::OP_EXTRACT);
     });
-//    connect(clearDataBtn, &DPushButton::clicked, [this](){
-//        this->responseBtn(SoftManageTool::OPERATFLAG::OP_CLEARDATA);
-//    });
-//    connect(uninstallBtn, &DPushButton::clicked, [this](){
-//        this->responseBtn(SoftManageTool::OPERATFLAG::OP_UNINSTALL);
-//    });
+    //安装软件响应
     connect(installBtn, &DPushButton::clicked, [this](){
-        installApp();
+        this->responseBtn(MHDUIY::OPERATFLAG::OP_INSTALL);
     });
-
+    //清除数据响应
     connect(clearDataBtn, &DPushButton::clicked, [this](){
         clearData();
     });
+
     connect(this, &SoftwareManageWidget::_clearYes, [this](){
-        this->responseBtn(SoftManageTool::OPERATFLAG::OP_CLEARDATA);
+        this->responseBtn(MHDUIY::OPERATFLAG::OP_CLEARDATA);
     });
 
     connect(uninstallBtn, &DPushButton::clicked, [this](){
@@ -210,13 +238,12 @@ void SoftwareManageWidget::initUI()
         deleteApp2();
     });
     connect(this, &SoftwareManageWidget::_deleteYes2, [this](){
-        this->responseBtn(SoftManageTool::OPERATFLAG::OP_UNINSTALL);
+        this->responseBtn(MHDUIY::OPERATFLAG::OP_UNINSTALL);
     });
 
     connect(selectSoftBtn, &DPushButton::clicked, [this](){
         selectApk();
     });
-
 }
 
 void SoftwareManageWidget::clearData(){
@@ -274,11 +301,41 @@ void SoftwareManageWidget::selectApk(){
 }
 
 void SoftwareManageWidget::installApp(){
-    if( !QFile::exists(installSoftPath->text()) || installSoftPath->text().isEmpty() ){
-        installSoftPath->showAlertMessage("请选择正确的apk路径！");
-        return;
-    }
 
-    softTool->operateSoft(SoftManageTool::OP_INSTALL, installSoftPath->text());
-    return ;
+//    this->responseBtn(MHDUIY::OP_INSTALL, installSoftPath->text());
+//    return ;
+}
+
+void SoftwareManageWidget::acceptRetStatus(MHDUIY::OPERATFLAG flag, bool isSuc)
+{
+    emit stopSpinner();
+    QString tip;
+    switch( flag ){
+    case MHDUIY::OP_INSTALL:
+        tip = "安装";
+        break;
+    case MHDUIY::OP_UNINSTALL:
+        tip = "卸载";
+        break;
+    case MHDUIY::OP_CLEARDATA:
+        tip = "清除";
+        break;
+    case MHDUIY::OP_EXTRACT:
+        tip = "文件保存在系统文档目录中，提取";
+        break;
+    case MHDUIY::OP_FREEZE:
+        tip = "冻结";
+        break;
+    case MHDUIY::OP_UNFREEZE:
+        tip = "解冻";
+        break;
+    default:
+        break;
+    }
+    if(isSuc) {
+        emit sendMsgToMainWindow(tip + "成功!");
+    }
+    else {
+        emit sendMsgToMainWindow(tip + "失败!");
+    }
 }
