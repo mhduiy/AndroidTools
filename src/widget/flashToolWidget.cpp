@@ -267,6 +267,26 @@ void FlashToolWidget::initUI()
 
 void FlashToolWidget::responseFastRebootBtn(int i)
 {
+    ADBTools tool;
+
+    if(i <= 2) {
+        getFastBootDevices();
+        QString fastbootConnStr = DeviceConnect::getInstance()->getCurrentFastBootDeviceCode();
+        if(fastbootConnStr.isEmpty()) {
+//            emit sendMsgToMainWindow("没有连接fastboot设备");   若没有设备，则在刷新设备的时候已经通知用户
+            return;
+        }
+        tool.executeCommand((MHDUIY::FastRebootInfo::CMDSTR[i].arg(fastbootConnStr)));
+    }
+    else {
+        auto deviceConn = DeviceConnect::getInstance()->getCurrentDevice();
+        if(deviceConn->info[MHDUIY::deviceBaceInfo::DeviceCodeName].isEmpty()
+                || !deviceConn->info[MHDUIY::deviceBaceInfo::DeviceMode].contains("recovery", Qt::CaseInsensitive)) {
+            emit sendMsgToMainWindow("没有连接recovery设备");
+            return;
+        }
+        tool.executeCommand(MHDUIY::FastRebootInfo::CMDSTR[i].arg(deviceConn->info[MHDUIY::deviceBaceInfo::DeviceCodeName]));
+    }
     emit sendMsgToMainWindow("已触发 " + MHDUIY::FastRebootInfo::OUTSTR[i]);
 }
 

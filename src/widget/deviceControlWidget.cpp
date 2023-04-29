@@ -20,7 +20,7 @@ DeviceControlWidget::~DeviceControlWidget()
 
 void DeviceControlWidget::initUI()
 {
-    QHBoxLayout *mainLayout = new QHBoxLayout();
+    QGridLayout *mainLayout = new QGridLayout();
 
 //    /* test */
 //    rightContorlLayout->addWidget(new DPushButton("占位"));
@@ -296,8 +296,11 @@ void DeviceControlWidget::initUI()
     rightContorlLayout->addWidget(BtyCamouflageControl);
     leftArea->setWidget(leftW);
     rightArea->setWidget(rightW);
-    mainLayout->addWidget(leftArea,4);
-    mainLayout->addWidget(rightArea,3);
+    DLabel *label = new DLabel("部分设备需要打开USB调试(安全设置)才可正常使用此功能");
+    label->setAlignment(Qt::AlignCenter);
+    mainLayout->addWidget(label, 0, 0, 1, 2);
+    mainLayout->addWidget(leftArea, 1, 0, 1, 1);
+    mainLayout->addWidget(rightArea,1, 1, 1, 1);
     this->setLayout(mainLayout);
 }
 

@@ -16,7 +16,7 @@ bool SoftTools::installApp(const QString &Path)
     qDebug() << "安装" << Path << QThread::currentThreadId();
     QString command = QString("adb -s %1 install %2").arg(cutDevice).arg(Path);
     qDebug() << command;
-    adbTool.executeCommand(command);
+    adbTool.executeCommandNoLimit(command);
     emit finishOP(MHDUIY::OP_INSTALL, true);
     return true;
 }
@@ -36,7 +36,7 @@ bool SoftTools::uninstallApp(const QString &packageName)
     QString cutDevice = DeviceConnect::getInstance()->getCurrentDeviceCode();
     qDebug() << "卸载" << packageName<< QThread::currentThreadId();
     QString command = QString("adb -s %1 uninstall %2").arg(cutDevice).arg(packageName);
-    adbTool.executeCommand(command);
+    adbTool.executeCommandNoLimit(command);
     emit finishOP(MHDUIY::OP_UNINSTALL, true);
     return true;
 }
@@ -74,7 +74,7 @@ bool SoftTools::extractApp(const QString &packageName, const QString &targetPath
     qDebug() << packageName << "路径：" << _apkPath;
 
     QString command = QString("adb -s %1 pull %2 %3").arg(cutDevice).arg(_apkPath).arg(targetPath);
-    adbTool.executeCommand(command);
+    adbTool.executeCommandNoLimit(command);
     emit finishOP(MHDUIY::OP_EXTRACT, true);
     return true;
 }

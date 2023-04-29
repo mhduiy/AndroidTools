@@ -3,15 +3,16 @@ using namespace MHDUIY;
 
 QStringList deviceRealTimeInfo::OUTSTR {
     "电池电量",
-    "充电电流",
+    "电池电压",
     "电池温度",
     "剩余内存",
     "剩余存储",
-    "CPU占用",
-    "GPU占用",
+
     "窗口标识符",
     "当前前台包名",
-    "当前前台活动"
+    "当前前台活动",
+
+    "电池信息"
 };
 
 QStringList deviceDetailsInfo::OUTSTR {
@@ -29,6 +30,7 @@ QStringList deviceDetailsInfo::OUTSTR {
 
 QStringList deviceBaceInfo::OUTSTR {
     "设备代码"
+    "设备连接模式"
 };
 
 QStringList keySimulationInfo::OUTSTR {
@@ -148,12 +150,12 @@ QStringList FastRebootInfo::OUTSTR {
 };
 
 QStringList FastRebootInfo::CMDSTR {
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
+    "fastboot -s %1 reboot",
+    "fastboot -s %1 oem reboot-recovery",
+    "fastboot -s %1 reboot bootloader",
+    "adb -s %1 reboot",
+    "adb -s %1 reboot bootloader",
+    "adb -s %1 reboot recovery"
 };
 
 QStringList QuickConnItem::websiteNames {

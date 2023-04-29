@@ -52,3 +52,8 @@ void DeviceControlItem::setDescribe(const QString &describe)
 {
     this->describe->setText(describe);
 }
+
+void DeviceControlItem::setDesVisible(bool visible)
+{
+    this->describe->setVisible(visible);
+}

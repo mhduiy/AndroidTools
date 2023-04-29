@@ -30,7 +30,31 @@ QString ADBTools::executeCommand(const QString &cmd)
     }
     QProcess pro;
     pro.start(command);
-    pro.waitForFinished(200000);    //命令执行超过200秒强制提出
+    pro.waitForFinished(3000);    //命令执行超过3秒强制提出
+    QString ret = pro.readAllStandardOutput();
+    if(ret.isEmpty()) {
+        ret = pro.readAllStandardError();
+    }
+    return ret;
+}
+QString ADBTools::executeCommandNoLimit(const QString &cmd)
+{
+    if(cmd.isEmpty()) {
+        return QString();
+    }
+    QString command = cmd;
+    //使用新的adb路径
+    if(cmd.startsWith("adb")) {
+        command = command.right(command.size() - 3);
+        command = ADBPATH + command;
+    }
+    else if(cmd.startsWith("fastboot")) {
+        command = command.right(command.size() - 8);
+        command = FASTBOOTPATH + command;
+    }
+    QProcess pro;
+    pro.start(command);
+    pro.waitForFinished(300000);    //命令执行超过300秒强制提出
     QString ret = pro.readAllStandardOutput();
     if(ret.isEmpty()) {
         ret = pro.readAllStandardError();

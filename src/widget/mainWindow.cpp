@@ -62,7 +62,7 @@ void MainWindow::initUI()
     model->appendRow(new DStandardItem("信息面板"));
     model->appendRow(new DStandardItem("设备控制"));
     model->appendRow(new DStandardItem("软件管理"));
-    model->appendRow(new DStandardItem("文件管理"));
+//    model->appendRow(new DStandardItem("文件管理"));
     model->appendRow(new DStandardItem("刷机工具"));
     model->appendRow(new DStandardItem("设备镜像"));
     model->appendRow(new DStandardItem("终端"));
@@ -87,7 +87,7 @@ void MainWindow::initUI()
     mainStackedWidget->addWidget(infoPannelWidget);
     mainStackedWidget->addWidget(deviceControlWidget);
     mainStackedWidget->addWidget(softwareManageWidget);
-    mainStackedWidget->addWidget(fileManageWidget);
+//    mainStackedWidget->addWidget(fileManageWidget);
     mainStackedWidget->addWidget(flashToolWidget);
     mainStackedWidget->addWidget(deviceImageWidget);
     mainStackedWidget->addWidget(terminalWidget);
@@ -114,8 +114,8 @@ void MainWindow::initUI()
     connect(&timer, &QTimer::timeout, updateThreadTool, &UpdateThread::FlashPGInfo);
     connect(updateThreadTool, &UpdateThread::readDeviceInfoFinish, infoPannelWidget, &InfoPannelWidget::setInfoToRealTimePG);
     connect(updateThreadTool, &UpdateThread::readDeviceInfoFinish, this, [this](MHDUIY::deviceRealTimeInfo *info){
-        this->paintBtyIcon(info->valueInfo[MHDUIY::deviceRealTimeInfo::BatteryLevel]);
-        this->sysIcon->setToolTip(QString("当前设备电量：%1%").arg(info->valueInfo[MHDUIY::deviceRealTimeInfo::BatteryLevel]));
+        this->paintBtyIcon(info->valueInfo[MHDUIY::deviceRealTimeInfo::PG_BatteryLevel]);
+        this->sysIcon->setToolTip(QString("当前设备电量：%1%").arg(info->valueInfo[MHDUIY::deviceRealTimeInfo::PG_BatteryLevel]));
     });
 
     //寻找新设备
@@ -141,7 +141,7 @@ void MainWindow::initUI()
                     + "]");
         }
         this->deviceBox->setCurrentIndex(0);
-        timer.start(1000);  //开启刷新信息的定时器
+        timer.start(2000);  //开启刷新信息的定时器
     });
 
     //选择了其他设备
@@ -155,7 +155,7 @@ void MainWindow::initUI()
     connect(funcView, &DListView::clicked, [this](const QModelIndex &index){
         //实现点击左侧功能按钮右边界面切换
         if(index.row() == 0 && !this->timer.isActive()) {
-            this->timer.start(1000); //如果在开始界面开始信息刷新
+            this->timer.start(2000); //如果在开始界面开始信息刷新
             qDebug() << "start";
         }
         else {

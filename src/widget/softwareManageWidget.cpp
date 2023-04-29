@@ -137,7 +137,8 @@ void SoftwareManageWidget::initUI()
     /*软件包详细信息*/
     DWidget *detailW = new DWidget();
     detailInfoControl = new DeviceControlItem(detailW);
-    detailInfoControl->setTitle("360安全卫士");
+    detailInfoControl->setDesVisible(false);
+    detailInfoControl->setTitle("包名");
     //  detailInfoControl->setDescribe("这里是包名");
     QVBoxLayout *detailLayout = new QVBoxLayout(detailW);
     detailLayout->setSpacing(30);

@@ -19,6 +19,7 @@ public:
     void setTitle(const QString &title);        // 标题
     void setWidget(DWidget *w);
     void setDescribe(const QString &describe);  // 小字
+    void setDesVisible(bool visible);
 private:
     DGroupBox *box;         //控件盒
     DLabel *title;          //标题

@@ -45,6 +45,11 @@ private:
     DeviceControlItem *currentActivityControl;  //设备当前活动
     QVector<DLabel *> currentActivityLabels;
     DWarningButton *stopCutAppBtn;
+
+    DeviceControlItem *btyInfoControl;  //电池信息
+    DTextBrowser *btyTextBrowser;
+
+    DWarningButton *rebootAdbServerBtn;    //重启adb服务
     void stopCutApp(); //停止当前App
 };
 

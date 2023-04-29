@@ -4,6 +4,7 @@
 #include <QPalette>
 #include "ADBTools.h"
 #include "deviceConnect.h"
+#include <DTextBrowser>
 
 InfoPannelWidget::InfoPannelWidget(QWidget *parent)  : MyBaceWidget(parent)
 {
@@ -21,11 +22,12 @@ void InfoPannelWidget::initUI()
     QHBoxLayout *headLayout = new QHBoxLayout();
 
     deviceName = new DLabel("Android Tools");
-
+    rebootAdbServerBtn = new DWarningButton();
+    rebootAdbServerBtn->setFixedWidth(100);
+    rebootAdbServerBtn->setText("重启ADB");
+    rebootAdbServerBtn->setToolTip("重启ADB服务，可以解决一些未知问题或卡顿");
     headLayout->addWidget(deviceName);
-//    headLayout->addWidget(flashBtn);
-//    headLayout->addWidget(deviceBox);
-
+    headLayout->addWidget(rebootAdbServerBtn, Qt::AlignRight);
     //设置字体大小
     QFont font = deviceName->font();
     font.setPointSize(20);
@@ -33,9 +35,9 @@ void InfoPannelWidget::initUI()
 
     QHBoxLayout *pgLayout = new QHBoxLayout();
 
-    deviceRealTimePG.resize(MHDUIY::deviceRealTimeInfo::GPUUsed+1);
+    deviceRealTimePG.resize(MHDUIY::deviceRealTimeInfo::PG_StorageUsed+1);
     pgLayout->setAlignment(Qt::AlignLeft);
-    for (int i = 0; i < MHDUIY::deviceRealTimeInfo::GPUUsed+1; i++) {
+    for (int i = 0; i < MHDUIY::deviceRealTimeInfo::PG_StorageUsed+1; i++) {
         deviceRealTimePG[i] = new MyCircleProgress();
         deviceRealTimePG[i]->setFixedSize(100,150);
         deviceRealTimePG[i]->setTopText(MHDUIY::deviceRealTimeInfo::OUTSTR[i]);
@@ -82,11 +84,13 @@ void InfoPannelWidget::initUI()
     DWidget *baseInfoW = new DWidget(this);
     baseInfoControl = new DeviceControlItem(baseInfoW);
     baseInfoControl->setTitle("设备基础信息");
+    baseInfoControl->setDesVisible(false);
     QVBoxLayout *baseInfoLayout = new QVBoxLayout(baseInfoW);
     baseInfoLayout->addWidget(deviceInfoTable);
 
     DWidget *currentActivityW = new DWidget(this);
     currentActivityControl = new DeviceControlItem(currentActivityW);
+    currentActivityControl->setDesVisible(false);
     currentActivityControl->setTitle("设备当前活动");
     QGridLayout *cutActivityLayout = new QGridLayout(currentActivityW);
     cutActivityLayout->setColumnStretch(0, 1);
@@ -95,7 +99,7 @@ void InfoPannelWidget::initUI()
         DLabel *l = new DLabel();
         l->setWordWrap(true);
         currentActivityLabels.push_back(l);
-        cutActivityLayout->addWidget(new DLabel(MHDUIY::deviceRealTimeInfo::OUTSTR.value(i+7)), i, 0);
+        cutActivityLayout->addWidget(new DLabel(MHDUIY::deviceRealTimeInfo::OUTSTR.value(i+5)), i, 0);
         cutActivityLayout->addWidget(l, i, 1);
     }
     stopCutAppBtn = new DWarningButton();
@@ -103,8 +107,20 @@ void InfoPannelWidget::initUI()
     stopCutAppBtn->setText("停止当前应用");
     cutActivityLayout->addWidget(stopCutAppBtn, 3, 0, 1, 2);
 
+    DWidget *btyInfoW = new DWidget(this);
+    btyInfoControl = new DeviceControlItem(btyInfoW);
+    btyInfoControl->setTitle("设备电池信息");
+    btyInfoControl->setDesVisible(false);
+    QVBoxLayout *btyInfoLayout = new QVBoxLayout(btyInfoW);
+    btyTextBrowser = new DTextBrowser();
+    DFontSizeManager::instance()->bind(btyTextBrowser, DFontSizeManager::T8);
+    btyInfoLayout->addWidget(btyTextBrowser);
+
+    QVBoxLayout *rightLayout = new QVBoxLayout();
+    rightLayout->addWidget(currentActivityControl);
+    rightLayout->addWidget(btyInfoControl);
     deviceInfoLayout->addWidget(baseInfoControl, 1);
-    deviceInfoLayout->addWidget(currentActivityControl, 1);
+    deviceInfoLayout->addLayout(rightLayout, 1);
 
     mainLayout->addLayout(headLayout);
     mainLayout->addLayout(pgLayout);
@@ -112,19 +128,25 @@ void InfoPannelWidget::initUI()
 
     this->setLayout(mainLayout);
 
-//    connect(flashBtn, &DPushButton::clicked, this, &InfoPannelWidget::flashDevice);
+    connect(rebootAdbServerBtn, &DPushButton::clicked, [this](){
+        ADBTools tool;
+        tool.executeCommandNoLimit("adb kill-server");
+        tool.executeCommandNoLimit("adb start-server");
+        emit sendMsgToMainWindow("重启成功，请刷新设备");
+    });
 
 }
 
 void InfoPannelWidget::setInfoToRealTimePG(MHDUIY::deviceRealTimeInfo *info)
 {
-    for(int i = 0; i < int(info->GPUUsed) + 1 ; i++) {
+    for(int i = 0; i < int(info->PG_StorageUsed) + 1 ; i++) {
         deviceRealTimePG[i]->setBottomText(info->info[i]);
         deviceRealTimePG[i]->getPG()->setValue(info->valueInfo[i]);
     }
-    for(int i = info->WindowsCode; i < info->TOTAL; i++) {
-        currentActivityLabels.value(i - info->WindowsCode)->setText(info->info[i]);
-    }
+    currentActivityLabels.value(0)->setText(info->info[MHDUIY::deviceRealTimeInfo::AC_WindowsCode]);
+    currentActivityLabels.value(1)->setText(info->info[MHDUIY::deviceRealTimeInfo::AC_CurrentPackage]);
+    currentActivityLabels.value(2)->setText(info->info[MHDUIY::deviceRealTimeInfo::AC_CurrentActivity]);
+    btyTextBrowser->setText(info->info[MHDUIY::deviceRealTimeInfo::BTY_btyInfo]);
 }
 
 void InfoPannelWidget::setInfoToDetialsTable(MHDUIY::deviceDetailsInfo *info)

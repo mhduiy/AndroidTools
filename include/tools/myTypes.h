@@ -26,22 +26,24 @@ namespace MHDUIY {
     struct deviceRealTimeInfo {
         static QStringList OUTSTR;
         enum {
-            BatteryLevel = 0,   //电量
-            Electricity,        //电流
-            BatteryTEMP,        //电池温度
-            MemoryUsed,         //内存
-            StorageUsed,        //存储
-            CPUUsed,            //CPU使用率
-            GPUUsed,            //GPU使用率
+            /*图形面板信息*/
+            PG_BatteryLevel = 0,   //电量
+            PG_Voltage,            //电压
+            PG_BatteryTEMP,        //电池温度
+            PG_MemoryUsed,         //内存
+            PG_StorageUsed,        //存储
 
             /*当前活动*/
-            WindowsCode,        //窗口标识符
-            CurrentPackage,     //当前前台包名
-            CurrentActivity,    //当前前台活动
+            AC_WindowsCode,        //窗口标识符
+            AC_CurrentPackage,     //当前前台包名
+            AC_CurrentActivity,    //当前前台活动
+
+            /*电池信息*/
+            BTY_btyInfo,
             TOTAL
         };
         QVector<QString> info;
-        QVector<int> valueInfo;
+        QVector<int> valueInfo; //存放面板的数值
         inline deviceRealTimeInfo():info(TOTAL), valueInfo(TOTAL){}
     };
 
