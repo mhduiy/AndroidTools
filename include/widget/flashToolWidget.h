@@ -14,7 +14,7 @@
 #include <DListView>
 #include <QStandardItemModel>
 #include "mybacewidget.h"
-
+#include "flashtool.h"
 
 
 DWIDGET_USE_NAMESPACE
@@ -33,8 +33,12 @@ private:
 
     void getFastBootDevices();
 
+    int showAlertDlg();
+
 private:
 //    DTickEffect *warningEffect;     //警示控件
+    FlashTool *flashTool;
+    bool noDevice = true;
 
     DComboBox *deviceBox;
     DIconButton *updateBtn;
@@ -61,7 +65,6 @@ private:
     DCheckBox *isUnPackPayload;  //是否解包Payload.img
     DSuggestButton *unPackBtn;
     DPushButton *openUnPackOutDir;
-
     /*快捷重启*/
     DeviceControlItem *fastRebootControl;
     QVector<QPushButton *> fastRebootBtns;

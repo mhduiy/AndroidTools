@@ -52,7 +52,7 @@ void TerminalWidget::initUI()
     });
     //打开系统终端，指向程序的adb目录
     connect(openExternalTerminalBtn, &DPushButton::clicked, [this](){
-        QProcess::startDetached(QString("deepin-terminal -w %1").arg(QApplication::applicationDirPath() + "/../tools/platform-tools"));
+        QProcess::startDetached(QString(R"(deepin-terminal --keep-open -w %1 -C "./adb devices")").arg(QApplication::applicationDirPath() + "/../tools/platform-tools"));
     });
     //读取剪切板数据
     connect(pasteBtn, &DPushButton::clicked, [this](){

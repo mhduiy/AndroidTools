@@ -40,7 +40,7 @@ QVector<MHDUIY::deviceBaceInfo *> DeviceConnect::flashDevices()
     QStringList l = ret.split('\n');
 
     bool readFlag = false;
-    for (QString &s : l) {
+    for (QString s : l) {
         s = s.simplified();
         if(s.isEmpty()) {
             continue;
@@ -54,9 +54,11 @@ QVector<MHDUIY::deviceBaceInfo *> DeviceConnect::flashDevices()
         if(readFlag == true) {  //读取到新设备
             MHDUIY::deviceBaceInfo *info = new MHDUIY::deviceBaceInfo();
             QStringList ll = s.split(' ');
-            if(ll.value(1) == "device") {
+            QString deviceMode = ll.value(1);
+            if(deviceMode.contains("device", Qt::CaseInsensitive) || deviceMode.contains("recovery", Qt::CaseInsensitive)) {
                 qDebug() << ll.value(0);
                 info->info[MHDUIY::deviceBaceInfo::DeviceCodeName] = ll.value(0);
+                info->info[MHDUIY::deviceBaceInfo::DeviceMode] = deviceMode;
                 this->devices.push_back(info);
             }
         }
@@ -85,6 +87,7 @@ QVector<MHDUIY::deviceBaceInfo *> DeviceConnect::flashFastBootDevices()
             if(lineInfo.isEmpty()) {continue;}
             MHDUIY::deviceBaceInfo *deviceInfo = new MHDUIY::deviceBaceInfo();
             deviceInfo->info[MHDUIY::deviceBaceInfo::DeviceCodeName] = lineInfoList.value(0);
+            deviceInfo->info[MHDUIY::deviceBaceInfo::DeviceMode] = lineInfoList.value(1);
             result.push_back(deviceInfo);
             qDebug() << lineInfoList.value(0);
         }
@@ -123,7 +126,7 @@ void DeviceConnect::setCurrentFastBootDevice(MHDUIY::deviceBaceInfo *currentInfo
 
 void DeviceConnect::setCurrentFastBootDevice(int index)
 {
-    this->currentFastBootDevice = this->devices.value(index);
+    this->currentFastBootDevice = this->fastBootDevices.value(index);
 }
 
 QString DeviceConnect::getCurrentFastBootDeviceCode()

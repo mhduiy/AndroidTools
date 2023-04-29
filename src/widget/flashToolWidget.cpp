@@ -7,7 +7,10 @@
 #include <DStyledItemDelegate>
 #include <QDesktopServices>
 #include <QUrl>
-#include <deviceConnect.h>
+#include "deviceConnect.h"
+#include <QFile>
+#include <DFileDialog>
+#include <DDialog>
 
 FlashToolWidget::FlashToolWidget(QWidget *parent)  : MyBaceWidget(parent)
 {
@@ -29,6 +32,8 @@ void FlashToolWidget::initUI()
     QPalette labelPalette = alertLabel->palette();
     labelPalette.setColor(QPalette::WindowText, Qt::red);
     alertLabel->setPalette(labelPalette);
+
+    flashTool = new FlashTool();
 
     deviceBox = new DComboBox();
     updateBtn = new DIconButton();
@@ -203,6 +208,61 @@ void FlashToolWidget::initUI()
     mainLayout->addWidget(alertLabel);
     mainLayout->addLayout(deviceLayout);
     mainLayout->addLayout(funcLayout);
+    //刷写分区选择
+    connect(selectFlashImgBtn, &DPushButton::clicked, [this](){
+        QString doc_path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+        QString filePath = QFileDialog::getOpenFileName(this, tr("请选择一个镜像文件"), doc_path, tr("IMG Files (*.img)"));
+        FlashImgPathEdit->setText(filePath);
+    });
+    //刷写分区
+    connect(flashBtn, &DPushButton::clicked, [this](){
+        QString path = this->FlashImgPathEdit->text();
+        if(!QFile::exists(path)) {
+            this->FlashImgPathEdit->showAlertMessage("请选择正确的路径");
+            return;
+        }
+        if(this->showAlertDlg() != 0) {
+            return;
+        }
+        if(noDevice) {
+            emit sendMsgToMainWindow("没有连接任何设备");
+            return;
+        }
+        flashTool->flashPartition(this->targetPartition->currentText(), path);
+    });
+    //临时启动选择
+    connect(selectStartImgBtn, &DPushButton::clicked, [this](){
+        QString doc_path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+        QString filePath = QFileDialog::getOpenFileName(this, tr("请选择一个镜像文件"), doc_path, tr("IMG Files (*.img)"));
+        tempStartPathEdit->setText(filePath);
+    });
+    //临时启动
+    connect(tempStartBtn, &DPushButton::clicked, [this](){
+        QString path = this->tempStartPathEdit->text();
+        if(!QFile::exists(path)) {
+            this->tempStartPathEdit->showAlertMessage("请选择正确的路径");
+            return;
+        }
+        if(this->showAlertDlg() != 0) {
+            return;
+        }
+        if(noDevice) {
+            emit sendMsgToMainWindow("没有连接任何设备");
+            return;
+        }
+        flashTool->startPartition(path);
+    });
+    //清除分区
+    connect(clearBtn, &DPushButton::clicked, [this](){
+        if(this->showAlertDlg() != 0) {
+            return;
+        }
+        if(noDevice) {
+            emit sendMsgToMainWindow("没有连接任何设备");
+            return;
+        }
+        flashTool->eraserPartition(clearPartitionBox->currentText());
+    });
 }
 
 void FlashToolWidget::responseFastRebootBtn(int i)
@@ -216,11 +276,22 @@ void FlashToolWidget::getFastBootDevices()
     this->deviceBox->clear();
     if(devices.size() == 0) {
         emit sendMsgToMainWindow("当前未连接到任何FastBoot设备");
+        noDevice = true;
         return;
     }
+    noDevice = false;
     for(auto info : devices) {
         this->deviceBox->addItem(info->info[MHDUIY::deviceBaceInfo::DeviceCodeName]);
     }
     deviceBox->setCurrentIndex(0);
     DeviceConnect::getInstance()->setCurrentFastBootDevice(0);
+}
+
+int FlashToolWidget::showAlertDlg()
+{
+    DDialog dlgDelete1("提示", "此操作为高危操作，且无法撤销, 是否继续执行");
+    dlgDelete1.addButton("是", true, DDialog::ButtonWarning);
+    dlgDelete1.addButton("否", false, DDialog::ButtonNormal);
+    dlgDelete1.setIcon(QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning));
+    return dlgDelete1.exec();
 }

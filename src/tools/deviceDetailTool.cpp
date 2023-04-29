@@ -41,14 +41,13 @@ MHDUIY::deviceDetailsInfo *DeviceDetailTool::flashInfo()
     ret = tool.executeCommand(command).simplified();
     res->info[MHDUIY::deviceDetailsInfo::DeviceModel] = ret;
     /*设备代号*/
-    command = QString("adb -s %1 shell getprop ro.product.product.device").arg(currentDeviceCode);
+    command = QString("adb -s %1 shell getprop ro.product.name").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();
     res->info[MHDUIY::deviceDetailsInfo::DeviceCodeName] = ret;
     /*系统信息*/
     command = QString("adb -s %1 shell getprop ro.custom.version").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();
     res->info[MHDUIY::deviceDetailsInfo::SystemInfo] = ret;
-
     /*安卓版本*/
     command = QString("adb -s %1 shell getprop ro.build.version.release").arg(currentDeviceCode);
     ret = tool.executeCommand(command).simplified();

@@ -68,7 +68,8 @@ namespace MHDUIY {
     struct deviceBaceInfo {
         static QStringList OUTSTR;
         enum {
-            DeviceCodeName,
+            DeviceCodeName, //设备名 一般是序列号
+            DeviceMode,     //设备连接电脑的模式 device recovery fastboot
             TOTAL
         };
         QVector<QString> info;

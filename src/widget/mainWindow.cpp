@@ -35,7 +35,7 @@ void MainWindow::initUI()
     flashBtn->setIcon(QIcon(":/Icon/Refresh.png"));
 
     wirelessBtn->setFixedWidth(80);
-    deviceBox->setFixedWidth(150);
+    deviceBox->setFixedWidth(220);
     spinner->setFixedSize(30,30);
     spinnerTip->setMargin(5);
     spinner->hide();
@@ -43,8 +43,8 @@ void MainWindow::initUI()
 
     this->titlebar()->addWidget(spinner, Qt::AlignRight);
     this->titlebar()->addWidget(spinnerTip, Qt::AlignRight);
-    this->titlebar()->addWidget(deviceBox, Qt::AlignRight);
-    this->titlebar()->addWidget(flashBtn, Qt::AlignRight);
+    this->titlebar()->addWidget(deviceBox, Qt::AlignLeft);
+    this->titlebar()->addWidget(flashBtn, Qt::AlignLeft);
     this->titlebar()->addWidget(wirelessBtn, Qt::AlignRight);
 
     this->titlebar()->setIcon(QIcon(":/Icon/appIcon.png"));
@@ -134,7 +134,11 @@ void MainWindow::initUI()
         infoPannelWidget->setInfoToDetialsTable(res);   //设置详细信息
 
         for(MHDUIY::deviceBaceInfo* info : devices) {   //添加信息的box
-            this->deviceBox->addItem(info->info[MHDUIY::deviceBaceInfo::DeviceCodeName]);
+            this->deviceBox->
+                    addItem(info->info[MHDUIY::deviceBaceInfo::DeviceCodeName]
+                    + "    ["
+                    + info->info[MHDUIY::deviceBaceInfo::DeviceMode]
+                    + "]");
         }
         this->deviceBox->setCurrentIndex(0);
         timer.start(1000);  //开启刷新信息的定时器
