@@ -1,0 +1,20 @@
+<svg width="240.00000000000003" height="240.00000000000003" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="242" width="242" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <rect transform="rotate(-0.149762, 121.142, 119.538)" rx="20" id="svg_3" height="179.678328" width="111.777956" y="29.698461" x="65.252772" stroke-width="16.5" stroke="#000" fill="#fff"/>
+  <ellipse ry="10" rx="10" id="svg_6" cy="312.428341" cx="108.56524" fill-opacity="null" stroke-opacity="null" stroke-width="19.5" stroke="#000" fill="#fff"/>
+  <line transform="rotate(90, 120.425, 117.804)" stroke-linecap="null" stroke-linejoin="null" id="svg_7" y2="117.803763" x2="205.913367" y1="117.803763" x1="34.936278" fill-opacity="null" stroke-opacity="null" stroke-width="99" stroke="#000" fill="none"/>
+  <rect rx="1" id="svg_14" height="85.32609" width="50.543476" y="58.949269" x="95.81524" fill-opacity="null" stroke-width="51" stroke="#ffffff" fill="none"/>
+  <ellipse ry="7" rx="7" id="svg_16" cy="191.557967" cx="120.815258" fill-opacity="null" stroke-width="14" stroke="#ffffff" fill="none"/>
+  <text xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="29" id="svg_17" y="113.297101" x="91.467413" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#ffffff" fill="#000000">ADB</text>
+ </g>
+</svg>

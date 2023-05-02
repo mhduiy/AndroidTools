@@ -47,7 +47,7 @@ void MainWindow::initUI()
     this->titlebar()->addWidget(flashBtn, Qt::AlignLeft);
     this->titlebar()->addWidget(wirelessBtn, Qt::AlignRight);
 
-    this->titlebar()->setIcon(QIcon(":/Icon/appIcon.png"));
+    this->titlebar()->setIcon(QIcon(":/Icon/AndroidTools.svg"));
 
     wirelessConWidget = new WirelessConnectWidget(this);
 
