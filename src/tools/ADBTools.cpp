@@ -1,11 +1,19 @@
 #include "ADBTools.h"
+#include <QDir>
+#include <QCoreApplication>
 
-const QString ADBPATH = "../tools/platform-tools/adb";
-const QString FASTBOOTPATH = "../tools/platform-tools/fastboot";
+
+//const QString ADBPATH = QCoreApplication::instance()->applicationFilePath() + "../tools/platform-tools/adb";
+//const QString FASTBOOTPATH = "../tools/platform-tools/fastboot";
+//#else
+//const QString ADBPATH = "../tools/platform-tools/adb";
+//const QString FASTBOOTPATH = "../tools/platform-tools/fastboot";
+//#endif
 
 ADBTools::ADBTools(QObject *parent) : QObject (parent)
 {
-
+    ADBPATH = qApp->applicationDirPath() + QDir::separator() + "../tools/platform-tools/adb";
+    FASTBOOTPATH = qApp->applicationDirPath() + QDir::separator() + "../tools/platform-tools/fastboot";
 }
 
 ADBTools::~ADBTools()

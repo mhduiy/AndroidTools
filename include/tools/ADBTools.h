@@ -22,6 +22,8 @@ public:
 signals:
 
 private:
+    QString ADBPATH;
+    QString FASTBOOTPATH;
 
 };
 
