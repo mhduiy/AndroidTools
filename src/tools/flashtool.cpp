@@ -21,14 +21,14 @@ void FlashTool::flashPartition(const QString &partition, const QString &imgPath)
 
 void FlashTool::startPartition(const QString &imgPath)
 {
-    QString command = QString("fastboot -s %1 boot %2").arg(DeviceConnect::getInstance()->getCurrentFastBootDeviceCode()).arg(imgPath);
+    QString command = QString("./fastboot -s %1 boot %2").arg(DeviceConnect::getInstance()->getCurrentFastBootDeviceCode()).arg(imgPath);
     QProcess::startDetached(QString(R"(deepin-terminal --keep-open -w %1 -C "%2")").arg(QApplication::applicationDirPath() + "/../tools/platform-tools")
             .arg(command));
 }
 
 void FlashTool::eraserPartition(const QString &artition)
 {
-    QString command = QString("fastboot -s %1 erase %2").arg(DeviceConnect::getInstance()->getCurrentFastBootDeviceCode()).arg(artition);
+    QString command = QString("./fastboot -s %1 erase %2").arg(DeviceConnect::getInstance()->getCurrentFastBootDeviceCode()).arg(artition);
     QProcess::startDetached(QString(R"(deepin-terminal --keep-open -w %1 -C "%2")").arg(QApplication::applicationDirPath() + "/../tools/platform-tools")
                             .arg(command));
 }

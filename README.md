@@ -1,3 +1,6 @@
 # AndroidTools
 
-![整体框架图（还在更新）](https://mhduiy-1310556463.cos.ap-chongqing.myqcloud.com/img/%E6%80%9D%E7%BB%B4%E7%AC%94%E8%AE%B0%20.jpeg)
+#### 注意事项
+
+需要在手机打开开发者模式中的USB调试方可使用
+部分手机需要打开USB调试（安全设置）才可使用全部功能
