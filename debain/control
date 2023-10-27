@@ -1,0 +1,8 @@
+Package: AndroidTools
+Version: 1.0
+Maintainer: zk mhduiy@qq.com
+Section: utils
+Architecture: amd64
+Priority: optional
+Depends: libc6 (>= 2.14)
+Description: 一个基于ADB的工具软件，具有信息监测，模拟控制，软件管理，刷机等等功能

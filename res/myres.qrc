@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/Icon">
+        <file>AndroidTools.svg</file>
+        <file>Refresh.png</file>
+    </qresource>
+</RCC>
