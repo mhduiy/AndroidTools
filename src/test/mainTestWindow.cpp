@@ -8,7 +8,9 @@ MainTestWindow::MainTestWindow(QWidget *parent) : QMainWindow(parent)
 
     mainLayout->setAlignment(Qt::AlignHCenter);
 
-    m_btn = new MButton("发送通知消息", MBtn_warning);
+    m_btnOrdinary = new MButton("发送成功通知消息", MBtn_ordinary);
+    m_btnSuggest = new MButton("发送警告通知消息", MBtn_suggested);
+    m_btnWarning = new MButton("发送错误通知消息", MBtn_warning);
     m_lineEdit = new MLineEdit();
     m_sideBar = new MSidebar();
     m_tabSwitchButton = new MTabSwitchButton();
@@ -23,10 +25,18 @@ MainTestWindow::MainTestWindow(QWidget *parent) : QMainWindow(parent)
 
     mainLayout->addWidget(m_tabSwitchButton);
     mainLayout->addWidget(m_lineEdit);
-    mainLayout->addWidget(m_btn);
+    mainLayout->addWidget(m_btnOrdinary);
+    mainLayout->addWidget(m_btnSuggest);
+    mainLayout->addWidget(m_btnWarning);
 
-    connect(m_btn, &QPushButton::clicked, this, [this](){
+    connect(m_btnOrdinary, &MButton::clicked, this, [this](){
         m_notificationBox->sendMsg("这是一条测试消息", MsgIconType::MSG_Success, 2);
+    });
+    connect(m_btnSuggest, &MButton::clicked, this, [this](){
+        m_notificationBox->sendMsg("这是一条测试消息", MsgIconType::MSG_Warning, 2);
+    });
+    connect(m_btnWarning, &MButton::clicked, this, [this](){
+        m_notificationBox->sendMsg("这是一条测试消息", MsgIconType::MSG_Error, 2);
     });
 
     setCentralWidget(mainWidget);

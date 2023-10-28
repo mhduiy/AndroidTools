@@ -14,7 +14,9 @@ class MainTestWindow : public QMainWindow
 public:
     explicit MainTestWindow(QWidget *parent = nullptr);
 private:
-    MButton *m_btn;
+    MButton *m_btnOrdinary;
+    MButton *m_btnSuggest;
+    MButton *m_btnWarning;
     MLineEdit *m_lineEdit;
     MNotificationBox *m_notificationBox;
     MSidebar *m_sideBar;

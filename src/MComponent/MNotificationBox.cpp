@@ -42,7 +42,7 @@ MNotificationWidget::MNotificationWidget(QWidget *mainWindow) : QWidget(mainWind
 
 //    closeBtn->setVisible(false);
 
-    connect(closeBtn, &QPushButton::clicked, this, &MNotificationWidget::closeBtnClicked);
+    connect(closeBtn, &MButton::clicked, this, &MNotificationWidget::closeBtnClicked);
 }
 
 MNotificationWidget::~MNotificationWidget() {
