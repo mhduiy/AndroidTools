@@ -1,0 +1,81 @@
+MButton {
+    border-radius: 8px;
+    border-style: solid;
+    border-width: 1px;
+    padding: 10px;
+}
+
+MButton[style='0']{
+    color: #2f3542;
+    background-color: rgb(236,245,255);
+    border-color: rgb(64,158,255);
+
+}
+MButton[style='1']{
+    color: #ffffff;
+    background-color: rgb(64,158,255);
+    border-color: rgb(204, 230, 255);
+}
+MButton[style='2']{
+    color: #2f3542;
+    background-color: rgb(255, 193, 199);
+    border-color: rgb(255, 64, 86);
+}
+
+/**鼠标停留在按钮上的样式**/
+MButton[style='0']:hover{
+    color: #FFFFFF;
+    background-color: rgb(48, 129, 210);
+}
+
+/**鼠标按压下去的样式**/
+MButton[style='0']:pressed,MButton[style='0']:checked{
+    background-color: rgb(64,158,255);
+}
+
+/**按钮失能情况下样式**/
+MButton[style='0']:disabled{
+    color: #FFFFFF;
+    background-color: #dcdde1;
+    border-color: #dcdde1;
+}
+
+
+
+/**鼠标停留在按钮上的样式**/
+MButton[style='1']:hover{
+    color: #FFFFFF;
+    background-color: rgb(55, 133, 212);
+}
+
+/**鼠标按压下去的样式**/
+MButton[style='1']:pressed,MButton[style='1']:checked{
+    background-color: rgb(36, 106, 175);
+}
+
+/**按钮失能情况下样式**/
+MButton[style='1']:disabled{
+    color: #FFFFFF;
+    background-color: #dcdde1;
+    border-color: #dcdde1;
+}
+
+
+
+/**鼠标停留在按钮上的样式**/
+MButton[style='2']:hover{
+    color: #FFFFFF;
+    background-color: rgb(202, 51, 68);
+}
+
+/**鼠标按压下去的样式**/
+MButton[style='2']:pressed,MButton[style='2']:checked{
+    background-color: rgb(170, 54, 67);
+}
+
+/**按钮失能情况下样式**/
+MButton[style='2']:disabled{
+    color: #FFFFFF;
+    background-color: #dcdde1;
+    border-color: #dcdde1;
+}

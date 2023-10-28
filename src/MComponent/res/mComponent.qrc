@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/">
+        <file>MButton.qss</file>
+        <file>sidebar.qss</file>
+        <file>translate.png</file>
+        <file>screenShot.png</file>
+        <file>bilibiliData.png</file>
+        <file>left-arrow.png</file>
+        <file>closeIcon.png</file>
+        <file>successIcon.png</file>
+        <file>errorIcon.png</file>
+        <file>warningIcon.png</file>
+        <file>getBiliBiliData.py</file>
+        <file>closeWindow.png</file>
+        <file>fixWindow.png</file>
+        <file>minWindow.png</file>
+        <file>unFixWindow.png</file>
+        <file>appIcon.png</file>
+        <file>exchangeIcon.png</file>
+        <file>down-arrow.png</file>
+    </qresource>
+</RCC>
