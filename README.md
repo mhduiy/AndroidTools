@@ -15,8 +15,8 @@ AndroidTools是一个基于ADB(Android Debug Bridge)开发而成的工具，可�
 - [x] MTabSwitchButton  分页按钮
 - [x] MButton  按钮
 - [x] MSwitchButton  开关按钮
+- [x] MProgressBar  进度条
 - [ ] MSidebar  侧边栏
-- [ ] MProgressBar  进度条
 - [ ] MTitleBar  标题栏
 - [ ] MDialog  对话框
 - [ ] MColorLabel 带背景颜色的标签

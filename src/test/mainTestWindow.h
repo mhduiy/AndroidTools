@@ -8,6 +8,7 @@
 #include "MSidebar.h"
 #include "MTabSwitchButton.h"
 #include "MSwitchButton.h"
+#include "MProgressBar.h"
 
 class MainTestWindow : public QMainWindow
 {
@@ -23,6 +24,7 @@ private:
     MNotificationBox *m_notificationBox;
     MSidebar *m_sideBar;
     MTabSwitchButton *m_tabSwitchButton;
+    MProgressBar *bar;
 };
 
 #endif

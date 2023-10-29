@@ -1,4 +1,5 @@
 #include "mainTestWindow.h"
+#include <QTime>
 #include <QLayout>
 
 MainTestWindow::MainTestWindow(QWidget *parent) : QMainWindow(parent)
@@ -23,6 +24,20 @@ MainTestWindow::MainTestWindow(QWidget *parent) : QMainWindow(parent)
     m_tabSwitchButton = new MTabSwitchButton();
     m_notificationBox = new MNotificationBox(this);
 
+    bar = new MProgressBar();
+    bar->setColor(0, 20, Qt::darkRed);
+    bar->setColor(20, 40, Qt::darkYellow);
+    bar->setColor(40, 80, Qt::darkBlue);
+    bar->setColor(80, 101, Qt::darkGreen);
+
+    QTimer *timer = new QTimer;
+    qsrand(QTime::currentTime().msec());
+    connect(timer, &QTimer::timeout, this, [=](){
+        int value = qrand() % 101;
+        bar->setValue(value);
+    });
+    timer->start(1000);
+
     m_lineEdit->setTipText("输入账户名");
     m_lineEdit->setFixedWidth(200);
 
@@ -36,6 +51,7 @@ MainTestWindow::MainTestWindow(QWidget *parent) : QMainWindow(parent)
     mainLayout->addWidget(m_btnSuggest);
     mainLayout->addWidget(m_btnWarning);
     mainLayout->addLayout(switchButtonLayout);
+    mainLayout->addWidget(bar);
 
     m_switchButton->setSwitchState(true);
 
