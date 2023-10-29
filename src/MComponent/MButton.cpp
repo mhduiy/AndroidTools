@@ -96,7 +96,9 @@ void MButton::paintEvent(QPaintEvent *e)
     QTextOption textOption;
     textOption.setAlignment(Qt::AlignCenter);
     QFont font;
+    font.setPixelSize(14);
     font.setFamily("黑体");
+    painter.setFont(font);
     painter.drawText(btnRect, m_text, textOption);
 
     if(!m_icon.isNull())

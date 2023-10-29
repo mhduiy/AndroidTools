@@ -1,4 +1,6 @@
 #include "MTabSwitchButton.h"
+#include "Global/globalType.hpp"
+
 #include <QPainter>
 #include <QTextOption>
 #include <QMouseEvent>
@@ -52,11 +54,13 @@ void MTabSwitchButton::paintBackground()
     painter.setRenderHint(QPainter::TextAntialiasing);
     /* 启用线性插值算法以此来平滑图片 */
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    QPen pen;
+    pen.setWidth(2);
+    pen.setColor(MColor_OrdinaryForeColor);
+    painter.setPen(pen);
+    painter.setBrush(Qt::transparent);
 
-    painter.setPen(Qt::gray);
-    painter.setBrush(QColor(255, 255, 255, 120));
-
-    painter.drawRoundedRect(rect().marginsRemoved(QMargins(1, 0, 1, 0)), 10, 10);
+    painter.drawRoundedRect(rect().marginsRemoved(QMargins(1, 1, 1, 1)), 10, 10);
 }
 
 void MTabSwitchButton::paintText()
@@ -68,7 +72,8 @@ void MTabSwitchButton::paintText()
 
     painter.setPen(Qt::black);
     QFont font;
-    font.setPixelSize(12);
+    font.setFamily("黑体");
+    font.setPixelSize(14);
     
     painter.setFont(font);
 
@@ -100,17 +105,17 @@ void MTabSwitchButton::paintSlider()
 
     // 画当前Press的
     if (m_pressIndex != -1 && m_checkedIndex < m_rects.size() && m_pressIndex != m_checkedIndex) {
-        painter.setBrush(m_pressBrush);
+        painter.setBrush(MColor_OrdinaryHoverBackColor);
         painter.drawRoundedRect(m_rects.value(m_pressIndex), 10, 10);
     }
     // 画当前Hover的
     if (m_hoverIndex != -1 && m_hoverIndex < m_rects.size() && m_hoverIndex != m_checkedIndex && m_hoverIndex != m_pressIndex) {
-        painter.setBrush(m_hoverBrush);
+        painter.setBrush(MColor_OrdinaryBackColor);
         painter.drawRoundedRect(m_rects.value(m_hoverIndex), 10, 10);
     }
     // 画当前选中的
     if (m_checkedIndex != -1 && m_checkedIndex < m_rects.size()) {
-        painter.setBrush(m_checkBrush);
+        painter.setBrush(MColor_SuggestForeColor);
         painter.drawRoundedRect(QRectF(m_curSliderPoint, m_silderSize), 10, 10);
     }
 }
