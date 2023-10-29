@@ -7,6 +7,7 @@
 #include "MNotificationBox.h"
 #include "MSidebar.h"
 #include "MTabSwitchButton.h"
+#include "MSwitchButton.h"
 
 class MainTestWindow : public QMainWindow
 {
@@ -18,6 +19,7 @@ private:
     MButton *m_btnSuggest;
     MButton *m_btnWarning;
     MLineEdit *m_lineEdit;
+    MSwitchButton *m_switchButton;
     MNotificationBox *m_notificationBox;
     MSidebar *m_sideBar;
     MTabSwitchButton *m_tabSwitchButton;

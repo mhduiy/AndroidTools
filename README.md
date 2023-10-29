@@ -13,12 +13,15 @@ AndroidTools是一个基于ADB(Android Debug Bridge)开发而成的工具，可�
 - [x] MNotificationBox  通知
 - [x] MLineEdit  编辑框
 - [x] MTabSwitchButton  分页按钮
+- [x] MButton  按钮
+- [x] MSwitchButton  开关按钮
 - [ ] MSidebar  侧边栏
-- [ ] MPushButton  按钮
-- [ ] MSwitchButton  开关按钮
 - [ ] MProgressBar  进度条
 - [ ] MTitleBar  标题栏
 - [ ] MDialog  对话框
+
+- [ ] 折线图表
+- [ ] MFrame
 
 ## 特性和功能设计
 

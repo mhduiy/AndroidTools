@@ -54,7 +54,7 @@ void MButton::initData()
 
     connect(m_backColorAni, &QVariantAnimation::valueChanged, this, [this](const QVariant &data){
         setBackgroundColor(data.value<QColor>());
-    });
+    }, Qt::QueuedConnection);
 }
 
 void MButton::startAni()
@@ -108,14 +108,12 @@ void MButton::enterEvent(QEvent *e)
 {
     m_hover = true;
     startAni();
-    update();
     QWidget::enterEvent(e);
 }
 void MButton::leaveEvent(QEvent *e)
 {
     m_hover = false;
     startAni();
-    update();
     QWidget::leaveEvent(e);
 }
 void MButton::mouseReleaseEvent(QMouseEvent *e)
