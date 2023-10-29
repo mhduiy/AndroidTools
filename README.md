@@ -10,7 +10,7 @@ AndroidTools是一个基于ADB(Android Debug Bridge)开发而成的工具，可�
 
 #### 计划重绘控件
 
-- [x] MNotificationBox  通知
+- [x] MNotificationBox 通知控件
 - [x] MLineEdit  编辑框
 - [x] MTabSwitchButton  分页按钮
 - [x] MButton  按钮
@@ -19,9 +19,11 @@ AndroidTools是一个基于ADB(Android Debug Bridge)开发而成的工具，可�
 - [ ] MProgressBar  进度条
 - [ ] MTitleBar  标题栏
 - [ ] MDialog  对话框
-
-- [ ] 折线图表
-- [ ] MFrame
+- [ ] MColorLabel 带背景颜色的标签
+- [ ] MListView  列表控件
+- [ ] MBlurEffectWidget  实时模糊窗体
+- [ ] MLineChart 折线图表
+- [ ] MFrame  带动画，带背景色的窗体框架
 
 ## 特性和功能设计
 
@@ -42,4 +44,4 @@ AndroidTools是一个基于ADB(Android Debug Bridge)开发而成的工具，可�
 
 ## License
 
-See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
+See the [LICENSE](LICENSE) file for license rights and limitations (Apache 2.0).

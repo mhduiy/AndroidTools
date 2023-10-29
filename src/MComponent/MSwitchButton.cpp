@@ -11,7 +11,7 @@ MSwitchButton::MSwitchButton(QWidget *parent)
 , m_backColorAni(new QVariantAnimation(this))   
 , m_backHoverColorAni(new QVariantAnimation(this))
 {
-    setFixedSize(45, 25);
+    setFixedSize(50, 25);
     btnRect = rect().marginsRemoved(QMargins(1, 1, 1, 1));
     if (m_isOn) {
         m_foreColor = MColor_SuggestForeColor;
@@ -59,6 +59,9 @@ void MSwitchButton::leaveEvent(QEvent *e)
 
 void MSwitchButton::mouseReleaseEvent(QMouseEvent *e)
 {
+    if(m_posAni->state() == QAbstractAnimation::Running) {
+        return;
+    }
     m_isOn = !m_isOn;
     initData();
     if(rect().contains(mapFromGlobal(QCursor::pos())))
